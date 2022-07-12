@@ -1,0 +1,211 @@
+{% extends 'offcanvas.html' %}
+{% load bootstrap5 %}
+{% load static %}
+{% block main %}
+<section class="dash2">
+    <div class="content-wrapper" style="padding-bottom: 5rem;">
+        <div class="d-xl-flex justify-content-between align-items-start">
+            <h2 class="text-dark font-weight-bold mb-2"> {{res.Document_Type}}
+            </h2>
+        </div>
+        <!--alert -->
+        {% include 'alerts.html' %}
+        <div class="row my-3">
+            <div class="col-md-3">
+                <div class="card l-bg-cherry statCard h-100">
+                    <div class="card-statistic-3 p-4">
+                        <div class="card-icon card-icon-large"><i class="fas fa-file"></i></div>
+                        <div class="mb-4">
+                            <h5 class="card-title mb-0">Document No</h5>
+                        </div>
+                        <div class="row align-items-center mb-2 d-flex">
+                            <div class="col-md-12">
+                                <h2 class="d-flex align-items-center mb-0">
+                                    {{res.Document_No_}}
+                                </h2>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card l-bg-blue-dark statCard h-100">
+                    <div class="card-statistic-3 p-4">
+                        <div class="card-icon card-icon-large"><i class="fas fa-file"></i></div>
+                        <div class="mb-4">
+                            <h5 class="card-title mb-0">Document Type</h5>
+                        </div>
+                        <div class="row align-items-center mb-2 d-flex">
+                            <div class="col-md-12">
+                                <h2 class="d-flex align-items-center mb-0">
+                                    {{res.Document_Type}}
+                                </h2>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card l-bg-green-dark statCard h-100">
+                    <div class="card-statistic-3 p-4">
+                        <div class="card-icon card-icon-large"><i class="fas fa-users"></i></div>
+                        <div class="mb-4">
+                            <h5 class="card-title mb-0">Sender</h5>
+                        </div>
+                        <div class="row align-items-center mb-2 d-flex">
+                            <div class="col-md-12">
+                                <h2 class="d-flex align-items-center mb-0">
+                                    {{res.Sender_ID}}
+                                </h2>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card l-bg-orange-dark statCard h-100">
+                    <div class="card-statistic-3 p-4">
+                        <div class="card-icon card-icon-large"><i class="fas fa-calendar-times"></i></div>
+                        <div class="mb-4">
+                            <h5 class="card-title mb-0">Due Date</h5>
+                        </div>
+                        <div class="row align-items-center mb-2 d-flex">
+                            <div class="col-md-12">
+                                <h2 class="d-flex align-items-center mb-0">
+                                    {{res.Due_Date}}
+                                </h2>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-8">
+                <form class="row g-3">
+                    <div class="col-md-6">
+                        <label class="form-label">Approver</label>
+                        <input type="text" class="form-control" placeholder="{{res.Approver_ID}}" readonly>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Status</label>
+                        <input type="text" class="form-control" placeholder="{{res.Status}}" readonly>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Last Date Time Modified</label>
+                        <input type="text" class="form-control" placeholder="{{res.Last_Date_Time_Modified}}" readonly>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Last Modified By User</label>
+                        <input type="text" class="form-control" placeholder="{{res.Last_Modified_By_User_ID}}" readonly>
+                    </div>
+                    <div class="col-md-12">
+                        <label class="form-label">Amount</label>
+                        <input type="text" class="form-control" placeholder="{{res.Amount}}" readonly>
+                    </div>
+                </form>
+            </div>
+            <div class="col-md-4">
+                <div class="card h-100 solution_card">
+                    <div class="card-body">
+                        <h4 class="card-title mb-4">
+                            Attachments
+                        </h4>
+                        <ul class="inbox-wid list-unstyled">
+                            {% for response in file %}
+                            <form action="{% url 'getDocs' res.Document_No_ res.Table_ID %}" method="post">
+                                {% csrf_token %}
+                                <input type="hidden" name="attachmentID" value="{{response.AuxiliaryIndex2}}">
+                                <input type="hidden" name="File_Name" value="{{response.File_Name}}">
+                                <input type="hidden" name="File_Extension" value="{{response.File_Extension}}">
+                                <li class="inbox-list-item">
+                                    <button type="submit" data-toggle="tooltip" data-placement="top"
+                                        title="Click to Download">
+                                        <div class="media" style="display: flex;">
+                                            <div class="media-body">
+                                                <h5 class="font-size-16 mb-1">
+                                                    <i class="fas fa-download me-2 text-success"></i>
+                                                    {{response.File_Name}}.{{response.File_Extension}}
+                                                </h5>
+                                            </div>
+                                        </div>
+                                    </button>
+                                </li>
+                                <hr style="margin-top:-.5rem">
+                            </form>
+                            {% empty %}
+                            <p class="text-danger">
+                                Document has no attachments <i class="las la-file-download"></i>
+                            </p>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% if res.Status == 'Open' %}
+        <div class="row my-3">
+            <div class="d-grid gap-2 d-md-block">
+                <div style="display: inline-block;">
+                    <form id="myForm" action="{% url 'All_Approved' res.Document_No_ %}" method="post">
+                        {% csrf_token %}
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="col-md-12 my-2">
+                                    <input type="hidden" class="form-control" name="entryNo" value="{{res.Entry_No_}}">
+                                </div>
+                            </div>
+                        </div>
+                        <button class="btn btn-primary" type="submit">Approve
+                            Document</button>
+                    </form>
+
+                </div>
+                <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#reject" type="button">Reject
+                    Approval</button>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+    <!-- Modal -->
+    <div class="modal fade" id="reject" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+        aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="staticBackdropLabel">Reject Approval
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="myForm" action="{% url 'Rejected' res.Document_No_ %}" method="post">
+                        {% csrf_token %}
+                        <div class="row">
+                            <div class="col-md-12 my-2">
+                                <input type="hidden" class="form-control" name="entryNo" value="{{res.Entry_No_}}">
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="mb-2">
+                                    <label for="purpose" class="form-label">Reason <span class="text-danger">*</span>
+                                    </label>
+                                    <textarea class="form-control" name="approvalComments" rows="3" required></textarea>
+                                </div>
+                            </div>
+                        </div>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Discard</button>
+                    <button type="submit" id="sasa" class="btn btn-primary">Submit</button>
+                </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+
+{% endblock %}

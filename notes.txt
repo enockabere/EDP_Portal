@@ -1,0 +1,73 @@
+When a new planner line is created the document is submitted for approval and you cant edit it or delete  line.
+On leave Request Planner start date should not be required field.
+
+Add currency field to FnTrainingRequest and make it optional
+
+Can't delete training lines
+
+staff claim pending approval
+
+Global_Dimension_2_Code == DPT
+adhoc == NO:
+
+    Show Training Need details
+adhoc == Yes:
+
+    remove unrequired
+
+    Training Type:
+      PHYSICAL - (STRING)
+      vIRTUAL - (ONLINE)
+
+
+
+store request reject not showing
+
+User Roles
+    - User
+        - Create Work Order
+    - Admin 
+        - vehicles
+            - photos,
+            lifecycle, specs,engine and transmission, 
+            - status
+                -in service, Active, out of service
+        - Inspections
+
+        - Issues
+
+        - Reminders
+            - overdue, due soon(service, repairs)
+
+        - Contacts and users
+
+        - fuel history
+
+        - documents
+
+        - reports
+            - fuel costs
+
+        - comments
+
+    - Driver
+
+        -  bar code reader
+
+        - Daily Vehicle inspection (this makes a vehicle to be available)
+
+            -check seats,electronics, brakes etc (if it fails(take picture and raise comment))
+
+        - View Work orders
+
+        - Reminders (service)
+
+        - comment
+
+    intergrations
+
+        - vendors
+
+        - fuel card
+
+        - gps (fuel cards to see how much the fuel was or where it was fueled)
