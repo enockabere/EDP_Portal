@@ -2,11 +2,13 @@
 @import url('https://fonts.googleapis.com/css2?family=Nunito&family=Poppins&display=swap');
 :root {
     --first: #008080;
+    --green: #04fb14;
     --first-color-light: #6c8aaf;
     --green-color: #134326;
     --red-color: #e51e25;
     --sand-tan: #e1b382;
     --dark-color: #444a4a;
+    --dark:#3a3e3c;
     --olive: #A3BCB6;
     --white-color: #F7F6FB;
     --primary-font: 'Gelasio', serif;
@@ -92,7 +94,7 @@
 }
 
 .logo img {
-    width: 150px;
+    width: 180px;
     height: auto;
 }
 
@@ -139,7 +141,7 @@ label {
 .form-control,
 .form-control:focus,
 .input-group-addon {
-    border-color: var(--green-color);
+    border-color: var(--green);
     border-radius: 0;
 }
 
@@ -159,19 +161,11 @@ label {
     background-color: whitesmoke;
 }
 
-.login-form .input-group-addon {
-    max-width: 42px;
-    text-align: center;
-    background: none;
-    border-bottom: 1px solid var(--green-color);
-    padding-left: 5px;
-}
-
 .login-form .btn,
 .login-form .btn:active {
     font-size: 16px;
     font-weight: bold;
-    background: #134326 !important;
+    background: var(--first) !important;
     border-radius: 3px;
     border: none;
     min-width: 140px;
@@ -179,11 +173,11 @@ label {
 
 .login-form .btn:hover,
 .login-form .btn:focus {
-    background: #134326 !important;
+    background: var(--dark) !important;
 }
 
 .login-form a {
-    color: var(--green-color);
+    color: var(--green);
     text-decoration: none;
 }
 
@@ -285,4 +279,56 @@ label {
 .text-200 a:hover {
     color: var(--red-color);
     text-decoration: none;
+}
+
+.testimonial{
+    padding: 20px ;
+    overflow: hidden;
+    background:transparent;
+    color: #fdfeff;
+    font-family: var(--nunito);
+    z-index: 1;
+}
+
+.testimonial .pic{
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    overflow: hidden;
+    margin-left: auto;
+    margin-right: auto;
+    border: 2px solid #04fb14;
+    background: #04fb14;
+    padding: 4px;
+}
+.testimonial .pic img{
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+}
+.testimonial .testimonial-title{
+    font-size: 18px;
+    font-weight: 600;
+    font-family: var(--primary-font);
+    text-transform: capitalize;
+    text-align: center;
+    margin: 15px 0px 15px 0px;
+    color: #3a3e3c;
+}
+.testimonial .description{
+    font-family: var(--nunito);
+    font-style: regular;
+    font-size: 16px;
+    text-align: center;
+    text-shadow: 0 1px 0 var(--first);
+    color: white;
+}
+.owl-theme .owl-controls .owl-page span{
+    width: 10px;
+    height: 10px;
+    background: #fff;
+    border: 2px solid #04fb14;
+}
+.owl-theme .owl-controls .owl-page:active span{
+    color: #04fb14;
 }

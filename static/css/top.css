@@ -90,18 +90,21 @@ ul.breadcrumb li a:hover {
 }
 
 .l-bg-blue-dark {
-    background: linear-gradient(to right, #373b44, #144a85) !important;
+    background: linear-gradient(to right, rgb(221, 220, 220), #6d6d6d) !important;
     color: #fff;
+    border: none !important;
 }
 
 .l-bg-green-dark {
-    background: linear-gradient(to right, #0a504a, #134326) !important;
+    background: linear-gradient(to right, rgb(221, 220, 220), #86d6d6) !important;
+    border: none !important;
     color: #fff;
 }
 
 .l-bg-orange-dark {
-    background: linear-gradient(to right, #a86008, #c18b39) !important;
+    background: linear-gradient(to right, rgb(221, 220, 220), #bbd6b7) !important;
     color: #fff;
+    border: none !important;
 }
 
 .statCard .card-statistic-3 .card-icon-large .fas,

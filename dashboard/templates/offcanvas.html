@@ -2,6 +2,7 @@
 {% load bootstrap5 %}
 {% load static %}
 {% block content %}
+
 <div class="container-scroller">
     <!-- partial:partials/_navbar.html -->
     <nav class="navbar default-layout-navbar col-lg-12 col-12 p-0 fixed-top d-flex flex-row">
@@ -17,8 +18,33 @@
                 <i class="mdi mdi-apps" style="color: #134326; font-size: 1.6rem"></i>
             </button>
             <ul class="navbar-nav navbar-nav-right">
-                <li class="nav-item nav-profile dropdown">
 
+                <li class="nav-item dropdown">
+                    <a class="nav-link count-indicator dropdown-toggle" id="messageDropdown" href="#"
+                        data-toggle="dropdown" aria-expanded="false">
+                        Reports <i class="las la-angle-down mx-1" style="font-size:13px"></i>
+                    </a>
+                    <div class="dropdown-menu dropdown-menu-right navbar-dropdown preview-list"
+                        aria-labelledby="messageDropdown">
+                        <h6 class="p-3 mb-0 bg-primary text-white py-4">Statement</h6>
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item preview-item">
+                            <i class="las la-arrow-right mr-2"></i> Client Detailed Statement
+                        </a>
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item preview-item">
+                            <i class="las la-arrow-right mr-2"></i> Loan Statement
+                        </a>
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item preview-item">
+                            <i class="las la-arrow-right mr-2"></i> Loan Repayment Schedule
+                        </a>
+
+                        <div class="dropdown-divider"></div>
+
+                    </div>
+                </li>
+                <li class="nav-item nav-profile dropdown">
                     <a class="nav-link dropdown-toggle" id="profileDropdown" href="#" data-toggle="dropdown"
                         aria-expanded="false">
                         <div class="nav-profile-img">
@@ -27,6 +53,7 @@
                         <div class="nav-profile-text">
                             <p class="mb-1 text-black">{{full}}</p>
                         </div>
+                        <i class="las la-angle-down mx-1 text-success" style="font-size:13px"></i>
                     </a>
                     <div class="dropdown-menu navbar-dropdown dropdown-menu-right p-0 border-0 font-size-sm"
                         aria-labelledby="profileDropdown" data-x-placement="bottom-end">
@@ -42,9 +69,22 @@
                                 <span>Profile</span>
                                 <i class="las la-user-circle"></i>
                             </a>
+                            <div role="separator" class="dropdown-divider"></div>
+                            <a class="dropdown-item py-1 d-flex align-items-center justify-content-between"
+                                href="{% url 'profile' %}">
+                                <span>Need Help?</span>
+                                <i class="las la-question-circle"></i>
+                            </a>
+                            <div role="separator" class="dropdown-divider"></div>
+                            <a class="dropdown-item py-1 d-flex align-items-center justify-content-between"
+                                href="{% url 'profile' %}">
+                                <span>FAQs</span>
+                                <i class="las la-file-invoice"></i>
+                            </a>
+                            <div role="separator" class="dropdown-divider"></div>
                             <a class="dropdown-item py-1 d-flex align-items-center justify-content-between"
                                 href="{% url 'logout' %}">
-                                <span>Log Out</span>
+                                <span>Sign Out</span>
                                 <i class="mdi mdi-logout ml-1"></i>
                             </a>
                         </div>
@@ -72,8 +112,8 @@
                 <li class="nav-item">
                     <a class="nav-link" data-toggle="collapse" href="#hr" aria-expanded="false"
                         aria-controls="ui-basic">
-                        <span class="icon-bg"><i class="las la-briefcase"></i></span>
-                        <span class="menu-title">Human Resource</span>
+                        <span class="icon-bg"><i class="las la-hand-holding-usd"></i></span>
+                        <span class="menu-title">Loan Management</span>
                         <i class="las la-angle-down" id="drops"></i>
                     </a>
                     <div class="collapse" id="hr">
@@ -81,67 +121,44 @@
                             <li class="nav-item">
                                 <a class="nav-link" href="{% url 'LeavePlanner' %}"><i
                                         class="las la-arrow-right mr-2"></i>
-                                    Annual Leave Planner
+                                    Loan Calculator
                                 </a>
                             </li>
                             <li class="nav-item"> <a class="nav-link" href="{% url 'leave' %}"><i
-                                        class="las la-arrow-right mr-2"></i> Leave Requests</a>
+                                        class="las la-arrow-right mr-2"></i> New Loan</a>
                             </li>
                             <li class="nav-item"> <a class="nav-link" href="{% url 'training_request' %}"><i
-                                        class="las la-arrow-right mr-2"></i>Training Requests</a></li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="{% url 'pNine' %}"><i class="las la-arrow-right mr-2"></i>P9
-                                    Form</a>
-                            </li>
+                                        class="las la-arrow-right mr-2"></i>Loan Top Ups</a></li>
                             <li class="nav-item">
                                 <a class="nav-link" href="{% url 'payslip' %}"><i
-                                        class="las la-arrow-right mr-2"></i>Payslip</a>
+                                        class="las la-arrow-right mr-2"></i>Loan Repayment</a>
                             </li>
                         </ul>
                     </div>
                 </li>
+
                 <li class="nav-item">
-                    <a class="nav-link" data-toggle="collapse" href="#fn" aria-expanded="false"
-                        aria-controls="ui-basic">
-                        <span class="icon-bg"><i class="las la-briefcase"></i></span>
-                        <span class="menu-title">Finance</span>
-                        <i class="las la-angle-down" id="drops"></i>
+                    <a class="nav-link" href="{% url 'approve' %}">
+                        <span class="icon-bg"><i class="las la-wallet"></i></span>
+                        <span class="menu-title">Balance Enquiry</span>
                     </a>
-                    <div class="collapse" id="fn">
-                        <ul class="nav flex-column sub-menu">
-                            <li class="nav-item"> <a class="nav-link" href="{% url 'imprestReq' %}"><i
-                                        class="las la-arrow-right mr-2"></i> Imprest Requisition</a>
-                            </li>
-                            <li class="nav-item"> <a class="nav-link" href="{% url 'imprestSurr' %}"><i
-                                        class="las la-arrow-right mr-2"></i>Imprest Surrender</a></li>
-                            <li class="nav-item"> <a class="nav-link" href="{% url 'claim' %}"><i
-                                        class="las la-arrow-right mr-2"></i>Staff Claim</a></li>
-                        </ul>
-                    </div>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" data-toggle="collapse" href="#pr" aria-expanded="false"
-                        aria-controls="ui-basic">
-                        <span class="icon-bg"><i class="las la-briefcase"></i></span>
-                        <span class="menu-title">Procurement</span>
-                        <i class="las la-angle-down" id="drops"></i>
-                    </a>
-                    <div class="collapse" id="pr">
-                        <ul class="nav flex-column sub-menu">
-                            <li class="nav-item"> <a class="nav-link" href="{% url 'purchase' %}"><i
-                                        class="las la-arrow-right mr-2"></i>Purchase Requisition</a>
-                            </li>
-                            <li class="nav-item"> <a class="nav-link" href="{% url 'repair' %}"><i
-                                        class="las la-arrow-right mr-2"></i>Repair Requests</a></li>
-                            <li class="nav-item"> <a class="nav-link" href="{% url 'store' %}"><i
-                                        class="las la-arrow-right mr-2"></i>Store Request</a></li>
-                        </ul>
-                    </div>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="{% url 'approve' %}">
-                        <span class="icon-bg"><i class="las la-briefcase"></i></span>
-                        <span class="menu-title">Approvals</span>
+                        <span class="icon-bg"><i class="las la-calendar-plus"></i></span>
+                        <span class="menu-title">Appointments</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'approve' %}">
+                        <span class="icon-bg"><i class="las la-poll"></i></span>
+                        <span class="menu-title">Survey</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'approve' %}">
+                        <span class="icon-bg"><i class="las la-user"></i></span>
+                        <span class="menu-title">Profile</span>
                     </a>
                 </li>
                 <li class="nav-item" style="margin-top:.1rem;">
@@ -155,7 +172,7 @@
                 <li class="nav-item sidebar-user-actions" style="margin-top:.1rem;">
                     <div class="sidebar-user-menu">
                         <a href="{% url 'logout' %}" class="nav-link"><i class="las la-sign-out-alt"></i>
-                            <span class="menu-title">Log Out</span></a>
+                            <span class="menu-title">Sign Out</span></a>
                     </div>
                 </li>
                 <li class="nav-item documentation-link" style="margin-top:-.8rem !important;">

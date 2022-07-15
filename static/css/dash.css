@@ -11,6 +11,8 @@
     --dark-color: #444a4a;
     --olive: #A3BCB6;
     --white-color: #F7F6FB;
+    --neon: #35ff14;
+    --teal: #008080;
     --normal-font-size: 1rem;
     --z-fixed: 100;
     --primary-font: 'Gelasio', serif;
@@ -262,4 +264,30 @@
 .r2 img {
     width: 60px;
     height: 60px;
+}
+
+.stretch-card {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-align: stretch;
+    -ms-flex-align: stretch;
+    align-items: stretch;
+    -webkit-box-pack: stretch;
+    -ms-flex-pack: stretch;
+    justify-content: stretch; }
+    .stretch-card > .card {
+      width: 100%;
+      min-width: 100%; }
+  
+  @media (min-width: 576px) {
+    .border-right-sm {
+      border-right: 1px solid rgba(151, 151, 151, 0.3); } }
+
+.iconKard{
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    border: 3px solid var(--teal);
+    position: relative;
 }

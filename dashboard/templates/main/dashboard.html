@@ -4,281 +4,135 @@
 {% block main %}
 
 <section>
-    <div class="content-wrapper general-bg">
-        <div class="row" id="proBanner">
-            <div class="col-12">
+    <div class="content-wrapper">
+        <div class="row py-3" id="proBanner">
+            <div class="col-md-12">
                 <span class="d-flex align-items-center purchase-popup">
-                    <img src="../../../static/img/logo/fav.png" width="70px" class="img-fluid" alt="" srcset="">
-                    <h2 class="text-dark font-weight-bold" style="margin-left: auto;margin-right:0;"> Dashboard </h2>
+                    <img src="../../../static/img/logo/fav.png" width="180px" class="img-fluid" alt="" srcset="">
+                    <h2 class="text-dark font-weight-bold" style="margin-left: auto;margin-right:0;"> Overview dashboard
+                    </h2>
                 </span>
 
             </div>
         </div>
-        <div class="row g-1">
-            <div class="col-md-3 mb-2">
-                <div class="card summ-cards">
-                    <div class="card-title">
-                        Human Resource Summary
-                    </div>
-                    <div class="card-body">
-                        <div class="row">
-                            <div class="col-md-6">
-                                <div class="c-content c1">
-                                    <h6>Leave Requests</h6>
-                                    <small>{{leave_open}}</small>
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="c-content">
-                                    <h6>Training Requests</h6>
-                                    <small>{{open_train}}</small>
-                                </div>
-                            </div>
+
+        <div class="row py-3 gx-2">
+            <div class="col-xl-3 col-lg-6 col-sm-6 grid-margin stretch-card">
+                <div class="card l-bg-green-dark">
+                    <div class="card-body text-center">
+                        <h5 class="mb-2 text-dark font-weight-normal">Number of Students</h5>
+                        <h2 class="mb-4 text-dark font-weight-bold">93200</h2>
+                        <div class="iconKard mx-auto text-center">
+                            <i class="mdi mdi-human-male-female icon-md absolute-center text-dark"></i>
                         </div>
                     </div>
                 </div>
             </div>
-            <div class="col-md-5 mb-2">
-                <div class="card summ-cards3">
-                    <div class="card-title">
-                        Finance Summary
-                    </div>
-                    <div class="card-body">
-                        <div class="row">
-                            <div class="col-md-4">
-                                <div class="c-content c1">
-                                    <h6>Imprest Requisition</h6>
-                                    <small>{{imprest_open}}</small>
-                                </div>
-                            </div>
-                            <div class="col-md-4">
-                                <div class="c-content c2">
-                                    <h6>Imprest Surrender</h6>
-                                    <small>{{surrender_open}}</small>
-                                </div>
-                            </div>
-                            <div class="col-md-4">
-                                <div class="c-content">
-                                    <h6>Staff Claim</h6>
-                                    <small>{{open_claim}}</small>
-                                </div>
-                            </div>
+            <div class="col-xl-3 col-lg-6 col-sm-6 grid-margin stretch-card ">
+                <div class="card l-bg-orange-dark">
+                    <div class="card-body text-center">
+                        <h5 class="mb-2 text-dark font-weight-normal">Number of Teachers</h5>
+                        <h2 class="mb-4 text-dark font-weight-bold">75</h2>
+                        <div class="iconKard mx-auto text-center">
+                            <i class="mdi mdi-account-circle icon-md absolute-center text-dark"></i>
                         </div>
                     </div>
                 </div>
             </div>
-            <div class="col-md-4">
-                <div class="card summ-cards3">
-                    <div class="card-title">
-                        Procurement Summary
+            <div class="col-xl-3  col-lg-6 col-sm-6 grid-margin stretch-card">
+                <div class="card l-bg-blue-dark ">
+                    <div class="card-body text-center">
+                        <h5 class="mb-2 text-dark font-weight-normal">Average School Income</h5>
+                        <h2 class="mb-4 text-dark font-weight-bold">Kshs 100380</h2>
+                        <div class="iconKard mx-auto text-center">
+                            <i class="mdi mdi-wallet icon-md absolute-center text-dark"></i>
+                        </div>
                     </div>
-                    <div class="card-body">
-                        <div class="row">
-                            <div class="col-md-4">
-                                <div class="c-content c1">
-                                    <h6>Purchase Requests</h6>
-                                    <small>{{open_purchase}}</small>
-                                </div>
-                            </div>
-                            <div class="col-md-4">
-                                <div class="c-content c2">
-                                    <h6>Repair Request</h6>
-                                    <small>{{open_repair}}</small>
-                                </div>
-                            </div>
-                            <div class="col-md-4">
-                                <div class="c-content">
-                                    <h6>Store Requests</h6>
-                                    <small>{{open_store}}</small>
-                                </div>
-                            </div>
+                </div>
+            </div>
+            <div class="col-xl-3 col-lg-6 col-sm-6 grid-margin stretch-card">
+                <div class="card l-bg-orange-dark">
+                    <div class="card-body text-center">
+                        <h5 class="mb-2 text-dark font-weight-normal">Number of Students</h5>
+                        <h2 class="mb-4 text-dark font-weight-bold">42 Days</h2>
+                        <div class="iconKard mx-auto text-center">
+                            <i class="mdi mdi-chart-bar-stacked icon-md absolute-center text-dark"></i>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-        <div class="row py-4">
-            <div class="col-md-6 mb-2">
-                <div class="card p-3 h-100" style="background: #d9e3f0;">
-                    <div class="card-title text-dark">
-                        <h6>Approved Requests</h6>
-                    </div>
-                    <div class="card-body">
-                        <canvas id="myChart"></canvas>
-                    </div>
-                    <script>
-                        const labels = [
-                            'Leave',
-                            'Training',
-                            'Imprest Requisition',
-                            'Imprest Surrender',
-                            'Staff Claim',
-                            'Purchase Requests',
-                            'Repair Requests',
-                            'Store Requests',
-                        ];
-                        var Approved_Leave = '{{leave_app}}'
-                        var App_Train = '{{app_train}}'
-                        var APP_Imprest = '{{imprest_app}}'
-                        var App_Claim = '{{app_claim}}'
-                        var App_surrender = '{{surrender_app}}'
-                        var APP_Purchase = '{{app_purchase}}'
-                        var APP_Repair = '{{app_repair}}'
-                        var App_Store = '{{app_store}}'
-                        const data = {
-                            labels: labels,
-                            datasets: [{
-                                label: 'All Approved Requests',
-                                backgroundColor: 'rgb(255, 99, 132)',
-                                borderColor: 'rgb(255, 99, 132)',
-                                data: [Approved_Leave, App_Train, APP_Imprest, App_surrender, App_Claim,
-                                    APP_Purchase,
-                                    APP_Repair,
-                                    App_Store
-                                ],
-                            }]
-                        };
+        <div class="row py-2">
+            <div class="col-md-12 mb-2">
+                <div class="card card-danger-gradient">
+                    <div class="card-body mb-4">
+                        <div class="card p-3" style="background: #eaebeb;">
+                            <div class="card-title text-dark">
+                                <h6>Loan Management</h6>
+                            </div>
+                            <div class="card-body">
+                                <canvas id="myChart"></canvas>
+                            </div>
+                            <script>
+                                const labels = [
+                                    'Open Loans',
+                                    'Loans Pending Approval',
+                                    'Rejected Loans',
+                                ];
+                                var Approved_Leave = '{{leave_app}}'
+                                var App_Train = '{{app_train}}'
+                                var APP_Imprest = '{{imprest_app}}'
+                                const data = {
+                                    labels: labels,
+                                    datasets: [{
+                                        label: 'Loans',
+                                        backgroundColor: [
+                                            '#04fb14',
+                                            '#3c3c3c',
+                                            '#048383',
+                                        ],
+                                        data: [Approved_Leave, App_Train, APP_Imprest, ],
+                                    }]
+                                };
 
-                        const config = {
-                            type: 'line',
-                            data: data,
-                            options: {}
-                        };
-                    </script>
-                    <script>
-                        const myChart = new Chart(
-                            document.getElementById('myChart'),
-                            config
-                        );
-                    </script>
-                </div>
-            </div>
-            <div class="col-md-6 mb-2">
-                <div class="card p-3 h-100" style="background: #CCCCFF;">
-                    <div class="card-title text-dark">
-                        <h6>Rejected Requests</h6>
+                                const config = {
+                                    type: 'bar',
+                                    data: data,
+                                    options: {}
+                                };
+                            </script>
+                            <script>
+                                const myChart = new Chart(
+                                    document.getElementById('myChart'),
+                                    config
+                                );
+                            </script>
+                        </div>
                     </div>
-                    <div class="card-body">
-                        <canvas id="Chart2"></canvas>
-                    </div>
-                    <script>
-                        const newlabel = [
-                            'Leave',
-                            'Training',
-                            'Imprest Requisition',
-                            'Imprest Surrender',
-                            'Staff Claim',
-                            'Purchase ',
-                            'Repair Requests',
-                            'Store Requests',
-                        ];
-
-                        var Rejected_Leave = '{{leave_rej}}'
-                        var Rej_Train = '{{rej_train}}'
-                        var Rej_Imprest = '{{imprest_rej}}'
-                        var Rej_Claim = '{{rej_claim}}'
-                        var Rej_surrender = '{{surrender_rej}}'
-                        var Rej_Purchase = '{{rej_purchase}}'
-                        var Rej_Repair = '{{rej_repair}}'
-                        var Rej_Store = '{{rej_store}}'
-                        const data2 = {
-                            labels: newlabel,
-                            datasets: [{
-                                label: 'All Rejected Requests',
-                                backgroundColor: [
-                                    '#ff5e6c',
-                                    '#DFFF00',
-                                    '#8076a3',
-                                    '#FFBF00',
-                                    '#9FE2BF',
-                                ],
-                                borderColor: 'rgb(255, 99, 132)',
-                                data: [Rejected_Leave, Rej_Train, Rej_Imprest, Rej_surrender, Rej_Claim,
-                                    Rej_Purchase,
-                                    Rej_Repair,
-                                    Rej_Store
-                                ],
-                            }]
-                        };
-
-                        const configs = {
-                            type: 'bar',
-                            data: data2,
-                            options: {}
-                        };
-                    </script>
-                    <script>
-                        const Chart2 = new Chart(
-                            document.getElementById('Chart2'),
-                            configs
-                        );
-                    </script>
-                </div>
-            </div>
-        </div>
-        <div class="row pb-3">
-            <div class="col-md-12">
-                <div class="row my-2 ">
-                    <div class="col-md-12">
-                        <div class="card h-100 px-2" id="d-card">
-                            <div class="m-4">
-                                <ul class="nav nav-tabs" id="myTab">
-                                    <li class="nav-item">
-                                        <a href="#profile" class="nav-link text-dark" data-bs-toggle="tab">Documents
-                                            Pending
-                                            Your
-                                            Approval
-                                            ({{countsAPP}})</a>
-                                    </li>
-                                </ul>
-                                <div class="tab-content">
-                                    <div class="tab-pane show active fade" id="profile">
-                                        <div class="card-body">
-                                            <table id="example"
-                                                class="display table table-striped table-bordered dt-responsive table-responsive-lg"
-                                                style="width:100%">
-                                                <thead>
-                                                    <tr id="tops">
-                                                        <th>Document Type</th>
-                                                        <th>Sender</th>
-                                                        <th>Action</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-                                                    {% for res in apps %}
-                                                    <tr>
-                                                        <td id="rap">{{res.Document_Type}}</td>
-                                                        <td>{{res.Sender_ID}}</td>
-                                                        <td>
-                                                            <a href="{% url 'ApproveData' res.Document_No_ %}"
-                                                                class="btn btn-success link-btn" type="button"
-                                                                data-toggle="tooltip" data-placement="top"
-                                                                title="View"><i class="fa fa-table"></i>
-                                                            </a>
-                                                        </td>
-                                                    </tr>
-                                                    {% endfor %}
-                                                </tbody>
-                                            </table>
-                                        </div>
-                                    </div>
-                                    <!-- <div class="tab-pane fade" id="channel">
-                                        <h4 class="mt-2 text-dark">Try</h4>
-                                        <div class="card-body">
-                                            <div id="messages"></div>
-                                            <form id="form">
-                                                <div class="mb-3">
-                                                    <label for="exampleInputEmail1" class="form-label">Email
-                                                        address</label>
-                                                    <input type="text" class="form-control" id="message" name="message">
-                                                    <div id="emailHelp" class="form-text">We'll never share your email
-                                                        with anyone else.</div>
-                                                </div>
-
-                                                <button type="submit" class="btn btn-primary">Submit</button>
-                                            </form>
-                                        </div>
-                                    </div> -->
+                    <div class="card-body bg-white pt-2">
+                        <div class="row pt-2">
+                            <div class="col-sm-3">
+                                <div class="border-right border-md-0">
+                                    <h4>Loan Balance</h4>
+                                    <h1 class="text-dark font-weight-bold mb-md-3">$306</h1>
+                                </div>
+                            </div>
+                            <div class="col-sm-3">
+                                <div class="border-right border-md-0">
+                                    <h4>Amount due</h4>
+                                    <h1 class="text-dark font-weight-bold mb-md-3">$306</h1>
+                                </div>
+                            </div>
+                            <div class="col-sm-3">
+                                <div class="border-right border-md-0">
+                                    <h4>Next Due Date</h4>
+                                    <h1 class="text-dark font-weight-bold mb-md-3">22-01-2023</h1>
+                                </div>
+                            </div>
+                            <div class="col-sm-3">
+                                <div class="">
+                                    <h4>No. of Days in Arrears</h4>
+                                    <h1 class="text-dark font-weight-bold">20</h1>
                                 </div>
                             </div>
                         </div>
@@ -287,6 +141,7 @@
             </div>
         </div>
     </div>
+
 </section>
 
 <script>

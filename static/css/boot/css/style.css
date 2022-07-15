@@ -13826,7 +13826,19 @@ dl li {
   padding: 10px 15px;
   border-radius: 3px;
 }
-
+.stretch-card {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: stretch;
+  -ms-flex-align: stretch;
+  align-items: stretch;
+  -webkit-box-pack: stretch;
+  -ms-flex-pack: stretch;
+  justify-content: stretch; }
+  .stretch-card > .card {
+    width: 100%;
+    min-width: 100%; }
 .purchase-popup .btn {
   background: var(--first-color);
   margin-right: 20px;
