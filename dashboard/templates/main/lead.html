@@ -1,0 +1,95 @@
+<div class="row">
+    <div class="col-md-12">
+        <div class="alert alert-success l-bg-original" role="alert">
+            <h4 class="alert-heading">Hello, School Name</h4>
+            <p>
+                Your application has been received and it's being reviewed.
+
+                We have assigned you a Relationship Manager(RM).
+            </p>
+            <!-- Button trigger modal -->
+            <button type="button" class="btn btn-secondary RMBtn" data-bs-toggle="modal"
+                data-bs-target="#staticBackdrop">
+                View RM <i class="las la-address-card"></i>
+            </button>
+
+            <!-- Modal -->
+            <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+                aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="staticBackdropLabel">Relationship Manager Details</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="mx-auto text-center">
+                                <img src="../../../static/img/logo/pp.png" class="img-fluid" alt="" srcset=""
+                                    style="height: 100px; width:100px;border-radius:50%">
+                            </div>
+                            <form class="row">
+                                <div class="col-md-6">
+                                    <label class="form-label">RM Name</label>
+                                    <input type="text" class="form-control" placeholder="John Doe" readonly>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label">RM Contact No </label>
+                                    <input type="text" class="form-control" placeholder="+254700000000" readonly>
+                                </div>
+                                <div class="col-md-12">
+                                    <label class="form-label">RM Email</label>
+                                    <input type="text" class="form-control" placeholder="johndoe@gmail.com" readonly>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                            <button type="button" class="btn btn-primary"><i class="las la-plus"></i> Create Appointment
+                                <i class="las la-calendar-plus"></i></button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <hr>
+            <p class="mb-0">Your school's Location</p>
+            <div class="mapouter">
+                <div class="gmap_canvas">
+                    <iframe class="responsive-iframe" id="gmap_canvas" src=""></iframe>
+                    <style>
+                        .mapouter {
+                            position: relative;
+                            overflow: hidden;
+                            width: 100%;
+                            padding-top: 56.25%;
+                        }
+                    </style>
+                    <style>
+                        .responsive-iframe {
+                            position: absolute;
+                            top: 0;
+                            left: 0;
+                            bottom: 0;
+                            right: 0;
+                            width: 100%;
+                            height: 100%;
+                        }
+
+                        .RMBtn:hover {
+                            background: black;
+                        }
+                    </style>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+<script>
+    $(document).ready(function () {
+        var Coordinates = '{{Coordinates}}'
+        console.log(Coordinates)
+        detailUrl = 'https://maps.google.com/maps?q=' + Coordinates +
+            '&t=&z=13&ie=UTF8&iwloc=&output=embed';
+        $("#gmap_canvas").attr('src', detailUrl);
+    });
+</script>

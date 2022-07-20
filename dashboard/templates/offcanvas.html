@@ -8,7 +8,7 @@
     <nav class="navbar default-layout-navbar col-lg-12 col-12 p-0 fixed-top d-flex flex-row">
         <div class="text-center navbar-brand-wrapper d-flex align-items-center justify-content-center">
             <a class="navbar-brand brand-logo" href="{% url 'dashboard' %}"><i class='las la-industry'
-                    style="font-size:22px"></i>KMPDC</a>
+                    style="font-size:22px"></i>EDP</a>
             <a class="navbar-brand brand-logo-mini" href="{% url 'dashboard' %}"><i class='las la-industry'
                     style="font-size:22px"></i></a>
         </div>
@@ -18,7 +18,54 @@
                 <i class="mdi mdi-apps" style="color: #134326; font-size: 1.6rem"></i>
             </button>
             <ul class="navbar-nav navbar-nav-right">
-
+                {% if stage == 'Lead' %}
+                <li class="nav-item nav-profile dropdown">
+                    <a class="nav-link dropdown-toggle" id="profileDropdown" href="#" data-toggle="dropdown"
+                        aria-expanded="false">
+                        <div class="nav-profile-img">
+                            <img src="../../static/img/logo/pp.png" alt="image">
+                        </div>
+                        <div class="nav-profile-text">
+                            <p class="mb-1 text-black">{{full}}</p>
+                        </div>
+                        <i class="las la-angle-down mx-1 text-success" style="font-size:13px"></i>
+                    </a>
+                    <div class="dropdown-menu navbar-dropdown dropdown-menu-right p-0 border-0 font-size-sm"
+                        aria-labelledby="profileDropdown" data-x-placement="bottom-end">
+                        <div class="p-3 text-center bg-primary">
+                            <img class="img-avatar img-avatar48 img-avatar-thumb" src="../../static/img/logo/pp.png"
+                                alt="">
+                        </div>
+                        <div class="p-2">
+                            <h5 class="dropdown-header text-uppercase pl-2 text-dark">User Options</h5>
+                            <div role="separator" class="dropdown-divider"></div>
+                            <a class="dropdown-item py-1 d-flex align-items-center justify-content-between"
+                                href="{% url 'profile' %}">
+                                <span>Profile</span>
+                                <i class="las la-user-circle"></i>
+                            </a>
+                            <div role="separator" class="dropdown-divider"></div>
+                            <a class="dropdown-item py-1 d-flex align-items-center justify-content-between"
+                                href="{% url 'profile' %}">
+                                <span>Need Help?</span>
+                                <i class="las la-question-circle"></i>
+                            </a>
+                            <div role="separator" class="dropdown-divider"></div>
+                            <a class="dropdown-item py-1 d-flex align-items-center justify-content-between"
+                                href="{% url 'profile' %}">
+                                <span>FAQs</span>
+                                <i class="las la-file-invoice"></i>
+                            </a>
+                            <div role="separator" class="dropdown-divider"></div>
+                            <a class="dropdown-item py-1 d-flex align-items-center justify-content-between"
+                                href="{% url 'logout' %}">
+                                <span>Sign Out</span>
+                                <i class="mdi mdi-logout ml-1"></i>
+                            </a>
+                        </div>
+                    </div>
+                </li>
+                {% else %}
                 <li class="nav-item dropdown">
                     <a class="nav-link count-indicator dropdown-toggle" id="messageDropdown" href="#"
                         data-toggle="dropdown" aria-expanded="false">
@@ -90,6 +137,7 @@
                         </div>
                     </div>
                 </li>
+                {% endif %}
             </ul>
             <button class="navbar-toggler navbar-toggler-right d-lg-none align-self-center" type="button"
                 data-toggle="offcanvas">
@@ -102,13 +150,42 @@
         <!-- sidebar -->
         <nav class="sidebar sidebar-offcanvas" id="sidebar">
             <ul class="nav">
-                <li class="nav-item nav-category">ESS PORTAL</li>
+                <li class="nav-item nav-category">CLIENT'S SELF SERVICE PORTAL</li>
+                {% if stage == 'Lead' %}
                 <li class="nav-item">
                     <a class="nav-link" href="{% url 'dashboard' %}" max="1">
                         <span class="icon-bg"><i class="las la-grip-horizontal nav_icon"></i></span>
                         <span class="menu-title">Dashboard</span>
                     </a>
                 </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'appointments' %}">
+                        <span class="icon-bg"><i class="las la-calendar-plus"></i></span>
+                        <span class="menu-title">Appointments</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">
+                        <span class="icon-bg"><i class="las la-poll"></i></span>
+                        <span class="menu-title">Survey</span>
+                    </a>
+                </li>
+                <li class="nav-item sidebar-user-actions" style="margin-top:.1rem;">
+                    <div class="sidebar-user-menu">
+                        <a href="{% url 'logout' %}" class="nav-link"><i class="las la-sign-out-alt"></i>
+                            <span class="menu-title">Sign Out</span></a>
+                    </div>
+                </li>
+                <li class="nav-item documentation-link" style="margin-top:-.8rem !important;">
+                    <a class="nav-link" href="#">
+                        <span class="icon-bg">
+                            <i class="las la-external-link-alt"></i>
+                        </span>
+                        <span class="menu-title" style="font-size: 12px !important">{{today}} <span
+                                id="timer"></span></span>
+                    </a>
+                </li>
+                {% else %}
                 <li class="nav-item">
                     <a class="nav-link" data-toggle="collapse" href="#hr" aria-expanded="false"
                         aria-controls="ui-basic">
@@ -138,25 +215,25 @@
                 </li>
 
                 <li class="nav-item">
-                    <a class="nav-link" href="{% url 'approve' %}">
+                    <a class="nav-link" href="#">
                         <span class="icon-bg"><i class="las la-wallet"></i></span>
                         <span class="menu-title">Balance Enquiry</span>
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="{% url 'approve' %}">
+                    <a class="nav-link" href="{% url 'appointments' %}">
                         <span class="icon-bg"><i class="las la-calendar-plus"></i></span>
                         <span class="menu-title">Appointments</span>
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="{% url 'approve' %}">
+                    <a class="nav-link" href="#">
                         <span class="icon-bg"><i class="las la-poll"></i></span>
                         <span class="menu-title">Survey</span>
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="{% url 'approve' %}">
+                    <a class="nav-link" href="#">
                         <span class="icon-bg"><i class="las la-user"></i></span>
                         <span class="menu-title">Profile</span>
                     </a>
@@ -184,6 +261,7 @@
                                 id="timer"></span></span>
                     </a>
                 </li>
+                {% endif %}
             </ul>
         </nav>
         <div class="main-panel">

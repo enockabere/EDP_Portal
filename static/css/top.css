@@ -1,13 +1,20 @@
+@import url('https://fonts.googleapis.com/css2?family=Gelasio&family=Titillium+Web:wght@200&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Nunito&family=Poppins&display=swap');
 :root {
-    --first-color: #144a85;
+    --first: #008080;
+    --green: #04fb14;
     --first-color-light: #6c8aaf;
-    --green-color: #25CC88;
+    --green-color: #134326;
     --red-color: #e51e25;
     --sand-tan: #e1b382;
     --dark-color: #444a4a;
+    --dark:#3a3e3c;
     --olive: #A3BCB6;
     --white-color: #F7F6FB;
-
+    --primary-font: 'Gelasio', serif;
+    --normal-font: 'Titillium Web', sans-serif;
+    --nunito: 'Nunito', sans-serif;
+    --poppins: 'Poppins', sans-serif;
 }
 
 #drops {
@@ -94,6 +101,13 @@ ul.breadcrumb li a:hover {
     color: #fff;
     border: none !important;
 }
+
+.l-bg-original {
+    background: linear-gradient(to right, #078a8a, #565756) !important;
+    font-family: var(--nunito);
+    border: none !important;
+}
+
 
 .l-bg-green-dark {
     background: linear-gradient(to right, rgb(221, 220, 220), #86d6d6) !important;

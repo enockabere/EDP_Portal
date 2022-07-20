@@ -1,20 +1,20 @@
 @import url('https://fonts.googleapis.com/css2?family=Gelasio&family=Titillium+Web:wght@200&display=swap');
-
+@import url('https://fonts.googleapis.com/css2?family=Nunito&family=Poppins&display=swap');
 :root {
-    --header-height: 3rem;
-    --nav-width: 76px;
-    --first-color: #144a85;
+    --first: #008080;
+    --green: #04fb14;
     --first-color-light: #6c8aaf;
     --green-color: #134326;
     --red-color: #e51e25;
     --sand-tan: #e1b382;
     --dark-color: #444a4a;
+    --dark:#3a3e3c;
     --olive: #A3BCB6;
     --white-color: #F7F6FB;
-    --normal-font-size: 1rem;
-    --z-fixed: 100;
     --primary-font: 'Gelasio', serif;
     --normal-font: 'Titillium Web', sans-serif;
+    --nunito: 'Nunito', sans-serif;
+    --poppins: 'Poppins', sans-serif;
 }
 @media (max-width: 442px) {
    .timer{
@@ -73,18 +73,8 @@ h1 {
     color: var(--green-color);
 }
 
-input {
-    padding: 10px;
-    width: 100%;
-    font-size: 17px;
-    font-family: var(--normal-font);
-    border: 1px solid var(--dark-color);
-}
 
-/* Mark input boxes that gets an error on validation: */
-input.invalid {
-    background-color: #ffdddd;
-}
+
 
 /* Hide all steps by default: */
 .tab {
@@ -94,7 +84,7 @@ input.invalid {
 button {
     background-color: var(--first-color);
     color: #ffffff;
-    font-family: var(--normal-font);
+    font-family: var(--nunito);
     border: 1px solid var(--first-color);
     padding: 10px 20px;
     font-size: 17px;
@@ -108,7 +98,7 @@ button:hover {
 
 #prevBtn {
     background-color: var(--sand-tan);
-    font-family: var(--normal-font);
+    font-family: var(--nunito);
     color: #000;
 }
 
@@ -273,7 +263,29 @@ button:hover {
     text-transform: uppercase;
     letter-spacing: 1px;
 }
+.login-form .btn,
+.login-form .btn:active {
+    font-size: 16px;
+    font-weight: bold;
+    background: var(--first) !important;
+    border-radius: 3px;
+    border: none;
+    min-width: 140px;
+}
+.login-form label {
+    font-weight: normal;
+    font-size: 13px;
+}
 
+.login-form .btn:hover,
+.login-form .btn:focus {
+    background: var(--dark) !important;
+}
+
+.login-form a {
+    color: var(--green);
+    text-decoration: none;
+}
 ul.tasks .task-title {
     font-size: 13px;
     display: inline-block;
@@ -354,4 +366,139 @@ ul.tasks::after {
   z-index: 1;
   overflow: hidden;
   transition: 0.7s;
+}.n-login {
+    height: 100vh;
+    width: 100%;
+    overflow-x: hidden;
+}
+
+#n-left {
+    background-color: var(--first);
+    min-height: 100vh;
+}
+
+#n-right1 {
+    background-color: whitesmoke;
+}
+
+#n-right2 {
+    background-color: whitesmoke;
+    display: none;
+}
+
+.n-icon {
+    margin-top: 75px;
+}
+
+.brand {
+    margin-top: 10px;
+}
+
+.brand h2 {
+    color: rgb(238, 236, 236);
+    font-size: 1.6rem;
+    font-weight: 300;
+    font-style: normal;
+    line-height: 50px;
+    text-shadow: 0 1px 0 var(--first);
+    font-family: var(--poppins)
+}
+
+.br-brand {
+    font-weight: bold;
+    color: #CACFD2;
+    text-shadow: 0 1px 0 var(--first-color-light);
+}
+
+.l-text {
+    margin-top: 20px;
+    padding: 10px;
+}
+
+.l-text p {
+    font-family: var(--nunito);
+    font-style: regular;
+    font-size: 16px;
+    align-items: flex-end;
+    text-shadow: 0 1px 0 var(--first);
+    color: white;
+}
+
+.l-image img {
+    max-width: 200px;
+    height: 200px;
+}
+
+@media screen and (min-width: 1400px) {
+    .l-image img {
+        max-width: 400px;
+    }
+}
+
+.logo {
+    margin-top: 40px;
+}
+
+.logo img {
+    width: 180px;
+    height: auto;
+}
+.form-text {
+    margin-top: 70px;
+    margin-left: 85px;
+}
+
+.form-text h3 {
+    font-family: var(--nunito);
+    font-weight: 700;
+    font-style: normal;
+    font-size: 26px;
+    color: var(--primary-color);
+    line-height: 40px;
+    text-transform: uppercase;
+}
+
+.form-text p {
+    font-family: var(--nunito);
+    font-weight: 400;
+    font-style: normal;
+    font-size: 16px;
+    color: #17171F;
+    line-height: 24px;
+}
+
+.l-form {
+    margin-top: 20px;
+    margin-left: 85px;
+    padding-right: 50px;
+}
+
+label {
+    font-family: var(--nunito);
+    font-style: normal;
+    font-weight: 400;
+    font-size: 12px;
+    line-height: 18px;
+    color: #60606A;
+}
+#re-div {
+    border: 1px solid var(--green-color);
+    overflow: visible;
+    text-align: center;
+    opacity: 1;
+    margin-right: 35%;
+    margin-left: 35%;
+}
+
+#re-div:after {
+    background: whitesmoke;
+    font-family: var(--nunito);
+    font-weight: 400;
+    font-size: 12px;
+    content: 'OR';
+    padding: 0 10px;
+    position: relative;
+    top: -13px;
+    color: #60606A;
+    opacity: 1;
 }

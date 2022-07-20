@@ -15,7 +15,16 @@
 
             </div>
         </div>
+        {% if stage == 'Lead' %}
+        {% include 'main/lead.html' %}
 
+        {% elif stage == 'Documentation' %}
+
+        {% include 'main/documentation.html' %}
+
+        {% elif stage == 'application' %}
+        {% include 'main/application.html' %}
+        {% else %}
         <div class="row py-3 gx-2">
             <div class="col-xl-3 col-lg-6 col-sm-6 grid-margin stretch-card">
                 <div class="card l-bg-green-dark">
@@ -140,6 +149,7 @@
                 </div>
             </div>
         </div>
+        {% endif %}
     </div>
 
 </section>

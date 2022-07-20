@@ -161,6 +161,8 @@ def dashboard(request):
             claim_app = len(AppClaim)
             claim_rej = len(RejClaim)
 
+            stage = 'Documentation'
+
             purchase_open = len(openPurchase)
             purchase_app = len(AppPurchase)
             purchase_rej = len(RejPurchase)
@@ -180,6 +182,11 @@ def dashboard(request):
             train_open = len(openTraining)
             train_app = len(AppTraining)
             train_rej = len(RejTraining)
+
+            # Location
+            url = 'https://ipinfo.io/json'
+            Location_response = requests.get(url, timeout=10).json()
+            Coordinates = Location_response['loc']
 
         except requests.exceptions.ConnectionError as e:
             print(e)
@@ -219,7 +226,8 @@ def dashboard(request):
             "app_purchase": purchase_app, "rej_purchase": purchase_rej,
             "open_repair": repair_open, "app_repair": repair_app,
             "rej_repair": repair_rej, "open_store": store_open,
-            "app_store": store_app, "rej_store": store_rej
+            "app_store": store_app, "rej_store": store_rej, 
+            "stage":stage, "Coordinates":Coordinates,
             }
     except KeyError as e:
         messages.success(request, "Session Expired. Please Login")

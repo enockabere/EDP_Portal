@@ -528,28 +528,30 @@ a.btn.disabled,
 fieldset:disabled a.btn {
   pointer-events: none;
 }
+
 .btn-successs{
   color: #fff;
+  font-weight: bolder !important;
   font-size: 15px !important;
-  background-color: #46c35f !important;
-  border-color: #46c35f !important;
+  background-color: #0cb317 !important;
+  border-color: #0cb317 !important;
 }
 .btn-successs:hover{
   color: #fff;
-  background-color: #144a85 !important;
-  border-color: #144a85 !important;
+  background-color: #008080 !important;
+  border-color: #008080 !important;
 }
 
 .btn-primary {
   color: #fff;
-  background-color: #144a85 !important;
-  border-color: #144a85 !important;
+  background-color: #008080 !important;
+  border-color: #008080 !important;
 }
 
 .btn-primary:hover {
   color: #fff;
-  background-color: #0053d9;
-  border-color: #004ecc;
+  background-color: #008080;
+  border-color: #008080;
 }
 
 .btn-primary:focus,

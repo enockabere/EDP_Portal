@@ -7,6 +7,8 @@
     --red-color: #e51e25;
     --sand-tan: #e1b382;
     --dark-color: #444a4a;
+    --neon: #35ff14;
+    --teal-color: #008080;
     --olive: #A3BCB6;
     --white-color: #F7F6FB;
     --primary-font: 'Gelasio', serif;
@@ -28,15 +30,15 @@
 
 /* btns */
 .dropBtn {
-    background-color: var(--first-color);
+    background-color: var(--teal-color);
     font-family: var(--body-font);
-    border: 1px solid var(--first-color);
+    border: 1px solid var(--teal-color);
     color: var(--white-color)
 }
 
 .dropBtn:hover {
-    background-color: var(--first-color);
-    border: 1px solid var(--first-color);
+    background-color: var(--teal-color);
+    border: 1px solid var(--teal-color);
     color: var(--white-color)
 }
 
@@ -93,7 +95,7 @@
 }
 
 .modal-header {
-    background: #134326;
+    background: #008080;
     color: white;
 }
 
@@ -107,26 +109,25 @@
 
 .table thead {
     height: 3rem;
-    background: var(--first-color);
+    background: var(--teal-color);
 }
 
 .table thead tr th {
     color: white;
-    text-shadow: 0 1px 0 var(--first-color);
+    text-shadow: 0 1px 0 var(--teal-color);
     font-weight: bold;
 
 }
 
 .page-link {
-    color: var(--dark-color) !important;
+    color: var(--teal-color) !important;
 }
 
 .page-item.active .page-link {
-    background-color: var(--olive) !important;
-    border: 1px solid var(--olive);
-    color: white;
+    background-color: var(--teal-color) !important;
+    border: .5px solid var(--teal-color);
+    color: white !important;
 }
-
 
 .table tbody tr td {
     color: #222;
@@ -138,13 +139,13 @@
 }
 
 div.dataTables_filter input {
-    border-color: var(--first-color);
+    border-color: var(--teal-color);
     display: none;
 }
 
 @media screen and (max-width:375px) {
     div.dataTables_filter input {
-        border-color: var(--first-color);
+        border-color: var(--teal-color);
     }
 }
 

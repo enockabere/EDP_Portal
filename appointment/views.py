@@ -14,7 +14,7 @@ from django.http import HttpResponse
 # Create your views here.
 
 
-def Approve(request):
+def appointment(request):
     try:
         fullname = request.session['User_ID']
         year = request.session['years']
@@ -53,7 +53,7 @@ def Approve(request):
     except KeyError:
         messages.info(request, "Session Expired. Please Login")
         return redirect('auth')       
-    return render(request, 'Approve.html', ctx)
+    return render(request, 'appointment.html', ctx)
 
 
 def ApproveDetails(request, pk):

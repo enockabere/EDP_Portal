@@ -55,6 +55,11 @@ def login_request(request):
             return redirect('auth')
     ctx = {"year": year}
     return render(request, 'auth.html', ctx)
+def register_request(request):
+    url = 'https://ipinfo.io/json'
+    response = requests.get(url, timeout=10).json()
+    print(response['loc'])
+    return render(request,'register.html')
 def logout(request):
     try:
         del request.session['User_ID']
