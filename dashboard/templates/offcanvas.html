@@ -187,6 +187,12 @@
                 </li>
                 {% else %}
                 <li class="nav-item">
+                    <a class="nav-link" href="{% url 'dashboard' %}" max="1">
+                        <span class="icon-bg"><i class="las la-grip-horizontal nav_icon"></i></span>
+                        <span class="menu-title">Dashboard</span>
+                    </a>
+                </li>
+                <li class="nav-item">
                     <a class="nav-link" data-toggle="collapse" href="#hr" aria-expanded="false"
                         aria-controls="ui-basic">
                         <span class="icon-bg"><i class="las la-hand-holding-usd"></i></span>
@@ -201,7 +207,7 @@
                                     Loan Calculator
                                 </a>
                             </li>
-                            <li class="nav-item"> <a class="nav-link" href="{% url 'leave' %}"><i
+                            <li class="nav-item"> <a class="nav-link" href="{% url 'loan' %}"><i
                                         class="las la-arrow-right mr-2"></i> New Loan</a>
                             </li>
                             <li class="nav-item"> <a class="nav-link" href="{% url 'training_request' %}"><i

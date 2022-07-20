@@ -175,7 +175,7 @@ def FnDeleteLeavePlannerLine(request, pk):
     return redirect('PlanDetail', pk=pk)
 
 
-def Leave_Request(request):
+def Loan_Request(request):
     try:
         fullname = request.session['User_ID']
         year = request.session['years']
@@ -234,7 +234,7 @@ def Leave_Request(request):
     except KeyError:
         messages.info(request, "Session Expired. Please Login")
         return redirect('auth')
-    return render(request, 'leave.html', ctx)
+    return render(request, 'loan.html', ctx)
 
 
 def CreateLeave(request):

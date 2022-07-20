@@ -10,7 +10,7 @@ urlpatterns = [
     path('FnDeleteLeavePlannerLine/<str:pk>',
          views.FnDeleteLeavePlannerLine, name='FnDeleteLeavePlannerLine'),
 
-    path('leave', views.Leave_Request, name="leave"),
+    path('loan/request', views.Loan_Request, name="loan"),
     path('CreateLeave', views.CreateLeave, name="CreateLeave"),
     path('leave/detail/<str:pk>', views.LeaveDetail, name='LeaveDetail'),
     path('LeaveApprove/<str:pk>', views.LeaveApproval, name='LeaveApprove'),

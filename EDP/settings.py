@@ -80,7 +80,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'dashboard',
     'bootstrap5',
-    'HR',
+    'loans',
     'Finance',
     'Procurement',
     'appointment',

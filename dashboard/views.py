@@ -161,7 +161,7 @@ def dashboard(request):
             claim_app = len(AppClaim)
             claim_rej = len(RejClaim)
 
-            stage = 'application'
+            stage = 'customer'
 
             purchase_open = len(openPurchase)
             purchase_app = len(AppPurchase)
