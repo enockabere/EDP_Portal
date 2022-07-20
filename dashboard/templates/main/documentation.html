@@ -52,34 +52,78 @@
             </div>
             <hr>
             <h5 class="mb-0">Make Document Attachment</h5>
-            <div class="card">
+            <div class="card p-3 my-3">
                 <form>
-                    <div class="mb-3">
-                        <label for="exampleInputEmail1" class="form-label">Email address</label>
-                        <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
-                        <div id="emailHelp" class="form-text">We'll never share your email with anyone else.</div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <label class="form-label">Attachment <span class="text-danger">*</span></label>
+                            <select class="form-select" name="">
+                                <option class="after" value="" disabled selected>--Select--</option>
+                            </select>
+                        </div>
                     </div>
-                    <div class="mb-3">
-                        <label for="exampleInputPassword1" class="form-label">Password</label>
-                        <input type="password" class="form-control" id="exampleInputPassword1">
-                    </div>
-                    <div class="mb-3 form-check">
-                        <input type="checkbox" class="form-check-input" id="exampleCheck1">
-                        <label class="form-check-label" for="exampleCheck1">Check me out</label>
+                    <div class="row my-2">
+                        <div class="col-md-12">
+                            <label class="form-label">File <span class="text-danger">*</span></label>
+                            <input type="file" class="form-control">
+                        </div>
                     </div>
                     <button type="submit" class="btn btn-primary">Submit</button>
+
                 </form>
             </div>
+            <div class="accordion" id="accordionExample">
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="headingOne">
+                        <button class="accordion-button text-info" type="button" data-bs-toggle="collapse"
+                            data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                            My Attachments
+                        </button>
+                    </h2>
+                    <div id="collapseOne" class="accordion-collapse collapse" aria-labelledby="headingOne"
+                        data-bs-parent="#accordionExample">
+                        <div class="accordion-body">
+                            <ul class="inbox-wid list-unstyled">
+                                {% for response in file %}
+                                <form action="" method="post">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="attachmentID" value="{{response.AuxiliaryIndex2}}">
+                                    <input type="hidden" name="File_Name" value="{{response.File_Name}}">
+                                    <input type="hidden" name="File_Extension" value="{{response.File_Extension}}">
+                                    <li class="inbox-list-item">
+                                        <button type="submit" data-toggle="tooltip" data-placement="top"
+                                            title="Click to Download">
+                                            <div class="media" style="display: flex;">
+                                                <div class="media-body">
+                                                    <h5 class="font-size-16 mb-1">
+                                                        <i class="fas fa-download me-2 text-success"></i>
+                                                        {{response.File_Name}}.{{response.File_Extension}}
+                                                    </h5>
+                                                </div>
+                                            </div>
+                                        </button>
+                                    </li>
+                                    <hr style="margin-top:-.5rem">
+                                </form>
+                                {% empty %}
+                                <p class="text-danger">
+                                    You have not attached any document<i class="las la-file-download"></i>
+                                </p>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    </div>
+                </div>
 
+            </div>
         </div>
     </div>
-</div>
-<script>
-    $(document).ready(function () {
-        var Coordinates = '{{Coordinates}}'
-        console.log(Coordinates)
-        detailUrl = 'https://maps.google.com/maps?q=' + Coordinates +
-            '&t=&z=13&ie=UTF8&iwloc=&output=embed';
-        $("#gmap_canvas").attr('src', detailUrl);
-    });
-</script>
+    <script>
+        $(document).ready(function () {
+            var Coordinates = '{{Coordinates}}'
+            console.log(Coordinates)
+            detailUrl = 'https://maps.google.com/maps?q=' + Coordinates +
+                '&t=&z=13&ie=UTF8&iwloc=&output=embed';
+            $("#gmap_canvas").attr('src', detailUrl);
+        });
+    </script>

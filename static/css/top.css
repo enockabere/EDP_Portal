@@ -114,10 +114,19 @@ ul.breadcrumb li a:hover {
     border: none !important;
     color: #fff;
 }
-
+.l-bg-dark {
+    background: linear-gradient(to right, rgb(221, 220, 220), #008080) !important;
+    border: none !important;
+    color: rgb(48, 47, 47);
+}
 .l-bg-orange-dark {
     background: linear-gradient(to right, rgb(221, 220, 220), #bbd6b7) !important;
     color: #fff;
+    border: none !important;
+}
+.l-orange{
+    background: linear-gradient(to right, rgb(221, 220, 220), #04fb14) !important;
+    color: rgb(70, 70, 70);
     border: none !important;
 }
 

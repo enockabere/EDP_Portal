@@ -18,7 +18,7 @@
                 <i class="mdi mdi-apps" style="color: #134326; font-size: 1.6rem"></i>
             </button>
             <ul class="navbar-nav navbar-nav-right">
-                {% if stage == 'Lead' %}
+                {% if stage == 'Lead' or stage == 'Documentation' or stage == 'application' %}
                 <li class="nav-item nav-profile dropdown">
                     <a class="nav-link dropdown-toggle" id="profileDropdown" href="#" data-toggle="dropdown"
                         aria-expanded="false">
@@ -150,8 +150,8 @@
         <!-- sidebar -->
         <nav class="sidebar sidebar-offcanvas" id="sidebar">
             <ul class="nav">
-                <li class="nav-item nav-category">CLIENT'S SELF SERVICE PORTAL</li>
-                {% if stage == 'Lead' %}
+                <li class="nav-item nav-category">CLIENT'S SELF SERVICE</li>
+                {% if stage == 'Lead' or stage == 'Documentation' or stage == 'application'  %}
                 <li class="nav-item">
                     <a class="nav-link" href="{% url 'dashboard' %}" max="1">
                         <span class="icon-bg"><i class="las la-grip-horizontal nav_icon"></i></span>

@@ -7,8 +7,8 @@ from django.conf.urls.static import static
 urlpatterns = [
     path('dashboard', views.dashboard, name="dashboard"),
     path('canvas', views.Canvas, name="canvas"),
-    path('details/<str:pk>/', views.details, name="details")
-
+    path('details/<str:pk>/', views.details, name="details"),
+    path('application/details', views.ApplicationDetails, name="ApplicationDetails"),
 ]
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL,

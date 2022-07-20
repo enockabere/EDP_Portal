@@ -161,7 +161,7 @@ def dashboard(request):
             claim_app = len(AppClaim)
             claim_rej = len(RejClaim)
 
-            stage = 'Documentation'
+            stage = 'application'
 
             purchase_open = len(openPurchase)
             purchase_app = len(AppPurchase)
@@ -234,6 +234,10 @@ def dashboard(request):
         return redirect('auth')
     return render(request, 'main/dashboard.html', ctx)
 
+def ApplicationDetails(request):
+    stage = 'application'
+    ctx = {"stage":stage}
+    return render(request,'main/AppDetails.html',ctx)
 
 def details(request, pk):
 
