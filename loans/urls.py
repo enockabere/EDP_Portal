@@ -3,26 +3,16 @@ from django.urls import path
 from . import views
 
 urlpatterns = [
-    path('dashboard/leave/Planner', views.Leave_Planner, name="LeavePlanner"),
-    path('CreatePlanner', views.CreatePlanner, name="CreatePlanner"),
-    path('PlanDetail/<str:pk>', views.PlanDetail, name='PlanDetail'),
-    path('PlannerLine/<str:pk>', views.CreatePlannerLine, name='PlannerLine'),
-    path('FnDeleteLeavePlannerLine/<str:pk>',
-         views.FnDeleteLeavePlannerLine, name='FnDeleteLeavePlannerLine'),
+    path('loan/calculator', views.Loan_Calculator, name="Loan_Calculator"),
+
 
     path('loan/request', views.Loan_Request, name="loan"),
-    path('CreateLeave', views.CreateLeave, name="CreateLeave"),
-    path('leave/detail/<str:pk>', views.LeaveDetail, name='LeaveDetail'),
-    path('LeaveApprove/<str:pk>', views.LeaveApproval, name='LeaveApprove'),
-    path('LeaveCancel/<str:pk>', views.LeaveCancelApproval, name='LeaveCancel'),
-    path('FnGenerateLeave/<str:pk>', views.FnGenerateLeaveReport,
-         name='FnGenerateLeaveReport'),
-    path('UploadLeaveAttachment/<str:pk>', views.UploadLeaveAttachment,
-         name='UploadLeaveAttachment'),
+    path('loan/detail', views.LoanDetail, name='LoanDetail'),
 
 
-    path('training', views.Training_Request, name='training_request'),
-    path('training/detail/<str:pk>', views.TrainingDetail, name='TrainingDetail'),
+
+    path('loan/topUp', views.TopUpsRequest, name='TopUpsRequest'),
+    path('topUp/detail', views.TopUpDetail, name='TopUpDetail'),
     path('TrainApprove/<str:pk>', views.TrainingApproval, name='TrainApprove'),
     path('TrainCancel/<str:pk>', views.TrainingCancelApproval, name='TrainCancel'),
     path('TrainingRequest', views.CreateTrainingRequest,

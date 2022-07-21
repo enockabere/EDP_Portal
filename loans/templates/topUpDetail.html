@@ -1,0 +1,166 @@
+{% extends 'offcanvas.html' %}
+{% load bootstrap5 %}
+{% load static %}
+{% block main %}
+
+<section class="dash2">
+    <div class="content-wrapper">
+        <div class="d-xl-flex justify-content-between align-items-start">
+            <h2 class="text-dark font-weight-bold mb-2"> Loan Top UP Details
+            </h2>
+
+            <div class="d-sm-flex justify-content-xl-between align-items-center mb-2">
+                <div class="dropdown ml-0 ml-md-4 mt-2 mt-lg-0">
+                    <button class="btn btn-successs" data-bs-toggle="modal" data-bs-target="#Attachment"> <i
+                            class="fas fa-upload mr-1"></i> Upload Attachment</button>
+                </div>
+            </div>
+        </div>
+        <!--alert -->
+        {% include 'alerts.html' %}
+        <div class="row">
+            <div class="col-md-12">
+                <div class="d-grid gap-2 d-md-block">
+                    <button class="btn btn-primary my-2" type="button" data-bs-toggle="modal"
+                        data-bs-target="#staticBackdrop"><i class="las la-plus"></i> Add School Enrollment
+                        History</button>
+                    <button class="btn btn-primary" type="button"><i class="las la-plus"></i> Add School Pass
+                        Rate</button>
+                    <button class="btn btn-primary" type="button"><i class="las la-plus"></i> Add School Project
+                        Details</button>
+                    <button class="btn btn-primary" type="button"><i class="las la-plus"></i> Add School
+                        Revenue</button>
+                    <button class="btn btn-primary" type="button"><i class="las la-plus"></i> Add School
+                        Expenses</button>
+                    <button class="btn btn-primary my-2" type="button"><i class="las la-plus"></i> Add School Transport
+                        Details</button>
+                    <button class="btn btn-primary" type="button"><i class="las la-plus"></i> Add School Assets</button>
+                    <button class="btn btn-primary" type="button"><i class="las la-plus"></i> Add School
+                        Liabilities</button>
+                    <button class="btn btn-primary" type="button"><i class="las la-plus"></i> Add School
+                        Commitments</button>
+                    <button class="btn btn-primary" type="button"><i class="las la-plus"></i> Add Security
+                        Provided</button>
+                    <button class="btn btn-primary" type="button"><i class="las la-plus"></i> Add Vehicle Security
+                        Details</button>
+                    <button class="btn btn-primary" type="button"><i class="las la-plus"></i> Add Property Security
+                        Details</button>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <form class="row g-3">
+                    <div class="col-md-6">
+                        <label class="form-label">Testing</label>
+                        <input type="text" class="form-control" placeholder="Testing" readonly>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Testing</label>
+                        <input type="text" class="form-control" placeholder="Testing" readonly>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Testing</label>
+                        <input type="text" class="form-control" placeholder="Testing" readonly>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Testing</label>
+                        <input type="text" class="form-control" placeholder="Testing" readonly>
+                    </div>
+                    <div class="col-md-12">
+                        <label class="form-label">Testing</label>
+                        <input type="text" class="form-control" placeholder="Testing" readonly>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div class="row mt-4">
+            <div class="col-md-12">
+                <div class="card" id="d-card">
+                    <h4 class="mt-2 mx-2 text-dark">School Enrollment
+                        History</h4>
+                    <div class="card-body">
+                        <table id="example"
+                            class="display table table-striped table-bordered dt-responsive table-responsive-lg"
+                            style="width:100%">
+                            <thead>
+                                <tr id="tops">
+                                    <th id="long">School Name</th>
+                                    <th>School Detail A</th>
+                                    <th>School Detail B</th>
+                                    <th>School Detail C</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Kenya High</td>
+                                    <td>Detail X</td>
+                                    <td>Detail Y</td>
+                                    <td>Detail Z</td>
+                                    <td>
+                                        <form action="" method="post" style="display: inline-block;">
+                                            {% csrf_token %}
+                                            <input type="hidden" name="lineNo" value="{{res.Line_No}}">
+                                            <button type="submit" class="btn btn-danger" data-toggle="tooltip"
+                                                data-placement="top" title="Delete"><i class="fas fa-trash-alt"></i>
+                                            </button>
+                                        </form>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row my-3 pb-3">
+            <div class="d-grid gap-2 d-md-block">
+                <div style="display: inline-block;">
+                    <form id="myForm" action="" method="post">
+                        {% csrf_token %}
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="col-md-12 my-2">
+                                    <input type="hidden" class="form-control" name="entryNo" value="{{res.Entry_No_}}">
+                                </div>
+                            </div>
+                        </div>
+                        <button class="btn btn-successs" type="submit">Submit
+                            Application <i class="las la-angle-double-right"></i></button>
+                    </form>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal fade" id="Attachment" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Upload Attachment</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form action="" method="post" class="myForm" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <div class=" mb-3">
+                            <label class="form-label">Attachments</label>
+                            <input class="form-control" name="attachment" type="file" multiple>
+                        </div>
+
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+
+{% endblock %}

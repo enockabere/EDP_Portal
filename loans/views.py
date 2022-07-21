@@ -19,7 +19,7 @@ import string
 # Create your views here.
 
 
-def Leave_Planner(request):
+def Loan_Calculator(request):
     try:
         fullname = request.session['User_ID']
         year = request.session['years']
@@ -43,7 +43,7 @@ def Leave_Planner(request):
     except KeyError as e:
         messages.info(request, "Session Expired. Please Login")
         return redirect('auth')
-    return render(request, 'planner.html', ctx)
+    return render(request, 'calculator.html', ctx)
 
 
 def CreatePlanner(request):
@@ -66,44 +66,6 @@ def CreatePlanner(request):
             messages.error(request, e)
             print(e)
     return redirect('LeavePlanner')
-
-
-def PlanDetail(request, pk):
-    fullname = request.session['User_ID']
-    year = request.session['years']
-    session = requests.Session()
-    session.auth = config.AUTHS
-    res = ''
-    state = ''
-    Access_Point = config.O_DATA.format("/QyLeavePlannerHeaders")
-    try:
-        response = session.get(Access_Point, timeout=10).json()
-        openPlan = []
-        Pending = []
-        for plan in response['value']:
-            if plan['Employee_No_'] == request.session['Employee_No_']:
-                output_json = json.dumps(plan)
-                openPlan.append(json.loads(output_json))
-                for claim in openPlan:
-                    if claim['No_'] == pk:
-                        res = claim
-    except requests.exceptions.ConnectionError as e:
-        print(e)
-    Lines_Res = config.O_DATA.format("/QyLeavePlannerLines")
-    try:
-        responses = session.get(Lines_Res, timeout=10).json()
-        openLines = []
-        for train in responses['value']:
-            if train['Document_No_'] == pk and train['Employee_No_'] == request.session['Employee_No_']:
-                output_json = json.dumps(train)
-                openLines.append(json.loads(output_json))
-    except requests.exceptions.ConnectionError as e:
-        print(e)
-    todays_date = dt.datetime.now().strftime("%b. %d, %Y %A")
-    ctx = {"today": todays_date, "res": res,
-           "year": year, "full": fullname,
-           "line": openLines}
-    return render(request, 'planDetails.html', ctx)
 
 
 def FnSubmitLeavePlanner(request, pk):
@@ -270,75 +232,19 @@ def CreateLeave(request):
             print(e)
     return redirect('leave')
 
-def LeaveDetail(request, pk):
+def LoanDetail(request):
     try:
         fullname = request.session['User_ID']
         year = request.session['years']
         session = requests.Session()
         session.auth = config.AUTHS
-        res = ''
-        state = ''
-        Access_Point = config.O_DATA.format("/QyLeaveApplications")
-        Approver = config.O_DATA.format("/QyApprovalEntries")
-        Ledger = config.O_DATA.format("/QyLeaveLedgerEntries")
-        try:
-            response = session.get(Access_Point, timeout=10).json()
-            res_approver = session.get(Approver, timeout=10).json()
-            res_Ledger = session.get(Ledger, timeout=10).json()
-            openClaim = []
-            Approvers = []
-            Pending = []
-            Ledgers = []
-            for approver in res_approver['value']:
-                if approver['Document_No_'] == pk:
-                    output_json = json.dumps(approver)
-                    Approvers.append(json.loads(output_json))
-            for claim in response['value']:
-                if claim['Status'] == 'Released' and claim['User_ID'] == request.session['User_ID']:
-                    output_json = json.dumps(claim)
-                    openClaim.append(json.loads(output_json))
-                    for claim in openClaim:
-                        if claim['Application_No'] == pk:
-                            res = claim
-                            if claim['Status'] == 'Released':
-                                state = 3
-                if claim['Status'] == 'Open' and claim['User_ID'] == request.session['User_ID']:
-                    output_json = json.dumps(claim)
-                    openClaim.append(json.loads(output_json))
-                    for claim in openClaim:
-                        if claim['Application_No'] == pk:
-                            request.session['Leave_Period'] = claim['Leave_Period']
-                            request.session['Leave_Code'] = claim['Leave_Code']
-                            res = claim
-                            if claim['Status'] == 'Open':
-                                state = 1
-                if claim['Status'] == 'Rejected' and claim['User_ID'] == request.session['User_ID']:
-                    output_json = json.dumps(claim)
-                    openClaim.append(json.loads(output_json))
-                    for claim in openClaim:
-                        if claim['Application_No'] == pk:
-                            res = claim
-                if claim['Status'] == "Pending Approval" and claim['User_ID'] == request.session['User_ID']:
-                    output_json = json.dumps(claim)
-                    Pending.append(json.loads(output_json))
-                    for claim in Pending:
-                        if claim['Application_No'] == pk:
-                            res = claim
-                            if claim['Status'] == 'Pending Approval':
-                                state = 2
-        except requests.exceptions.ConnectionError as e:
-            print(e)
-            messages.error(request,"500 Server Error, Try Again in a few")
-            return redirect('leave')
-
         todays_date = dt.datetime.now().strftime("%b. %d, %Y %A")
-        ctx = {"today": todays_date, "res": res,
-            "Approvers": Approvers, "state": state,
+        ctx = {"today": todays_date, 
             "year": year, "full": fullname}
     except KeyError:
         messages.info(request, "Session Expired. Please Login")
         return redirect('auth')
-    return render(request, 'leaveDetail.html', ctx)
+    return render(request, 'loanDetail.html', ctx)
 
 
 def UploadLeaveAttachment(request, pk):
@@ -415,7 +321,7 @@ def LeaveCancelApproval(request, pk):
     return redirect('LeaveDetail', pk=pk)
 
 
-def Training_Request(request):
+def TopUpsRequest(request):
     try:
         fullname = request.session['User_ID']
         year = request.session['years']
@@ -475,7 +381,7 @@ def Training_Request(request):
     except KeyError:
         messages.info(request, "Session Expired. Please Login")
         return redirect('auth')
-    return render(request, 'training.html', ctx)
+    return render(request, 'topUps.html', ctx)
 
 
 def CreateTrainingRequest(request):
@@ -511,96 +417,12 @@ def CreateTrainingRequest(request):
     return redirect('training_request')
 
 
-def TrainingDetail(request, pk):
+def TopUpDetail(request):
     session = requests.Session()
     session.auth = config.AUTHS
-    res = ''
-    state = ""
-    train_status = ""
-    Access_Point = config.O_DATA.format("/QyTrainingRequests")
-    Approver = config.O_DATA.format("/QyApprovalEntries")
-    destination = config.O_DATA.format("/QyDestinations")
-    try:
-        fullname = request.session['User_ID']
-        year = request.session['years']
-        response = session.get(Access_Point, timeout=10).json()
-        res_approver = session.get(Approver, timeout=10).json()
-        res_destination = session.get(destination, timeout=10).json()
-        openClaim = []
-        Approvers = []
-        Pending = []
-        Local = []
-        Foreign = []
-        for destinations in res_destination['value']:
-            if destinations['Destination_Type'] == 'Local':
-                output_json = json.dumps(destinations)
-                Local.append(json.loads(output_json))
-            if destinations['Destination_Type'] == 'Foreign':
-                output_json = json.dumps(destinations)
-                Foreign.append(json.loads(output_json))
-        for approver in res_approver['value']:
-            if approver['Document_No_'] == pk:
-                output_json = json.dumps(approver)
-                Approvers.append(json.loads(output_json))
-        for claim in response['value']:
-            if claim['Status'] == 'Released' and claim['Employee_No'] == request.session['Employee_No_']:
-                output_json = json.dumps(claim)
-                openClaim.append(json.loads(output_json))
-                for claim in openClaim:
-                    if claim['Request_No_'] == pk:
-                        res = claim
-                        if claim['Status'] == 'Released':
-                            state = 3
-            if claim['Status'] == 'Open' and claim['Employee_No'] == request.session['Employee_No_']:
-                output_json = json.dumps(claim)
-                openClaim.append(json.loads(output_json))
-                for claim in openClaim:
-                    if claim['Request_No_'] == pk:
-                        res = claim
-                        if claim['Status'] == 'Open':
-                            state = 1
-                        if claim['Adhoc'] == True:
-                            train_status = "Adhoc"
-            if claim['Status'] == 'Rejected' and claim['Employee_No'] == request.session['Employee_No_']:
-                output_json = json.dumps(claim)
-                openClaim.append(json.loads(output_json))
-                for claim in openClaim:
-                    if claim['Request_No_'] == pk:
-                        res = claim
-            if claim['Status'] == 'Pending Approval' and claim['Employee_No'] == request.session['Employee_No_']:
-                output_json = json.dumps(claim)
-                Pending.append(json.loads(output_json))
-                for claim in Pending:
-                    if claim['Request_No_'] == pk:
-                        res = claim
-                        if claim['Status'] == 'Pending Approval':
-                            state = 2
-    except requests.exceptions.ConnectionError as e:
-        print(e)
-        messages.error(request,"500 Server Error, Try Again in a few")
-        return redirect('training_request')
-    except KeyError:
-        messages.info(request, "Session Expired. Please Login")
-        return redirect('auth')
-    Lines_Res = config.O_DATA.format("/QyTrainingNeedsRequest")
-    try:
-        responseNeeds = session.get(Lines_Res, timeout=10).json()
-        openLines = []
-        for train in responseNeeds['value']:
-            if train['Source_Document_No'] == pk and train['Employee_No'] == request.session['Employee_No_']:
-                output_json = json.dumps(train)
-                openLines.append(json.loads(output_json))
-    except requests.exceptions.ConnectionError as e:
-        messages.error(request,e)
-        return redirect('training_request')
-
     todays_date = dt.datetime.now().strftime("%b. %d, %Y %A")
-    ctx = {"today": todays_date, "res": res,
-        "Approvers": Approvers, "state": state,
-        "year": year, "full": fullname,
-        "train_status": train_status, "line": openLines,
-        "local":Local,"foreign":Foreign}
-    return render(request, 'trainingDetail.html', ctx)
+    ctx = {"today": todays_date}
+    return render(request, 'topUpDetail.html', ctx)
 
 
 def FnAdhocTrainingNeedRequest(request, pk):

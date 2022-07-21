@@ -7,6 +7,7 @@ from django.conf import settings as config
 import datetime
 from django.contrib.sessions.models import Session
 from django.contrib import messages
+import datetime as dt
 # Create your views here.
 
 
@@ -14,236 +15,420 @@ def dashboard(request):
     try:
         session = requests.Session()
         session.auth = config.AUTHS
-
-        Access_Imprest = config.O_DATA.format("/Imprests")
-        Access_Leave = config.O_DATA.format("/QyLeaveApplications")
-        Access_Train = config.O_DATA.format("/QyTrainingRequests")
-        Access_Surrender = config.O_DATA.format("/QyImprestSurrenders")
-        Access_Claim = config.O_DATA.format("/QyStaffClaims")
-        Access_purchase = config.O_DATA.format("/QyPurchaseRequisitionHeaders")
-        Access_Repair = config.O_DATA.format("/QyRepairRequisitionHeaders")
-        Access_Store = config.O_DATA.format("/QyStoreRequisitionHeaders")
-
-        try:
-            Imprest = session.get(Access_Imprest, timeout=10).json()
-            Leave = session.get(Access_Leave, timeout=10).json()
-            Training = session.get(Access_Train, timeout=10).json()
-            Surrender = session.get(Access_Surrender, timeout=10).json()
-            Claim = session.get(Access_Claim, timeout=10).json()
-            Purchase = session.get(Access_purchase, timeout=10).json()
-            Repair = session.get(Access_Repair, timeout=10).json()
-            Store = session.get(Access_Store, timeout=10).json()
-
-            openLeave = []
-            AppLeave = []
-            RejLeave = []
-
-            openTraining = []
-            AppTraining = []
-            RejTraining = []
-
-            openImprest = []
-            AppImprest = []
-            RejImprest = []
-
-            openSurrender = []
-            AppSurrender = []
-            RejSurrender = []
-
-            openClaim = []
-            AppClaim = []
-            RejClaim = []
-
-            openPurchase = []
-            AppPurchase = []
-            RejPurchase = []
-
-            openRepair = []
-            AppRepair = []
-            RejRepair = []
-
-            openStore = []
-            AppStore = []
-            RejStore = []
-
-            for Leave in Leave['value']:
-                if Leave['Status'] == 'Open' and Leave['User_ID'] == request.session['User_ID']:
-                    output_json = json.dumps(Leave)
-                    openLeave.append(json.loads(output_json))
-                if Leave['Status'] == 'Released' and Leave['User_ID'] == request.session['User_ID']:
-                    output_json = json.dumps(Leave)
-                    AppLeave.append(json.loads(output_json))
-                if Leave['Status'] == 'Rejected' and Leave['User_ID'] == request.session['User_ID']:
-                    output_json = json.dumps(Leave)
-                    RejLeave.append(json.loads(output_json))
-
-            for Training in Training['value']:
-                if Training['Status'] == 'Open' and Training['Employee_No'] == request.session['Employee_No_']:
-                    output_json = json.dumps(Training)
-                    openTraining.append(json.loads(output_json))
-                if Training['Status'] == 'Released' and Training['Employee_No'] == request.session['Employee_No_']:
-                    output_json = json.dumps(Training)
-                    AppTraining.append(json.loads(output_json))
-                if Training['Status'] == 'Rejected' and Training['Employee_No'] == request.session['Employee_No_']:
-                    output_json = json.dumps(Training)
-                    RejTraining.append(json.loads(output_json))
-
-            for imprest in Imprest['value']:
-                if imprest['Status'] == 'Open' and imprest['User_Id'] == request.session['User_ID']:
-                    output_json = json.dumps(imprest)
-                    openImprest.append(json.loads(output_json))
-                if imprest['Status'] == 'Released' and imprest['User_Id'] == request.session['User_ID']:
-                    output_json = json.dumps(imprest)
-                    AppImprest.append(json.loads(output_json))
-                if imprest['Status'] == 'Rejected' and imprest['User_Id'] == request.session['User_ID']:
-                    output_json = json.dumps(imprest)
-                    RejImprest.append(json.loads(output_json))
-            for Surrender in Surrender['value']:
-                if Surrender['Status'] == 'Open' and Surrender['User_Id'] == request.session['User_ID']:
-                    output_json = json.dumps(imprest)
-                    openSurrender.append(json.loads(output_json))
-                if Surrender['Status'] == 'Released' and Surrender['User_Id'] == request.session['User_ID']:
-                    output_json = json.dumps(imprest)
-                    AppSurrender.append(json.loads(output_json))
-                if Surrender['Status'] == 'Rejected' and Surrender['User_Id'] == request.session['User_ID']:
-                    output_json = json.dumps(imprest)
-                    RejSurrender.append(json.loads(output_json))
-            for Claim in Claim['value']:
-                if Claim['Status'] == 'Open' and Claim['User_Id'] == request.session['User_ID']:
-                    output_json = json.dumps(imprest)
-                    openClaim.append(json.loads(output_json))
-                if Claim['Status'] == 'Released' and Claim['User_Id'] == request.session['User_ID']:
-                    output_json = json.dumps(imprest)
-                    AppClaim.append(json.loads(output_json))
-                if Claim['Status'] == 'Rejected' and Claim['User_Id'] == request.session['User_ID']:
-                    output_json = json.dumps(imprest)
-                    RejClaim.append(json.loads(output_json))
-            for Purchase in Purchase['value']:
-                if Purchase['Status'] == 'Open' and Purchase['Employee_No_'] == request.session['Employee_No_']:
-                    output_json = json.dumps(Purchase)
-                    openPurchase.append(json.loads(output_json))
-                if Purchase['Status'] == 'Released' and Purchase['Employee_No_'] == request.session['Employee_No_']:
-                    output_json = json.dumps(Purchase)
-                    AppPurchase.append(json.loads(output_json))
-                if Purchase['Status'] == 'Rejected' and Purchase['Employee_No_'] == request.session['Employee_No_']:
-                    output_json = json.dumps(Purchase)
-                    RejPurchase.append(json.loads(output_json))
-            for Repair in Repair['value']:
-                if Repair['Status'] == 'Open' and Repair['Requested_By'] == request.session['User_ID']:
-                    output_json = json.dumps(Repair)
-                    openRepair.append(json.loads(output_json))
-                if Repair['Status'] == 'Released' and Repair['Requested_By'] == request.session['User_ID']:
-                    output_json = json.dumps(Repair)
-                    AppRepair.append(json.loads(output_json))
-                if Repair['Status'] == 'Rejected' and Repair['Requested_By'] == request.session['User_ID']:
-                    output_json = json.dumps(Repair)
-                    RejRepair.append(json.loads(output_json))
-            for Store in Store['value']:
-                if Store['Status'] == 'Open' and Store['Requested_By'] == request.session['User_ID']:
-                    output_json = json.dumps(Store)
-                    openStore.append(json.loads(output_json))
-                if Store['Status'] == 'Released' and Store['Requested_By'] == request.session['User_ID']:
-                    output_json = json.dumps(Store)
-                    AppStore.append(json.loads(output_json))
-                if Store['Status'] == 'Rejected' and Store['Requested_By'] == request.session['User_ID']:
-                    output_json = json.dumps(Store)
-                    RejStore.append(json.loads(output_json))
-
-            imprest_open = len(openImprest)
-            imprest_app = len(AppImprest)
-            imprest_rej = len(RejImprest)
-
-            surrender_open = len(openSurrender)
-            surrender_app = len(AppSurrender)
-            surrender_rej = len(RejSurrender)
-
-            claim_open = len(openClaim)
-            claim_app = len(AppClaim)
-            claim_rej = len(RejClaim)
-
-            stage = 'customer'
-
-            purchase_open = len(openPurchase)
-            purchase_app = len(AppPurchase)
-            purchase_rej = len(RejPurchase)
-
-            repair_open = len(openRepair)
-            repair_app = len(AppRepair)
-            repair_rej = len(RejRepair)
-
-            store_open = len(openStore)
-            store_app = len(AppStore)
-            store_rej = len(RejStore)
-
-            leave_open = len(openLeave)
-            leave_App = len(AppLeave)
-            leave_rej = len(RejLeave)
-
-            train_open = len(openTraining)
-            train_app = len(AppTraining)
-            train_rej = len(RejTraining)
-
-            # Location
-            url = 'https://ipinfo.io/json'
-            Location_response = requests.get(url, timeout=10).json()
-            Coordinates = Location_response['loc']
-
-        except requests.exceptions.ConnectionError as e:
-            print(e)
-
-        Approval = config.O_DATA.format("/QyApprovalEntries")
-        try:
-            res_App = session.get(Approval, timeout=10).json()
-            Approve = []
-            for approve in res_App['value']:
-                if approve['Status'] == 'Open' and approve['Approver_ID'] == request.session['User_ID']:
-                    output_json = json.dumps(approve)
-                    Approve.append(json.loads(output_json))
-            countsAPP = len(Approve)
-        except requests.exceptions.ConnectionError as e:
-            print(e)
-        fullname =  request.session['User_ID']
-        Responsibility = request.session['User_Responsibility_Center']
-        E_Mail = request.session['E_Mail']
-        Employee_No_ = request.session['Employee_No_']
-        Customer_No_ = request.session['Customer_No_']
-
         todays_date = datetime.datetime.now().strftime("%b. %d, %Y %A")
-
-        ctx = {"today": todays_date,
-            "res": open, "full": fullname,
-            "Responsibility": Responsibility, "E_Mail": E_Mail,
-            "Employee_No_": Employee_No_, "Customer_No_": Customer_No_,
-            "apps": Approve, "countsAPP": countsAPP,
-            "leave_open": leave_open, "leave_app": leave_App,
-            "leave_rej": leave_rej, "open_train": train_open,
-            "app_train": train_app, "rej_train": train_rej,
-            "imprest_open": imprest_open, "imprest_app": imprest_app,
-            "imprest_rej": imprest_rej, "surrender_open": surrender_open,
-            "surrender_app": surrender_app, "surrender_rej": surrender_rej,
-            "open_claim": claim_open, "app_claim": claim_app,
-            "rej_claim": claim_rej, "open_purchase": purchase_open,
-            "app_purchase": purchase_app, "rej_purchase": purchase_rej,
-            "open_repair": repair_open, "app_repair": repair_app,
-            "rej_repair": repair_rej, "open_store": store_open,
-            "app_store": store_app, "rej_store": store_rej, 
-            "stage":stage, "Coordinates":Coordinates,
-            }
+        CustomerName=request.session['CustomerName']
+        CustomerNumber=request.session['CustomerNo']
+        MemberNo=request.session['MemberNo']
+        CustomerEmail=request.session['CustomerEmail']
+        stage=request.session['stage']
+        # Coordinates=request.session['Coordinates'] 
+        Coordinates="-1.2833,36.8167"
+        
     except KeyError as e:
         messages.success(request, "Session Expired. Please Login")
+        print(e)
         return redirect('auth')
+    ctx = {"today": todays_date,
+            "res": open, "full": CustomerName,
+            "CustomerNumber": CustomerNumber, "CustomerEmail": CustomerEmail,
+            "MemberNo": MemberNo,"stage":stage, "Coordinates":Coordinates,
+            }
     return render(request, 'main/dashboard.html', ctx)
 
 def ApplicationDetails(request):
-    stage = 'application'
-    ctx = {"stage":stage}
+    try:
+        stage = 'application'
+        CustomerNumber= 'CRML00047'
+        # CustomerName=request.session['CustomerName']
+        # CustomerNumber=request.session['CustomerNo']
+        # MemberNo=request.session['MemberNo']
+        # CustomerEmail=request.session['CustomerEmail']
+        # stage=request.session['stage']
+        # Coordinates=request.session['Coordinates'] 
+        session = requests.Session()
+        session.auth = config.AUTHS
+
+        LoanProduct = config.O_DATA.format("/LoanProducts")
+        Applicant = config.O_DATA.format("/ApplicantsList")
+        try:
+            LoanProductResponse = session.get(LoanProduct, timeout=10).json()
+            loanProducts = LoanProductResponse['value']
+            ApplicantResponse = session.get(Applicant, timeout=10).json()
+            for applicant in ApplicantResponse['value']:
+                if applicant['No'] == CustomerNumber:
+                    res = applicant
+        except requests.exceptions.RequestException as e:
+            print(e)
+            messages.info(request, "Whoops! Something went wrong. Please Login to Continue")
+            return redirect('auth')
+
+        todays_date = dt.datetime.now().strftime("%b. %d, %Y %A")
+        
+    except KeyError:
+        messages.info(request, "Session Expired. Please Login")
+        return redirect('auth')
+
+    ctx = {"today": todays_date, "loanProducts":loanProducts,
+        "stage":stage, "data":res,
+            }
     return render(request,'main/AppDetails.html',ctx)
 
-def details(request, pk):
+def FnSchoolEnrolment(request):
+    if request.method == 'POST':
+        try:
+            entryNo = ""
+            applicantNo = "000001"
+            # applicantNo = request.session['CustomerNo']
+            academicYear = int(request.POST.get('academicYear'))
+            schoolStrength = request.POST.get('schoolStrength')
+            myAction = request.POST.get('myAction')
+        except ValueError:
+            messages.info(request,"Missing Input!")
+            return redirect('ApplicationDetails')
+        except KeyError:
+            messages.info(request, "Session Expired. Please Login")
+            return redirect('auth')
 
-    todays_date = datetime.datetime.now().strftime("%b. %d, %Y %A")
-    ctx = {"today": todays_date}
-    return render(request, "main/details.html", ctx)
+        try:
+            response = config.CLIENT.service.FnSchoolEnrolment(
+                entryNo, applicantNo, academicYear, schoolStrength, myAction)
+            messages.success(request, "Successfully Added")
+            print(response)
+            return redirect('ApplicationDetails')
+        except Exception as e:
+            print(e)
+            messages.info(request, e)
+            return redirect('ApplicationDetails')
+    return redirect('ApplicationDetails')
+
+def FnSchoolPassRate(request):
+    if request.method == 'POST':
+        try:
+            entryNo = ""
+            applicantNo = "000001"
+            # applicantNo = request.session['CustomerNo']
+            kcpeStudents = request.POST.get('kcpeStudents')
+            passRate = request.POST.get('passRate')
+            year = int(request.POST.get('year'))
+            myAction = request.POST.get('myAction')
+        except ValueError:
+            messages.info(request,"Missing Input!")
+            return redirect('ApplicationDetails')
+        except KeyError:
+            messages.info(request, "Session Expired. Please Login")
+            return redirect('auth')
+
+        try:
+            response = config.CLIENT.service.FnSchoolPassRate(
+                entryNo, applicantNo,kcpeStudents,passRate, year, myAction)
+            messages.success(request, "Successfully Added")
+            print(response)
+            return redirect('ApplicationDetails')
+        except Exception as e:
+            print(e)
+            messages.info(request, e)
+            return redirect('ApplicationDetails')
+    return redirect('ApplicationDetails')
+
+def FnSchoolProjectDetails(request):
+    if request.method == 'POST':
+        try:
+            entryNo = ""
+            applicantNo = "000001"
+            # applicantNo = request.session['CustomerNo']
+            projectDescription = request.POST.get('projectDescription')
+            estimatedCost = float(request.POST.get('estimatedCost'))
+            costType = int(request.POST.get('costType'))
+            myAction = request.POST.get('myAction')
+        except ValueError:
+            messages.info(request,"Missing Input!")
+            return redirect('ApplicationDetails')
+        except KeyError:
+            messages.info(request, "Session Expired. Please Login")
+            return redirect('auth')
+
+        try:
+            response = config.CLIENT.service.FnSchoolProjectDetails(
+                entryNo, applicantNo,projectDescription,estimatedCost, costType, myAction)
+            messages.success(request, "Successfully Added")
+            print(response)
+            return redirect('ApplicationDetails')
+        except Exception as e:
+            print(e)
+            messages.info(request, e)
+            return redirect('ApplicationDetails')
+    return redirect('ApplicationDetails')
+
+def FnSchoolRevenue(request):
+    if request.method == 'POST':
+        try:
+            entryNo = ""
+            applicantNo = "000001"
+            # applicantNo = request.session['CustomerNo']
+            edpClass = request.POST.get('edpClass')
+            streams = request.POST.get('streams')
+            termOneFees = float(request.POST.get('termOneFees'))
+            termTwoFees = float(request.POST.get('termTwoFees'))
+            termThreeFees = float(request.POST.get('termThreeFees'))
+            newStudentAdmission = float(request.POST.get('newStudentAdmission'))
+            admissionFees = float(request.POST.get('admissionFees'))
+            myAction = request.POST.get('myAction')
+        except ValueError:
+            messages.info(request,"Missing Input!")
+            return redirect('ApplicationDetails')
+        except KeyError:
+            messages.info(request, "Session Expired. Please Login")
+            return redirect('auth')
+
+        try:
+            response = config.CLIENT.service.FnSchoolRevenue(
+                entryNo, applicantNo,edpClass,streams, termOneFees,termTwoFees,termThreeFees,
+                newStudentAdmission,admissionFees, myAction)
+            messages.success(request, "Successfully Added")
+            print(response)
+            return redirect('ApplicationDetails')
+        except Exception as e:
+            print(e)
+            messages.info(request, e)
+            return redirect('ApplicationDetails')
+    return redirect('ApplicationDetails')
+
+def FnSchoolExpenses(request):
+    if request.method == 'POST':
+        try:
+            entryNo = ""
+            applicantNo = "000001"
+            # applicantNo = request.session['CustomerNo']
+            expenseHead = request.POST.get('expenseHead')
+            monthlyExpense = float(request.POST.get('monthlyExpense'))
+            multiplierFactor = float(request.POST.get('multiplierFactor'))
+            myAction = request.POST.get('myAction')
+        except ValueError:
+            messages.info(request,"Missing Input!")
+            return redirect('ApplicationDetails')
+        except KeyError:
+            messages.info(request, "Session Expired. Please Login")
+            return redirect('auth')
+
+        try:
+            response = config.CLIENT.service.FnSchoolExpenses(
+                entryNo, applicantNo,expenseHead,monthlyExpense,multiplierFactor,myAction)
+            messages.success(request, "Successfully Added")
+            print(response)
+            return redirect('ApplicationDetails')
+        except Exception as e:
+            print(e)
+            messages.info(request, e)
+            return redirect('ApplicationDetails')
+    return redirect('ApplicationDetails')
+
+def FnSchoolTransportDetails(request):
+    if request.method == 'POST':
+        try:
+            entryNo = ""
+            applicantNo = "000001"
+            # applicantNo = request.session['CustomerNo']
+            transportDescription = request.POST.get('transportDescription')
+            count = int(request.POST.get('count'))
+            myAction = request.POST.get('myAction')
+        except ValueError:
+            messages.info(request,"Missing Input!")
+            return redirect('ApplicationDetails')
+        except KeyError:
+            messages.info(request, "Session Expired. Please Login")
+            return redirect('auth')
+
+        try:
+            response = config.CLIENT.service.FnSchoolTransportDetails(
+                entryNo, applicantNo,transportDescription,count,myAction)
+            messages.success(request, "Successfully Added")
+            print(response)
+            return redirect('ApplicationDetails')
+        except Exception as e:
+            print(e)
+            messages.info(request, e)
+            return redirect('ApplicationDetails')
+    return redirect('ApplicationDetails')
+
+def FnSchoolCoapplicantAssets(request):
+    if request.method == 'POST':
+        try:
+            entryNo = ""
+            applicantNo = "000001"
+            # applicantNo = request.session['CustomerNo']
+            assetName = request.POST.get('assetName')
+            estimatedValue = float(request.POST.get('estimatedValue'))
+            assetOwner = request.POST.get('assetOwner')
+            myAction = request.POST.get('myAction')
+        except ValueError:
+            messages.info(request,"Missing Input!")
+            return redirect('ApplicationDetails')
+        except KeyError:
+            messages.info(request, "Session Expired. Please Login")
+            return redirect('auth')
+
+        try:
+            response = config.CLIENT.service.FnSchoolCoapplicantAssets(
+                entryNo, applicantNo,assetName,estimatedValue,assetOwner,myAction)
+            messages.success(request, "Successfully Added")
+            print(response)
+            return redirect('ApplicationDetails')
+        except Exception as e:
+            print(e)
+            messages.info(request, e)
+            return redirect('ApplicationDetails')
+    return redirect('ApplicationDetails')
+
+def FnSchoolLiabilities(request):
+    if request.method == 'POST':
+        try:
+            entryNo = ""
+            applicantNo = "000001"
+            # applicantNo = request.session['CustomerNo']
+            nameofborrower = request.POST.get('nameofborrower')
+            bankName = request.POST.get('bankName')
+            loanAmount = float(request.POST.get('loanAmount'))
+            loanBalance = float(request.POST.get('loanBalance'))
+            expectedMonthlyInstalment = request.POST.get('expectedMonthlyInstalment')
+            loanTenure = request.POST.get('loanTenure')
+            balanceTenure = request.POST.get('balanceTenure')
+            myAction = request.POST.get('myAction')
+        except ValueError:
+            messages.info(request,"Missing Input!")
+            return redirect('ApplicationDetails')
+        except KeyError:
+            messages.info(request, "Session Expired. Please Login")
+            return redirect('auth')
+
+        try:
+            response = config.CLIENT.service.FnSchoolLiabilities(
+                entryNo, applicantNo,nameofborrower,bankName,loanAmount,
+                loanBalance,expectedMonthlyInstalment,loanTenure,balanceTenure,myAction)
+            messages.success(request, "Successfully Added")
+            print(response)
+            return redirect('ApplicationDetails')
+        except Exception as e:
+            print(e)
+            messages.info(request, e)
+            return redirect('ApplicationDetails')
+    return redirect('ApplicationDetails')
+
+def FnSchoolCommitments(request):
+    if request.method == 'POST':
+        try:
+            entryNo = ""
+            applicantNo = "000001"
+            # applicantNo = request.session['CustomerNo']
+            nameOfProduct = request.POST.get('nameOfProduct')
+            monthlyCommitment = float(request.POST.get('monthlyCommitment'))
+            annualCommitment = float(request.POST.get('annualCommitment'))
+            myAction = request.POST.get('myAction')
+        except ValueError:
+            messages.info(request,"Missing Input!")
+            return redirect('ApplicationDetails')
+        except KeyError:
+            messages.info(request, "Session Expired. Please Login")
+            return redirect('auth')
+
+        try:
+            response = config.CLIENT.service.FnSchoolCommitments(
+                entryNo, applicantNo,nameOfProduct,monthlyCommitment,
+                annualCommitment,myAction)
+            messages.success(request, "Successfully Added")
+            print(response)
+            return redirect('ApplicationDetails')
+        except Exception as e:
+            print(e)
+            messages.info(request, e)
+            return redirect('ApplicationDetails')
+    return redirect('ApplicationDetails')
+
+def FnSchoolSecurityProvided(request):
+    if request.method == 'POST':
+        try:
+            entryNo = ""
+            applicantNo = "000001"
+            # applicantNo = request.session['CustomerNo']
+            typeOfSecurity = request.POST.get('typeOfSecurity')
+            available = eval(request.POST.get('available'))
+            myAction = request.POST.get('myAction')
+        except ValueError:
+            messages.info(request,"Missing Input!")
+            return redirect('ApplicationDetails')
+        except KeyError:
+            messages.info(request, "Session Expired. Please Login")
+            return redirect('auth')
+
+        try:
+            response = config.CLIENT.service.FnSchoolSecurityProvided(
+                entryNo, applicantNo,typeOfSecurity,available,myAction)
+            messages.success(request, "Successfully Added")
+            print(response)
+            return redirect('ApplicationDetails')
+        except Exception as e:
+            print(e)
+            messages.info(request, e)
+            return redirect('ApplicationDetails')
+    return redirect('ApplicationDetails')
+
+def FnSchoolVehicleSecurity(request):
+    if request.method == 'POST':
+        try:
+            entryNo = ""
+            applicantNo = "000001"
+            # applicantNo = request.session['CustomerNo']
+            registrationNo = request.POST.get('registrationNo')
+            ownerName = request.POST.get('ownerName')
+            yearOfManufacture = request.POST.get('yearOfManufacture')
+            approximateValue = float(request.POST.get('yearOfManufacture'))
+            myAction = request.POST.get('myAction')
+        except ValueError:
+            messages.info(request,"Missing Input!")
+            return redirect('ApplicationDetails')
+        except KeyError:
+            messages.info(request, "Session Expired. Please Login")
+            return redirect('auth')
+
+        try:
+            response = config.CLIENT.service.FnSchoolVehicleSecurity(
+                entryNo, applicantNo,registrationNo,ownerName,yearOfManufacture,
+                approximateValue,myAction)
+            messages.success(request, "Successfully Added")
+            print(response)
+            return redirect('ApplicationDetails')
+        except Exception as e:
+            print(e)
+            messages.info(request, e)
+            return redirect('ApplicationDetails')
+    return redirect('ApplicationDetails')
+
+def FnSchoolProjectSecurityDetails(request):
+    if request.method == 'POST':
+        try:
+            entryNo = ""
+            applicantNo = "000001"
+            # applicantNo = request.session['CustomerNo']
+            propertySecurityDetails = request.POST.get('propertySecurityDetails')
+            description = request.POST.get('description')
+            myAction = request.POST.get('myAction')
+        except ValueError:
+            messages.info(request,"Missing Input!")
+            return redirect('ApplicationDetails')
+        except KeyError:
+            messages.info(request, "Session Expired. Please Login")
+            return redirect('auth')
+
+        try:
+            response = config.CLIENT.service.FnSchoolProjectSecurityDetails(
+                entryNo, applicantNo,propertySecurityDetails,description,myAction)
+            messages.success(request, "Successfully Added")
+            print(response)
+            return redirect('ApplicationDetails')
+        except Exception as e:
+            print(e)
+            messages.info(request, e)
+            return redirect('ApplicationDetails')
+    return redirect('ApplicationDetails')
 
 
 def Canvas(request):

@@ -6,67 +6,307 @@ import json
 import requests
 from requests import Session
 from requests_ntlm import HttpNtlmAuth
-import datetime
-from datetime import date
+from datetime import date,datetime
 from zeep import Client
 from zeep.transports import Transport
 from django.contrib import messages
 from requests.auth import HTTPBasicAuth
+from django.http import JsonResponse
+import secrets
+import string
+from cryptography.fernet import Fernet
+import base64
+from django.contrib.sites.shortcuts import get_current_site
+from  django.template.loader import render_to_string
+from django.core.mail import EmailMessage
+import threading
 # Create your views here.
 
+class EmailThread(threading.Thread):
+
+    def __init__(self, email):
+        self.email = email
+        threading.Thread.__init__(self)
+
+    def run(self):
+        self.email.send()
+
+def send_mail(emailAddress,verificationToken,request):
+    current_site = get_current_site(request)
+    email_subject = 'Activate Your Account'
+    email_body = render_to_string('activate.html',{
+        'domain': current_site,
+        'Secret': verificationToken,
+    })
+
+    email = EmailMessage(subject=email_subject,body=email_body,
+    from_email=config.EMAIL_HOST_USER,to=[emailAddress])
+
+    EmailThread(email).start()
 
 def login_request(request):
-    todays_date = date.today()
-    year = todays_date.year
-    request.session['years'] = year
+    session = requests.Session()
+    session.auth = config.AUTHS
     if request.method == 'POST':
-        username = request.POST.get('username').upper().strip()
-        password = request.POST.get('password').strip()
-        print(username, password)
-        user = Session()
-        user.auth = HTTPBasicAuth(username, password)
-        Access_Point = config.O_DATA.format("/QyEmployees")
-        Access2 = config.O_DATA.format("/QyUserSetup")
         try:
-            CLIENT = Client(config.BASE_URL, transport=Transport(session=user))
-            response = user.get(Access_Point, timeout=10).json()
-            res_data = user.get(Access2, timeout=10).json()
-            Data = []
-            for data in res_data['value']:
-                if data['User_ID'] == username:
-                    output_json = json.dumps(data)
-                    Data.append(json.loads(output_json))
-                    request.session['Employee_No_'] = Data[0]['Employee_No_']
-                    request.session['Customer_No_'] = Data[0]['Customer_No_']
-                    request.session['User_ID'] = Data[0]['User_ID']
-                    request.session['E_Mail'] = Data[0]['E_Mail']
-                    request.session['User_Responsibility_Center'] = Data[0]['User_Responsibility_Center']
-                    print(request.session['User_ID'])
-                    print("Emp",request.session['Employee_No_'])
-
-                    for emp in response['value']:
-                        if emp['No_'] == request.session['Employee_No_']:
-                            request.session['Department'] = emp['Department_Code']
-                            print("Department:",request.session['Department'])
-                    return redirect('dashboard')
-
-        except requests.exceptions.RequestException as e:
-            messages.error(request, "Invalid Username or Password")
+            email = request.POST.get('email')
+            password = request.POST.get('password')
+        except ValueError:
+            messages.error(request,"Missing Input!")
+            print("Missing Input!")
             return redirect('auth')
-    ctx = {"year": year}
-    return render(request, 'auth.html', ctx)
+        print(email,password)
+        Leads = config.O_DATA.format("/LeadsList")
+        try:
+        #     Customer = config.O_DATA.format("/CustomersList")
+        #     CustomerResponse = session.get(Customer, timeout=10).json()
+        #     for applicant in CustomerResponse['value']:
+        #         if applicant['Email_Address'] == email and applicant['Verified']==True:
+        #             Portal_Password = base64.urlsafe_b64decode(
+        #                 applicant['Password'])
+        #             cipher_suite = Fernet(config.ENCRYPT_KEY)
+        #             try:
+        #                 decoded_text = cipher_suite.decrypt(
+        #                     Portal_Password).decode("ascii")
+        #             except Exception as e:
+        #                 print(e)
+        #             if decoded_text == password:
+        #                 request.session['CustomerName'] = applicant['Full_Name']
+        #                 request.session['CustomerNo'] = applicant['No']
+        #                 request.session['MemberNo'] = applicant['Member_Number']
+        #                 request.session['CustomerEmail'] = applicant['Email_Address']
+        #                 request.session['stage'] = 'Customer'
+        #                 return redirect('dashboard')
+        #             else:
+        #                 messages.error(
+        #                     request, "Invalid Credentials. Please reset your password else create a new account")
+        #                 return redirect('auth')
+        #     Applicant = config.O_DATA.format("/ApplicantsList")
+        #     ApplicantResponse = session.get(Applicant, timeout=10).json()
+        #     for applicant in ApplicantResponse['value']:
+        #         if applicant['Email_Address'] == email and applicant['Verified']==True:
+        #             Portal_Password = base64.urlsafe_b64decode(
+        #                 applicant['Password'])
+        #             cipher_suite = Fernet(config.ENCRYPT_KEY)
+        #             try:
+        #                 decoded_text = cipher_suite.decrypt(
+        #                     Portal_Password).decode("ascii")
+        #             except Exception as e:
+        #                 print(e)
+        #             if decoded_text == password:
+        #                 request.session['CustomerName'] = applicant['Full_Name']
+        #                 request.session['CustomerNo'] = applicant['No']
+        #                 request.session['MemberNo'] = applicant['Business_Company_Reg_No']
+        #                 request.session['CustomerEmail'] = applicant['Email_Address']
+        #                 request.session['stage'] = 'Applicant'
+        #                 return redirect('dashboard')
+        #             else:
+        #                 messages.error(
+        #                     request, "Invalid Credentials. Please reset your password else create a new account")
+        #                 return redirect('auth')
+
+        #     Potential = config.O_DATA.format("/PotentialsList")
+        #     PotentialResponse = session.get(Potential, timeout=10).json()
+        #     for applicant in PotentialResponse['value']:
+        #         if applicant['Email_Address'] == email and applicant['Verified']==True:
+        #             Portal_Password = base64.urlsafe_b64decode(
+        #                 applicant['Password'])
+        #             cipher_suite = Fernet(config.ENCRYPT_KEY)
+        #             try:
+        #                 decoded_text = cipher_suite.decrypt(
+        #                     Portal_Password).decode("ascii")
+        #             except Exception as e:
+        #                 print(e)
+        #             if decoded_text == password:
+        #                 request.session['CustomerName'] = applicant['Name']
+        #                 request.session['CustomerNo'] = applicant['No']
+        #                 request.session['MemberNo'] = applicant['Business_Company_Reg_No']
+        #                 request.session['CustomerEmail'] = applicant['Email_Address']
+        #                 request.session['stage'] = 'Potential'
+        #                 return redirect('dashboard')
+        #             else:
+        #                 messages.error(
+        #                     request, "Invalid Credentials. Please reset your password else create a new account")
+        #                 return redirect('auth')
+            
+            LeadResponse = session.get(Leads, timeout=10).json()
+            for lead in LeadResponse['value']:
+                if lead['Email_Address'] == email:
+                    request.session['CustomerName'] = lead['Name_of_the_School']
+                    request.session['CustomerNo'] = lead['No']
+                    request.session['MemberNo'] = lead['Business_Company_Reg_No']
+                    request.session['CustomerEmail'] = lead['Email_Address']
+                    request.session['Coordinates'] = lead['Coordinates']
+                    request.session['stage'] = 'Lead'
+                    return redirect('dashboard')
+                    # Portal_Password = base64.urlsafe_b64decode(
+                    #     lead['Password'])
+                    # print(Portal_Password)
+                #     cipher_suite = Fernet(config.ENCRYPT_KEY)
+                #     try:
+                #         decoded_text = cipher_suite.decrypt(
+                #             Portal_Password).decode("ascii")
+                #     except Exception as e:
+                #         print(e)
+                #     if decoded_text == password:
+                #         request.session['CustomerName'] = lead['Name_of_the_School']
+                #         request.session['CustomerNo'] = lead['No']
+                #         request.session['MemberNo'] = lead['Business_Company_Reg_No']
+                #         request.session['CustomerEmail'] = lead['Email_Address']
+                #         request.session['stage'] = 'Lead'
+                #         return redirect('dashboard')
+                #     else:
+                #         messages.error(
+                #             request, "Invalid Credentials. Please reset your password else create a new account")
+                #         return redirect('auth')
+                # messages.error(request,'Create/Verify your account')
+                # return redirect('auth')
+        except requests.exceptions.ConnectionError as e:
+            messages.error(request,e)
+            print(e)
+    return render(request, 'auth.html')
+
 def register_request(request):
-    url = 'https://ipinfo.io/json'
-    response = requests.get(url, timeout=10).json()
-    print(response['loc'])
-    return render(request,'register.html')
+    session = requests.Session()
+    session.auth = config.AUTHS
+    Access_Point = config.O_DATA.format("/LeadSources")
+    EDPBranch = config.O_DATA.format("/DimensionValues")
+    try:
+        response = session.get(Access_Point, timeout=10).json()
+        lead_source = response['value']
+        BranchResponse = session.get(EDPBranch, timeout=10).json()
+        
+        Branch = []
+        for branch in BranchResponse['value']:
+            if branch['Dimension_Code'] == 'BRANCH':
+                output_json = json.dumps(branch)
+                Branch.append(json.loads(output_json))
+
+    except requests.exceptions.ConnectionError as e:
+        print(e)
+        return redirect('register')
+
+    ctx = {"lead_source":lead_source,"branch":Branch}
+    return render(request,'register.html',ctx)
+
+def RegisterLead(request):
+    if request.method == 'POST':
+        try:
+            leadNo = ''
+            schoolName = request.POST.get('schoolName')            
+            leadSource = request.POST.get('leadSource')
+            branchName = request.POST.get('branchName')  
+            subBranch = request.POST.get('subBranch')
+            typeOfOwnership = int(request.POST.get('typeOfOwnership'))
+            yearSchoolStarted = datetime.strptime(request.POST.get('yearSchoolStarted'), '%Y-%m-%d').date()
+            localAuthortyLicense = int(request.POST.get('localAuthortyLicense'))
+            formOfRegistration = int(request.POST.get('formOfRegistration'))
+            leaseAgreement = int(request.POST.get('leaseAgreement'))
+            postalAddress = request.POST.get('postalAddress')
+            emailAddress = request.POST.get('emailAddress')
+            phoneNumber = request.POST.get('phoneNumber')
+            businessNo = request.POST.get('businessNo')
+            moestNo = request.POST.get('moestNo')
+            premisses = int(request.POST.get('premisses'))
+            coord = request.POST.get('coordinates')
+            password = request.POST.get('password')
+            password2 = request.POST.get('password2')
+            myAction = 'insert'
+
+            if len(password) < 6:
+                messages.error(request, "Password should be at least 6 characters")
+                return redirect('register')
+            if password != password2:
+                messages.error(request, "Password mismatch")
+                return redirect('register')
+            nameChars = ''.join(secrets.choice(string.ascii_uppercase + string.digits)
+                        for i in range(5))
+            verificationToken = str(nameChars)
+
+            print("Token:",verificationToken)
+            
+            cipher_suite = Fernet(config.ENCRYPT_KEY)
+            
+            encrypted_text = cipher_suite.encrypt(password.encode('ascii'))
+            myPassword = base64.urlsafe_b64encode(encrypted_text).decode("ascii")
+
+            print("Password:", myPassword)
+
+            if not coord:
+                coordinates = 'None'
+            
+            if coord == 'True':
+                url = 'https://ipinfo.io/json'
+                Coo_Response = requests.get(url, timeout=10).json()
+                coordinates = Coo_Response['loc']
+            
+            print("Coordinates:", coordinates)
+
+            response = config.CLIENT.service.FnCreateSignUp(leadNo, schoolName, leadSource,branchName,
+            subBranch,typeOfOwnership,yearSchoolStarted,localAuthortyLicense,formOfRegistration,
+            leaseAgreement,postalAddress,emailAddress,phoneNumber,businessNo,moestNo,premisses,
+            coordinates,myPassword,verificationToken, myAction)
+            print("response:",response)
+            if response:
+                send_mail(emailAddress,verificationToken,request)
+                messages.success(request, 'We sent you an email to verify your account')
+                return redirect('auth')
+        except Exception as e:
+            messages.info(request,e)
+            print(e)
+            return redirect('register')
+
+def verifyRequest(request):
+    if request.method == 'POST':
+        try:
+            email = request.POST.get('email')
+            secret = request.POST.get('secret')
+            verified = True
+        except ValueError:
+            messages.error(request,'Wrong Input')
+            return redirect('verify')
+        session = requests.Session()
+        session.auth = config.AUTHS
+        Access_Point = config.O_DATA.format("/LeadsList")
+        try:
+            response = session.get(Access_Point, timeout=10).json()
+            for res in response['value']:
+                if res['Email_Address'] == email and res['Verification_Token'] == secret:
+                    try:
+                        response = config.CLIENT.service.FnVerifyEmailAddress(email,verified)
+                        print("response:",response)
+                        messages.success(request,"Verification Successful")
+                        return redirect('auth')
+                    except requests.exceptions.RequestException as e:
+                        messages.error(request,e)
+                        print(e)
+                        return redirect('verify')
+        except requests.exceptions.RequestException as e:
+            print(e)
+            messages.error(request,e)
+            return redirect('verify')
+    return render(request,"verify.html")
+
+def Spoke(request):
+    session = requests.Session()
+    session.auth = config.AUTHS
+    Item = config.O_DATA.format("/DimensionValues")
+    BranchCode = request.GET.get('BranchCode')
+    try:
+        Item_res = session.get(Item, timeout=10).json()
+        return JsonResponse(Item_res)
+
+    except  Exception as e:
+        pass
+    return redirect('register')
+
 def logout(request):
     try:
-        del request.session['User_ID']
-        del request.session['Employee_No_']
-        del request.session['Customer_No_']
-        del request.session['User_Responsibility_Center']
-        del request.session['Department']
+        del request.session['CustomerName']
+        del request.session['CustomerNo']
+        del request.session['MemberNo']
+        del request.session['CustomerEmail']
+        del request.session['stage']
         messages.success(request,"Logged out successfully")
     except KeyError:
         print(False)

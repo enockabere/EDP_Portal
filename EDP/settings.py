@@ -161,6 +161,14 @@ USE_L10N = True
 
 USE_TZ = True
 
+# Send Email Settings
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_HOST_USER ='hypertextassassin3@gmail.com'
+EMAIL_HOST_PASSWORD='qnybgnibxjsumyvn'
+EMAIL_USE_TLS = True
+EMAIL_PORT = 587
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
@@ -180,17 +188,19 @@ STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+ENCRYPT_KEY = b'bzKNyzSwwsN0pwQKglGqPnMKPS6WTPElkRPoCOTYN0I='
+
 
 AUTHS = Session()
 
 WEB_SERVICE_PWD = 'Admin@123'
 
-O_DATA = "http://20.121.189.145:7048/KMPDC/ODataV4/Company('KMPDC'){}"
-BASE_URL = 'http://20.121.189.145:7047/KMPDC/WS/KMPDC/Codeunit/WebPortal'
-AUTHS.auth = HTTPBasicAuth('EMAEBA', WEB_SERVICE_PWD)
+O_DATA = "http://demo.nav.kobby.co.ke:1348/BC130/ODataV4/Company('Ed%20Partners%20Africa%20Limited'){}"
+BASE_URL = 'http://demo.nav.kobby.co.ke:1347/BC130/WS/Ed%20Partners%20Africa%20Limited/Codeunit/Integrations'
+AUTHS.auth = HTTPBasicAuth('KTL-ADMIN', WEB_SERVICE_PWD)
 
 CLIENT = Client(BASE_URL, transport=Transport(session=AUTHS))
-AUTHS = HTTPBasicAuth('EMAEBA', WEB_SERVICE_PWD)
+AUTHS = HTTPBasicAuth('KTL-ADMIN', WEB_SERVICE_PWD)
 django_heroku.settings(locals())
 
 # live Company Name = KMPDC LIVE

@@ -7,8 +7,19 @@ from django.conf.urls.static import static
 urlpatterns = [
     path('dashboard', views.dashboard, name="dashboard"),
     path('canvas', views.Canvas, name="canvas"),
-    path('details/<str:pk>/', views.details, name="details"),
     path('application/details', views.ApplicationDetails, name="ApplicationDetails"),
+    path('FnSchoolEnrolment',views.FnSchoolEnrolment,name='FnSchoolEnrolment'),
+    path('FnSchoolPassRate',views.FnSchoolPassRate,name='FnSchoolPassRate'),
+    path('FnSchoolProjectDetails',views.FnSchoolProjectDetails,name='FnSchoolProjectDetails'),
+    path('FnSchoolRevenue',views.FnSchoolRevenue,name='FnSchoolRevenue'),
+    path('FnSchoolExpenses',views.FnSchoolExpenses,name='FnSchoolExpenses'),
+    path('FnSchoolTransportDetails',views.FnSchoolTransportDetails,name='FnSchoolTransportDetails'),
+    path('FnSchoolCoapplicantAssets',views.FnSchoolCoapplicantAssets,name='FnSchoolCoapplicantAssets'),
+    path('FnSchoolLiabilities',views.FnSchoolLiabilities,name='FnSchoolLiabilities'),
+    path('FnSchoolCommitments',views.FnSchoolCommitments,name='FnSchoolCommitments'),
+    path('FnSchoolSecurityProvided',views.FnSchoolSecurityProvided,name='FnSchoolSecurityProvided'),
+    path('FnSchoolVehicleSecurity',views.FnSchoolVehicleSecurity,name='FnSchoolVehicleSecurity'),
+    path('FnSchoolProjectSecurityDetails',views.FnSchoolProjectSecurityDetails,name='FnSchoolProjectSecurityDetails'),
 ]
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL,

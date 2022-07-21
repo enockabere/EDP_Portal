@@ -10,11 +10,11 @@
             <div class="col-12">
                 <span class="d-flex align-items-center purchase-popup">
                     <img src="../../../static/img/logo/fav.png" width="70px" class="img-fluid" alt="" srcset="">
-                    <h2 class="text-dark font-weight-bold ml-3"> Loan Application </h2>
-                    <button type="submit" class="btn btn-successs" data-bs-toggle="modal"
+                    <h2 class="text-dark font-weight-bold ml-3"> Loan Top Ups </h2>
+                    <button class="btn btn-successs align-items-center p-3" data-bs-toggle="modal"
                         data-bs-target="#staticBackdrop"
                         style="margin-left: auto;margin-right:0;outline: none;border: none;"> <i
-                            class="las la-plus text-white" style="font-size:15px;"></i> New Loan </button>
+                            class="las la-plus text-white" style="font-size:15px;"></i> New Application</button>
                 </span>
 
             </div>
@@ -46,7 +46,6 @@
                         </ul>
                         <div class="tab-content">
                             <div class="tab-pane fade show active" id="home">
-                                <h4>Open Leave</h4>
                                 <div class="card-body">
                                     <table id="example"
                                         class="display table table-striped table-bordered dt-responsive table-responsive-lg"
@@ -70,7 +69,7 @@
                                                 <td>Equity Bank</td>
                                                 <td>Product X</td>
                                                 <td>
-                                                    <a href="{% url 'LoanDetail' %}"
+                                                    <a href="{% url 'TopUpDetail' %}"
                                                         class="btn btn-success btn-icon-text" type="button"
                                                         data-toggle="tooltip" data-placement="top" title="Continue"
                                                         style="background: #25CC88;"> Next <i
@@ -83,7 +82,6 @@
                                 </div>
                             </div>
                             <div class="tab-pane fade" id="profile">
-                                <h4 class="mt-2">Approved Leave</h4>
                                 <div class="card-body">
                                     <table id="example"
                                         class="display table table-striped table-bordered dt-responsive table-responsive-lg"
@@ -107,7 +105,7 @@
                                                 <td>Equity Bank</td>
                                                 <td>Product X</td>
                                                 <td>
-                                                    <a href="{% url 'LoanDetail' %}"
+                                                    <a href="{% url 'TopUpDetail' %}"
                                                         class="btn btn-success btn-icon-text" type="button"
                                                         data-toggle="tooltip" data-placement="top" title="View"
                                                         style="background: #25CC88;"><i class="las la-eye"></i> View
@@ -119,7 +117,6 @@
                                 </div>
                             </div>
                             <div class="tab-pane fade" id="reject">
-                                <h4 class="mt-2">Rejected Leave</h4>
                                 <div class="card-body">
                                     <table id="example"
                                         class="display table table-striped table-bordered dt-responsive table-responsive-lg"
@@ -143,7 +140,7 @@
                                                 <td>Equity Bank</td>
                                                 <td>Product X</td>
                                                 <td>
-                                                    <a href="{% url 'LoanDetail' %}"
+                                                    <a href="{% url 'TopUpDetail' %}"
                                                         class="btn btn-success btn-icon-text" type="button"
                                                         data-toggle="tooltip" data-placement="top" title="View"
                                                         style="background: #25CC88;"><i class="las la-eye"></i> View
@@ -155,7 +152,6 @@
                                 </div>
                             </div>
                             <div class="tab-pane fade" id="pending">
-                                <h4 class="mt-2">Pending Approval Leave</h4>
                                 <div class="card-body">
                                     <table id="example"
                                         class="display table table-striped table-bordered dt-responsive table-responsive-lg"
@@ -179,7 +175,7 @@
                                                 <td>Equity Bank</td>
                                                 <td>Product X</td>
                                                 <td>
-                                                    <a href="{% url 'LoanDetail' %}"
+                                                    <a href="{% url 'TopUpDetail' %}"
                                                         class="btn btn-success btn-icon-text" type="button"
                                                         data-toggle="tooltip" data-placement="top" title="View"
                                                         style="background: #25CC88;"><i class="las la-eye"></i> View
@@ -196,100 +192,87 @@
             </div>
         </div>
     </div>
-    <!--Create leave Modal -->
+    <!-- Modal -->
     <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
         aria-labelledby="staticBackdropLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-lg">
+        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="staticBackdropLabel">Loan Application
+                    <h5 class="modal-title" id="staticBackdropLabel">New Training Request
                     </h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <form class="myForm needs-validation" action="{% url 'CreateLeave' %}" method="post" novalidate>
+                    <form class="myForm" action="{% url 'CreateTrainingRequest' %}" method="post">
                         {% csrf_token %}
-                        <div class="row">
-                            <div class="col-md-12">
-                                <input type="hidden" name="imprestNo" value="">
+                        <div class="mb-2">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <input type="hidden" name="myAction" value="insert">
+                                </div>
                             </div>
-                        </div>
-                        <h6 class="text-success">School Details</h6>
-                        <div class="row my-2">
-                            <div class="col-md-4">
-                                <label class="form-label">Details <span class="text-danger">*</span></label>
-                                <input type="text" class="form-control" name="" placeholder="" required>
+                            <div class="row mt-3">
+                                <div class="col-md-12">
+                                    <label for="isAdhoc" class="form-label">Adhoc</label>
+                                    <select class="form-select" id="isAdhocT" name="isAdhoc" required>
+                                        <option selected disabled value="">Select </option>
+                                        <option value="True">Yes</option>
+                                        <option value="False">No</option>
+                                    </select>
+                                    <div class="invalid-feedback">
+                                        Please select a valid option.
+                                    </div>
+                                </div>
                             </div>
-                            <div class="col-md-4">
-                                <label class="form-label">Details <span class="text-danger">*</span></label>
-                                <input type="text" class="form-control" name="" placeholder="" required>
-                            </div>
-                            <div class="col-md-4">
-                                <label class="form-label">Details <span class="text-danger">*</span></label>
-                                <input type="text" class="form-control" name="" placeholder="" required>
-                            </div>
-                        </div>
-                        <div class="row my-2">
-                            <div class="col-md-4">
-                                <label class="form-label">Details <span class="text-danger">*</span></label>
-                                <input type="text" class="form-control" name="" placeholder="" required>
-                            </div>
-                            <div class="col-md-4">
-                                <label class="form-label">Details <span class="text-danger">*</span></label>
-                                <input type="text" class="form-control" name="" placeholder="" required>
-                            </div>
-                            <div class="col-md-4">
-                                <label class="form-label">Details <span class="text-danger">*</span></label>
-                                <input type="text" class="form-control" name="" placeholder="" required>
-                            </div>
-                        </div>
-                        <h6 class="text-success">Bank Details</h6>
-                        <div class="row my-2">
-                            <div class="col-md-4">
-                                <label class="form-label">Details <span class="text-danger">*</span></label>
-                                <input type="text" class="form-control" name="" placeholder="" required>
-                            </div>
-                            <div class="col-md-4">
-                                <label class="form-label">Details <span class="text-danger">*</span></label>
-                                <input type="text" class="form-control" name="" placeholder="" required>
-                            </div>
-                            <div class="col-md-4">
-                                <label class="form-label">Details <span class="text-danger">*</span></label>
-                                <input type="text" class="form-control" name="" placeholder="" required>
-                            </div>
-                        </div>
-                        <h6 class="text-success">Loan Details</h6>
-                        <div class="row my-2">
-                            <div class="col-md-4">
-                                <label class="form-label">Details <span class="text-danger">*</span></label>
-                                <input type="text" class="form-control" name="" placeholder="" required>
-                            </div>
-                            <div class="col-md-4">
-                                <label class="form-label">Details <span class="text-danger">*</span></label>
-                                <input type="text" class="form-control" name="" placeholder="" required>
-                            </div>
-                            <div class="col-md-4">
-                                <label class="form-label">Details <span class="text-danger">*</span></label>
-                                <input type="text" class="form-control" name="" placeholder="" required>
-                            </div>
-                        </div>
+                            <div class="row" id="trainingNeedRow" style="display: none;">
+                                <div class="col-md-12">
+                                    <label class="form-label">Training Need</label>
+                                    <select class="form-select" id="trainingNeed" name="trainingNeed" disabled>
+                                        <option selected disabled value="">Select Training Need </option>
+                                        {% for res in train %}
+                                        <option value="{{res.Code}}">{{res.Description}}</option>
+                                        {% endfor %}
+                                    </select>
+                                    <div class="invalid-feedback">
+                                        Please select a valid Training Need.
+                                    </div>
 
-                        <div class="row">
-                            <div class="col-md-12">
-                                <input type="hidden" name="myAction" value="insert">
+                                </div>
+                            </div>
+
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Discard</button>
+                                <button type="submit" id="sasa" class="btn btn-primary">Submit</button>
                             </div>
                         </div>
+                    </form>
                 </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Discard</button>
-                    <button type="submit" class="btn btn-primary">Submit</button>
-                </div>
-                </form>
             </div>
         </div>
     </div>
-    </div>
 </section>
+<script>
+    $(document).ready(function () {
+        $('#isAdhocT').on('change', function () {
+            if (this.value == "True") {
+                $("#trainingNeedRow").hide(1000);
+                $('#trainingNeed').prop('disabled', true)
+            } else {
+                $("#trainingNeedRow").show(1000);
+                $('#trainingNeed').prop('disabled', false)
+            }
+        });
+        // Edit Training
+        $('.EditAdhoc').on('change', function () {
+            if (this.value == "True") {
+                $('.trainingNeedTTRow').hide(1000);
+                $('.trainingNeedTT').prop('disabled', true);
+            } else {
+                $(".trainingNeedTTRow").show(1000);
+                $('.trainingNeedTT').prop('disabled', false)
+            }
+        });
 
-
+    })
+</script>
 {% endblock %}
