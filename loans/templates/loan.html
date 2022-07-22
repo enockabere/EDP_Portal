@@ -207,89 +207,124 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <form class="myForm needs-validation" action="{% url 'CreateLeave' %}" method="post" novalidate>
+                    <form class="myForm needs-validation" action="{% url 'ApplyLoan' %}" id="LoanForm" method="post"
+                        novalidate>
                         {% csrf_token %}
+                        <div class="row my-2">
+                            <div class="col-md-4">
+                                <label class="form-label">Student Count <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" name="studentCount" placeholder="10000"
+                                    required>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label">No. Of Teachers <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" name="noOfTeachers" placeholder="" required>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label">Min. Fees Per Student <span
+                                        class="text-danger">*</span></label>
+                                <input type="text" class="form-control" name="minFeesPerStudent" placeholder="00000.000"
+                                    required>
+                            </div>
+                        </div>
                         <div class="row">
+                            <div class="col-md-4">
+                                <label class="form-label">Max. Fees Per Student <span
+                                        class="text-danger">*</span></label>
+                                <input type="text" class="form-control" name="maxFeesPerStudent" placeholder="00000.000"
+                                    required>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label">EDP Branch <span class="text-danger">*</span></label>
+                                <select class="form-select" name="branchName" id="branchName">
+                                    <option value="" disabled selected>--Select--</option>
+                                    {% for branch in branch %}
+                                    <option value="{{branch.Code}}">{{branch.Name}}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label">EDP Sub Branch <span class="text-danger">*</span></label>
+                                <select class="form-select" name="subBranch">
+                                    <option class="after" value="" disabled selected>--Select--</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="row my-2">
+                            <div class="col-md-4">
+                                <label class="form-label">Loan Product <span class="text-danger">*</span></label>
+                                <select class="form-select" name="loanProduct">
+                                    <option value="" disabled selected>--Select--</option>
+                                    {% for res in loanProducts %}
+                                    <option value="{{res.Code}}">{{res.Description}}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label">Sub Product <span class="text-danger">*</span></label>
+                                <select class="form-select" name="subProductCode">
+                                    <option value="" disabled selected>--Select--</option>
+                                </select>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label">Applied Amount <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" name="appliedAmount" placeholder="000.000"
+                                    required>
+                            </div>
+                        </div>
+                        <div class="row my-2">
                             <div class="col-md-12">
-                                <input type="hidden" name="imprestNo" value="">
+                                <label class="form-label">Loan Purpose</label>
+                                <textarea class="form-control" name="loanPurpose" rows="3"></textarea>
                             </div>
                         </div>
-                        <h6 class="text-success">School Details</h6>
-                        <div class="row my-2">
-                            <div class="col-md-4">
-                                <label class="form-label">Details <span class="text-danger">*</span></label>
-                                <input type="text" class="form-control" name="" placeholder="" required>
-                            </div>
-                            <div class="col-md-4">
-                                <label class="form-label">Details <span class="text-danger">*</span></label>
-                                <input type="text" class="form-control" name="" placeholder="" required>
-                            </div>
-                            <div class="col-md-4">
-                                <label class="form-label">Details <span class="text-danger">*</span></label>
-                                <input type="text" class="form-control" name="" placeholder="" required>
-                            </div>
-                        </div>
-                        <div class="row my-2">
-                            <div class="col-md-4">
-                                <label class="form-label">Details <span class="text-danger">*</span></label>
-                                <input type="text" class="form-control" name="" placeholder="" required>
-                            </div>
-                            <div class="col-md-4">
-                                <label class="form-label">Details <span class="text-danger">*</span></label>
-                                <input type="text" class="form-control" name="" placeholder="" required>
-                            </div>
-                            <div class="col-md-4">
-                                <label class="form-label">Details <span class="text-danger">*</span></label>
-                                <input type="text" class="form-control" name="" placeholder="" required>
-                            </div>
-                        </div>
-                        <h6 class="text-success">Bank Details</h6>
-                        <div class="row my-2">
-                            <div class="col-md-4">
-                                <label class="form-label">Details <span class="text-danger">*</span></label>
-                                <input type="text" class="form-control" name="" placeholder="" required>
-                            </div>
-                            <div class="col-md-4">
-                                <label class="form-label">Details <span class="text-danger">*</span></label>
-                                <input type="text" class="form-control" name="" placeholder="" required>
-                            </div>
-                            <div class="col-md-4">
-                                <label class="form-label">Details <span class="text-danger">*</span></label>
-                                <input type="text" class="form-control" name="" placeholder="" required>
-                            </div>
-                        </div>
-                        <h6 class="text-success">Loan Details</h6>
-                        <div class="row my-2">
-                            <div class="col-md-4">
-                                <label class="form-label">Details <span class="text-danger">*</span></label>
-                                <input type="text" class="form-control" name="" placeholder="" required>
-                            </div>
-                            <div class="col-md-4">
-                                <label class="form-label">Details <span class="text-danger">*</span></label>
-                                <input type="text" class="form-control" name="" placeholder="" required>
-                            </div>
-                            <div class="col-md-4">
-                                <label class="form-label">Details <span class="text-danger">*</span></label>
-                                <input type="text" class="form-control" name="" placeholder="" required>
-                            </div>
-                        </div>
-
-                        <div class="row">
-                            <div class="col-md-12">
-                                <input type="hidden" name="myAction" value="insert">
-                            </div>
-                        </div>
+                        <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Discard</button>
+                        <button type="submit" class="btn btn-primary">Submit</button>
+                    </form>
                 </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Discard</button>
-                    <button type="submit" class="btn btn-primary">Submit</button>
-                </div>
-                </form>
             </div>
         </div>
     </div>
     </div>
 </section>
+<script>
+    $(document).ready(function () {
+        $('#branchName').on('change', function (e) {
+            e.preventDefault();
+            var BranchCode = $("#branchName").val();
+            if (BranchCode != null) {
+                $("#LoanForm select[name='subBranch']").find('.after').nextAll().remove();
+                $.ajax({
+                    type: 'get',
+                    url: '{% url "SubBranch" %}',
+                    dataType: 'json',
+                    data: {
+                        BranchCode: BranchCode
+                    },
+                    success: function (response) {
+                        let options = '';
+                        for (var i = 0; i < response.value.length; i++) {
+                            if (response.value[i].Dimension_Code == 'SPOKE' && response
+                                .value[i].Branch_Code == BranchCode) {
+                                options += '<option value=' + response.value[i]
+                                    .Code + '>' + response.value[i].Name +
+                                    '</option>';
+                            }
+                        }
+                        $("#LoanForm select[name='subBranch']").find('.after')
+                            .after(
+                                options);
 
+                    },
+                    error: function (response) {
+                        console.log('Something went wrong');
+                    }
+                });
+            } else {
+                $("#LoanForm select[name='subBranch']").find('.after').nextAll().remove();
+            }
+        });
+    })
+</script>
 
 {% endblock %}

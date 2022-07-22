@@ -132,35 +132,25 @@ def login_request(request):
             LeadResponse = session.get(Leads, timeout=10).json()
             for lead in LeadResponse['value']:
                 if lead['Email_Address'] == email:
-                    request.session['CustomerName'] = lead['Name_of_the_School']
-                    request.session['CustomerNo'] = lead['No']
-                    request.session['MemberNo'] = lead['Business_Company_Reg_No']
-                    request.session['CustomerEmail'] = lead['Email_Address']
-                    request.session['Coordinates'] = lead['Coordinates']
-                    request.session['stage'] = 'Lead'
-                    return redirect('dashboard')
-                    # Portal_Password = base64.urlsafe_b64decode(
-                    #     lead['Password'])
-                    # print(Portal_Password)
-                #     cipher_suite = Fernet(config.ENCRYPT_KEY)
-                #     try:
-                #         decoded_text = cipher_suite.decrypt(
-                #             Portal_Password).decode("ascii")
-                #     except Exception as e:
-                #         print(e)
-                #     if decoded_text == password:
-                #         request.session['CustomerName'] = lead['Name_of_the_School']
-                #         request.session['CustomerNo'] = lead['No']
-                #         request.session['MemberNo'] = lead['Business_Company_Reg_No']
-                #         request.session['CustomerEmail'] = lead['Email_Address']
-                #         request.session['stage'] = 'Lead'
-                #         return redirect('dashboard')
-                #     else:
-                #         messages.error(
-                #             request, "Invalid Credentials. Please reset your password else create a new account")
-                #         return redirect('auth')
-                # messages.error(request,'Create/Verify your account')
-                # return redirect('auth')
+                    Portal_Password = base64.urlsafe_b64decode(
+                        lead['Password'])
+                    cipher_suite = Fernet(config.ENCRYPT_KEY)
+                    try:
+                        decoded_text = cipher_suite.decrypt(
+                            Portal_Password).decode("ascii")
+                    except Exception as e:
+                        print(e)
+                    if decoded_text == password:
+                        request.session['CustomerName'] = lead['Name_of_the_School']
+                        request.session['CustomerNo'] = lead['No']
+                        request.session['MemberNo'] = lead['Business_Company_Reg_No']
+                        request.session['CustomerEmail'] = lead['Email_Address']
+                        request.session['stage'] = 'Lead'
+                        return redirect('dashboard')
+                    else:
+                        messages.error(
+                            request, "Invalid Credentials. Please reset your password else create a new account")
+                        return redirect('auth')
         except requests.exceptions.ConnectionError as e:
             messages.error(request,e)
             print(e)
@@ -192,7 +182,7 @@ def register_request(request):
 def RegisterLead(request):
     if request.method == 'POST':
         try:
-            leadNo = ''
+            leadNo = 'CRM00423'
             schoolName = request.POST.get('schoolName')            
             leadSource = request.POST.get('leadSource')
             branchName = request.POST.get('branchName')  
@@ -211,7 +201,7 @@ def RegisterLead(request):
             coord = request.POST.get('coordinates')
             password = request.POST.get('password')
             password2 = request.POST.get('password2')
-            myAction = 'insert'
+            myAction = 'modify'
 
             if len(password) < 6:
                 messages.error(request, "Password should be at least 6 characters")

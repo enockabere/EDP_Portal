@@ -21,15 +21,23 @@ def dashboard(request):
         MemberNo=request.session['MemberNo']
         CustomerEmail=request.session['CustomerEmail']
         stage=request.session['stage']
-        # Coordinates=request.session['Coordinates'] 
-        Coordinates="-1.2833,36.8167"
-        
+        Coordinates=request.session['Coordinates'] 
+
+        LeadsData = config.O_DATA.format("/LeadsList")
+        LeadsResponse = session.get(LeadsData, timeout=10).json()  
+        for lead in LeadsResponse['value']:
+            if lead['No'] == CustomerNumber and lead['Email_Address']==CustomerEmail:
+                LeadRes = lead  
     except KeyError as e:
         messages.success(request, "Session Expired. Please Login")
         print(e)
+        return redirect('auth') 
+    except requests.exceptions.RequestException as e:
+        print(e)
+        messages.info(request, e)
         return redirect('auth')
-    ctx = {"today": todays_date,
-            "res": open, "full": CustomerName,
+
+    ctx = {"today": todays_date,"LeadRes": LeadRes, "full": CustomerName,
             "CustomerNumber": CustomerNumber, "CustomerEmail": CustomerEmail,
             "MemberNo": MemberNo,"stage":stage, "Coordinates":Coordinates,
             }

@@ -27,9 +27,11 @@
                         Rate</button>
                     <button class="btn btn-primary" type="button"><i class="las la-plus"></i> Add School Project
                         Details</button>
-                    <button class="btn btn-primary" type="button"><i class="las la-plus"></i> Add School
+                    <button class="btn btn-primary" type="button" data-bs-toggle="modal"
+                        data-bs-target="#ModalFnSchoolLoanRevenue"><i class="las la-plus"></i> Add School
                         Revenue</button>
-                    <button class="btn btn-primary" type="button"><i class="las la-plus"></i> Add School
+                    <button class="btn btn-primary" type="button" data-bs-toggle="modal"
+                        data-bs-target="#ModalFnSchoolLoanExpenses"><i class="las la-plus"></i> Add School
                         Expenses</button>
                     <button class="btn btn-primary my-2" type="button"><i class="las la-plus"></i> Add School Transport
                         Details</button>
@@ -177,6 +179,138 @@
                     <button type="submit" class="btn btn-primary">Submit</button>
                 </div>
                 </form>
+            </div>
+        </div>
+    </div>
+    <!-- Modal FnSchoolRevenue -->
+    <div class="modal fade" id="ModalFnSchoolLoanRevenue" data-bs-backdrop="static" data-bs-keyboard="false"
+        tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-scrollable">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="staticBackdropLabel">School Revenue</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form class="myForm needs-validation" action="{% url 'FnSchoolLoanRevenue' %}" method="post"
+                        novalidate>
+                        {% csrf_token %}
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="mb-2">
+                                    <label class="form-label">Class <span class="text-danger">*</span></label>
+                                    <input type="text" class="form-control" name="edpClass" required>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="mb-2">
+                                    <label class="form-label">Streams <span class="text-danger">*</span></label>
+                                    <input type="number" class="form-control" name="streams" required>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="mb-2">
+                                    <label class="form-label">Term One Fees <span class="text-danger">*</span></label>
+                                    <input type="text" class="form-control" name="termOneFees" placeholder="0000.000"
+                                        required>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="mb-2">
+                                    <label class="form-label">Term Two Fees <span class="text-danger">*</span></label>
+                                    <input type="text" class="form-control" name="termTwoFees" placeholder="0000.000"
+                                        required>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="mb-2">
+                                    <label class="form-label">Term Three Fees <span class="text-danger">*</span></label>
+                                    <input type="text" class="form-control" name="termThreeFees" placeholder="0000.000"
+                                        required>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="mb-2">
+                                    <label class="form-label">New Student Admission <span
+                                            class="text-danger">*</span></label>
+                                    <input type="text" class="form-control" name="newStudentAdmission"
+                                        placeholder="0000.000" required>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row my-3">
+                            <div class="col-md-12">
+                                <div class="mb-2">
+                                    <label class="form-label">Admission Fees <span class="text-danger">*</span></label>
+                                    <input type="text" class="form-control" name="admissionFees" placeholder="0000.000"
+                                        required>
+                                </div>
+                            </div>
+                        </div>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-primary">Submit</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- End -->
+    <!-- Modal FnSchoolLoanExpenses -->
+    <div class="modal fade" id="ModalFnSchoolLoanExpenses" data-bs-backdrop="static" data-bs-keyboard="false"
+        tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-scrollable">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="staticBackdropLabel">School Expenses</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form class="myForm needs-validation" action="{% url 'FnSchoolLoanExpenses' %}" method="post"
+                        novalidate>
+                        {% csrf_token %}
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="mb-2">
+                                    <label class="form-label">Expense Head <span class="text-danger">*</span></label>
+                                    <input type="text" class="form-control" name="expenseHead" required>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="mb-2">
+                                    <label class="form-label">Monthly Expense<span class="text-danger">*</span></label>
+                                    <input type="text" class="form-control" name="monthlyExpense" placeholder="0000.000"
+                                        required>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row my-3">
+                            <div class="col-md-12">
+                                <div>
+                                    <label class="form-label">Multiplier Factor<span
+                                            class="text-danger">*</span></label>
+                                    <input type="text" class="form-control" name="multiplierFactor" placeholder="0.0"
+                                        required>
+                                </div>
+                            </div>
+                        </div>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-primary">Submit</button>
+                    </form>
+                </div>
             </div>
         </div>
     </div>

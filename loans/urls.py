@@ -8,6 +8,10 @@ urlpatterns = [
 
     path('loan/request', views.Loan_Request, name="loan"),
     path('loan/detail', views.LoanDetail, name='LoanDetail'),
+    path('FnSchoolLoanRevenue',views.FnSchoolLoanRevenue,name='FnSchoolLoanRevenue'),
+    path('FnSchoolLoanExpenses',views.FnSchoolLoanExpenses,name='FnSchoolLoanExpenses'),
+    path('ApplyLoan',views.ApplyLoan,name='ApplyLoan'),
+    path('SubBranch',views.SubBranch,name='SubBranch'),
 
 
 
