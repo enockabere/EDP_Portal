@@ -22,25 +22,12 @@ from django.http import JsonResponse
 
 def Loan_Calculator(request):
     try:
-        fullname = request.session['User_ID']
-        year = request.session['years']
         session = requests.Session()
         session.auth = config.AUTHS
 
-        Access_Point = config.O_DATA.format("/QyLeavePlannerHeaders")
-        try:
-            response = session.get(Access_Point, timeout=10).json()
-            Plans = []
-            for leave in response['value']:
-                if leave['Employee_No_'] == request.session['Employee_No_']:
-                    output_json = json.dumps(leave)
-                    Plans.append(json.loads(output_json))
-        except requests.exceptions.ConnectionError as e:
-            print(e)
-
         todays_date = dt.datetime.now().strftime("%b. %d, %Y %A")
-        ctx = {"today": todays_date, "res": Plans,
-            "year": year, "full": fullname}
+        ctx = {"today": todays_date
+           }
     except KeyError as e:
         messages.info(request, "Session Expired. Please Login")
         return redirect('auth')

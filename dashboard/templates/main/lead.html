@@ -1,98 +1,118 @@
-<div class="row">
-    <div class="col-md-12">
-        <div class="alert alert-success l-bg-original" role="alert">
-            <h4 class="alert-heading">Hello, {{full}}</h4>
-            <p>
-                Your application has been received and it's being reviewed. We will notify you once you have been
-                assigned a Relationship Manager(RM).
-            </p>
-            <hr>
-            <form class="row g-3 card py-3">
-                <div class="row">
-                    <div class="col-md-4">
-                        <label class="form-label">Lead Source</label>
-                        <input type="text" class="form-control" placeholder="{{LeadRes.Lead_Source}}" readonly>
-                    </div>
-                    <div class="col-md-4">
-                        <label class="form-label">Branch</label>
-                        <input type="text" class="form-control" placeholder="{{LeadRes.Lead_Branch}}" readonly>
-                    </div>
-                    <div class="col-md-4">
-                        <label class="form-label">Type Of Ownership</label>
-                        <input type="text" class="form-control" placeholder="{{LeadRes.Type_Of_Ownership}}" readonly>
-                    </div>
-                    <div class="col-md-4">
-                        <label class="form-label">Year School Started</label>
-                        <input type="text" class="form-control" placeholder="{{LeadRes.Year_School_Started}}" readonly>
-                    </div>
-                    <div class="col-md-4">
-                        <label class="form-label">Local Authority License</label>
-                        <input type="text" class="form-control" placeholder="{{LeadRes.Local_Authority_License}}"
-                            readonly>
-                    </div>
-                    <div class="col-md-4">
-                        <label class="form-label">Email Address</label>
-                        <input type="text" class="form-control" placeholder="{{LeadRes.Email_Address}}" readonly>
-                    </div>
-                    <div class="col-md-4">
-                        <label class="form-label">Form Of Registration</label>
-                        <input type="text" class="form-control" placeholder="{{LeadRes.Form_Of_Registration}}" readonly>
-                    </div>
-                    <div class="col-md-4">
-                        <label class="form-label">Business Company Reg No</label>
-                        <input type="text" class="form-control" placeholder="{{LeadRes.Business_Company_Reg_No}}"
-                            readonly>
-                    </div>
-                    <div class="col-md-4">
-                        <label class="form-label">MOEST Registration No</label>
-                        <input type="text" class="form-control" placeholder="{{LeadRes.MOEST_Registration_No}}"
-                            readonly>
-                    </div>
-                    <div class="col-md-4">
-                        <label class="form-label">Relationship Manager Name</label>
-                        <input type="text" class="form-control" placeholder="{{LeadRes.RM_Name}}" readonly>
-                    </div>
-                    <div class="col-md-4">
-                        <label class="form-label">Phone No</label>
-                        <input type="text" class="form-control" placeholder="{{LeadRes.Phone_No}}" readonly>
-                    </div>
-                    <div class="col-md-4">
-                        <label class="form-label">Year of Commence</label>
-                        <input type="text" class="form-control" placeholder="{{LeadRes.Year_of_Commence}}" readonly>
-                    </div>
-                </div>
-            </form>
-            <p class="mb-0">Your school's Location</p>
-            <div class="mapouter">
-                <div class="gmap_canvas">
-                    <iframe class="responsive-iframe" id="gmap_canvas" src=""></iframe>
-                    <style>
-                        .mapouter {
-                            position: relative;
-                            overflow: hidden;
-                            width: 100%;
-                            padding-top: 56.25%;
-                        }
-                    </style>
-                    <style>
-                        .responsive-iframe {
-                            position: absolute;
-                            top: 0;
-                            left: 0;
-                            bottom: 0;
-                            right: 0;
-                            width: 100%;
-                            height: 100%;
-                        }
+<style>
+    .mapouter {
+        position: relative;
+        overflow: hidden;
+        width: 100%;
+        padding-top: 56.25%;
+    }
+</style>
+<style>
+    .responsive-iframe {
+        position: absolute;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        right: 0;
+        width: 100%;
+        height: 100%;
+    }
 
-                        .RMBtn:hover {
-                            background: black;
-                        }
-                    </style>
+    .RMBtn:hover {
+        background: black;
+    }
+
+    .LeadCard {
+        box-shadow: 0px 0px 10px 0px rgba(82, 63, 105, 0.1);
+        -webkit-box-shadow: 0px 0px 10px 0px rgba(82, 63, 105, 0.1);
+        -moz-box-shadow: 0px 0px 10px 0px rgba(82, 63, 105, 0.1);
+        -ms-box-shadow: 0px 0px 10px 0px rgba(82, 63, 105, 0.1);
+        background-clip: border-box;
+        border-radius: 8px;
+    }
+</style>
+<div class="row">
+    <div class="col-md-12 container">
+        <div class="alert bg-success mb-5 py-4" role="alert">
+            <div class="d-flex">
+                <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none"
+                    stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                    class="feather feather-check-circle">
+                    <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                    <polyline points="22 4 12 14.01 9 11.01"></polyline>
+                </svg>
+                <div class="px-3">
+                    <h5 class="alert-heading">Thank you your application has been received and it's being reviewed!</h5>
+                    <p>We will notify you once you have been assigned a Relationship Manager(RM).</p>
+                    <a href="#" class="btn text-white btn-danger" data-dismiss="alert" aria-label="Close"
+                        data-abc="true">Dismiss</a>
+                    <a href="#" class="btn text-white mx-1 btn-primary" id="ViewMap" data-abc="true">
+                        View School Location
+                        <i class="las la-arrow-right"></i>
+                    </a>
                 </div>
             </div>
-
         </div>
+    </div>
+</div>
+<div class="row pb-3">
+    <div class="col-md-12">
+        <form class="row g-3 p-3 card LeadCard">
+            <div class="mapouter" id="LocationMap" style="display:none">
+                <div class="gmap_canvas">
+                    <iframe class="responsive-iframe" id="gmap_canvas" src=""></iframe>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-4">
+                    <label class="form-label">Lead Source</label>
+                    <input type="text" class="form-control" placeholder="{{LeadRes.Lead_Source}}" readonly>
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label">Branch</label>
+                    <input type="text" class="form-control" placeholder="{{LeadRes.Lead_Branch}}" readonly>
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label">Type Of Ownership</label>
+                    <input type="text" class="form-control" placeholder="{{LeadRes.Type_Of_Ownership}}" readonly>
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label">Year School Started</label>
+                    <input type="text" class="form-control" placeholder="{{LeadRes.Year_School_Started}}" readonly>
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label">Local Authority License</label>
+                    <input type="text" class="form-control" placeholder="{{LeadRes.Local_Authority_License}}" readonly>
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label">Email Address</label>
+                    <input type="text" class="form-control" placeholder="{{LeadRes.Email_Address}}" readonly>
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label">Form Of Registration</label>
+                    <input type="text" class="form-control" placeholder="{{LeadRes.Form_Of_Registration}}" readonly>
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label">Business Company Reg No</label>
+                    <input type="text" class="form-control" placeholder="{{LeadRes.Business_Company_Reg_No}}" readonly>
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label">MOEST Registration No</label>
+                    <input type="text" class="form-control" placeholder="{{LeadRes.MOEST_Registration_No}}" readonly>
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label">Relationship Manager Name</label>
+                    <input type="text" class="form-control" placeholder="{{LeadRes.RM_Name}}" readonly>
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label">Phone No</label>
+                    <input type="text" class="form-control" placeholder="{{LeadRes.Phone_No}}" readonly>
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label">Year of Commence</label>
+                    <input type="text" class="form-control" placeholder="{{LeadRes.Year_of_Commence}}" readonly>
+                </div>
+            </div>
+        </form>
     </div>
 </div>
 <script>
@@ -102,5 +122,8 @@
         detailUrl = 'https://maps.google.com/maps?q=' + Coordinates +
             '&t=&z=13&ie=UTF8&iwloc=&output=embed';
         $("#gmap_canvas").attr('src', detailUrl);
+        $("#ViewMap").click(function () {
+            $('#LocationMap').toggle(1000)
+        })
     });
 </script>

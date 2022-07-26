@@ -4,9 +4,18 @@
 {% block main %}
 <section class="dash2">
     <div class="content-wrapper" style="padding-bottom: 5rem;">
-        <div class="d-xl-flex justify-content-between align-items-start">
-            <h2 class="text-dark font-weight-bold mb-2"> Product X
-            </h2>
+
+        <div class="row">
+            <div class="col-md-12">
+                <div class="alert alert-success l-bg-original" role="alert">
+                    <h4 class="alert-heading">Hello, {{data.Full_Name}}</h4>
+                    <p>
+                        Your application has been received and it's being reviewed.
+                        Please Fill all the required Information.
+                    </p>
+                    <hr>
+                </div>
+            </div>
         </div>
         <!--alert -->
         {% include 'alerts.html' %}

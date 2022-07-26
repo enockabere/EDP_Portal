@@ -16,95 +16,20 @@ from django.http import HttpResponse
 
 def appointment(request):
     try:
-        fullname = request.session['User_ID']
-        year = request.session['years']
+        CustomerName=request.session['CustomerName']
+        CustomerNumber=request.session['CustomerNo']
+        MemberNo=request.session['MemberNo']
+        CustomerEmail=request.session['CustomerEmail']
+        stage=request.session['stage']
         session = requests.Session()
         session.auth = config.AUTHS
-
-        Access_Point = config.O_DATA.format("/QyApprovalEntries")
-        try:
-            response = session.get(Access_Point, timeout=10).json()
-            open = []
-            approved = []
-            rejected = []
-            for approve in response['value']:
-                if approve['Status'] == 'Open' and approve['Approver_ID'] == request.session['User_ID']:
-                    output_json = json.dumps(approve)
-                    open.append(json.loads(output_json))
-                if approve['Status'] == 'Approved' and approve['Approver_ID'] == request.session['User_ID']:
-                    output_json = json.dumps(approve)
-                    approved.append(json.loads(output_json))
-                if approve['Status'] == 'Canceled' and approve['Approver_ID'] == request.session['User_ID']:
-                    output_json = json.dumps(approve)
-                    rejected.append(json.loads(output_json))
-            counts = len(open)
-            countApproved = len(approved)
-            countReject = len(rejected)
-        except requests.exceptions.RequestException as e:
-            print(e)
-            messages.info(request, "Whoops! Something went wrong. Please Login to Continue")
-            return redirect('auth')
-
         todays_date = dt.datetime.now().strftime("%b. %d, %Y %A")
-        ctx = {"today": todays_date, "res": open,
-            "year": year, "full": fullname,
-            "count": counts,"countApproved":countApproved, "approved":approved,
-            "countReject":countReject,"reject":rejected}
     except KeyError:
         messages.info(request, "Session Expired. Please Login")
-        return redirect('auth')       
+        return redirect('auth')  
+    ctx = {"today": todays_date, "res": open,
+             "full": CustomerName,"stage":stage,}     
     return render(request, 'appointment.html', ctx)
-
-
-def ApproveDetails(request, pk):
-    try:
-        fullname = request.session['User_ID']
-        year = request.session['years']
-        session = requests.Session()
-        session.auth = config.AUTHS
-        res = ''
-        Access_Point = config.O_DATA.format("/QyApprovalEntries")
-        Access_File = config.O_DATA.format("/QyDocumentAttachments")
-        try:
-            response = session.get(Access_Point, timeout=10).json()
-            Approves = []
-            for approve in response['value']:
-                if approve['Status'] == 'Open' and approve['Approver_ID'] == request.session['User_ID']:
-                    output_json = json.dumps(approve)
-                    Approves.append(json.loads(output_json))
-                    for claim in Approves:
-                        if claim['Document_No_'] == pk:
-                            res = claim
-                if approve['Status'] == 'Approved' and approve['Approver_ID'] == request.session['User_ID']:
-                    output_json = json.dumps(approve)
-                    Approves.append(json.loads(output_json))
-                    for claim in Approves:
-                        if claim['Document_No_'] == pk:
-                            res = claim
-                if approve['Status'] == 'Canceled' and approve['Approver_ID'] == request.session['User_ID']:
-                    output_json = json.dumps(approve)
-                    Approves.append(json.loads(output_json))
-                    for claim in Approves:
-                        if claim['Document_No_'] == pk:
-                            res = claim
-            allFiles = []
-            res_file = session.get(Access_File, timeout=10).json()
-            for file in res_file['value']:
-                if file['No_'] == pk:
-                    output_json = json.dumps(file)
-                    allFiles.append(json.loads(output_json))
-        except requests.exceptions.RequestException as e:
-            print(e)
-            messages.info(request, "Whoops! Something went wrong. Please Login to Continue")
-            return redirect('auth')
-        todays_date = dt.datetime.now().strftime("%b. %d, %Y %A")
-        ctx = {"today": todays_date, "res": res, "full": fullname, "year": year,
-        "file":allFiles}
-    except KeyError:
-        messages.info(request, "Session Expired. Please Login")
-        return redirect('auth')
-    return render(request, 'approveDetails.html', ctx)
-
 
 def All_Approved(request, pk):
     entryNo = ''

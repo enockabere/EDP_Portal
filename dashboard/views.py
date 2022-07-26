@@ -12,6 +12,9 @@ import datetime as dt
 
 
 def dashboard(request):
+    LeadRes = ''
+    Coordinates = ''
+    PotentialRes = ''
     try:
         session = requests.Session()
         session.auth = config.AUTHS
@@ -21,13 +24,18 @@ def dashboard(request):
         MemberNo=request.session['MemberNo']
         CustomerEmail=request.session['CustomerEmail']
         stage=request.session['stage']
-        Coordinates=request.session['Coordinates'] 
 
         LeadsData = config.O_DATA.format("/LeadsList")
         LeadsResponse = session.get(LeadsData, timeout=10).json()  
         for lead in LeadsResponse['value']:
             if lead['No'] == CustomerNumber and lead['Email_Address']==CustomerEmail:
-                LeadRes = lead  
+                LeadRes = lead 
+                Coordinates = lead['Coordinates'] 
+        PotentialData = config.O_DATA.format("/PotentialsList")
+        PotentialResponse = session.get(PotentialData, timeout=10).json()  
+        for potential in PotentialResponse['value']:
+            if potential['No'] == CustomerNumber and potential['Email_Address']==CustomerEmail:
+                PotentialRes = potential 
     except KeyError as e:
         messages.success(request, "Session Expired. Please Login")
         print(e)
@@ -40,19 +48,17 @@ def dashboard(request):
     ctx = {"today": todays_date,"LeadRes": LeadRes, "full": CustomerName,
             "CustomerNumber": CustomerNumber, "CustomerEmail": CustomerEmail,
             "MemberNo": MemberNo,"stage":stage, "Coordinates":Coordinates,
+            "PotentialRes":PotentialRes,
             }
     return render(request, 'main/dashboard.html', ctx)
 
 def ApplicationDetails(request):
     try:
-        stage = 'application'
-        CustomerNumber= 'CRML00047'
-        # CustomerName=request.session['CustomerName']
-        # CustomerNumber=request.session['CustomerNo']
-        # MemberNo=request.session['MemberNo']
-        # CustomerEmail=request.session['CustomerEmail']
-        # stage=request.session['stage']
-        # Coordinates=request.session['Coordinates'] 
+        CustomerName=request.session['CustomerName']
+        CustomerNumber=request.session['CustomerNo']
+        MemberNo=request.session['MemberNo']
+        CustomerEmail=request.session['CustomerEmail']
+        stage=request.session['stage']
         session = requests.Session()
         session.auth = config.AUTHS
 
@@ -77,7 +83,7 @@ def ApplicationDetails(request):
         return redirect('auth')
 
     ctx = {"today": todays_date, "loanProducts":loanProducts,
-        "stage":stage, "data":res,
+        "stage":stage, "data":res,"full": CustomerName,
             }
     return render(request,'main/AppDetails.html',ctx)
 
