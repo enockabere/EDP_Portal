@@ -502,3 +502,17 @@ label {
     color: #60606A;
     opacity: 1;
 }
+.modal-icons{
+    border: 3px solid var(--green);
+    margin-left: auto;
+    margin-right: auto;
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    position: relative;
+    vertical-align: middle;
+}
+.modal-icons i{
+    font-size: 2rem;
+    color: black;
+}

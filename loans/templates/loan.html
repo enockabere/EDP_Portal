@@ -36,7 +36,7 @@
                             </li>
                             <li class="nav-item flex-fill">
                                 <a href="#profile" class="nav-link" data-bs-toggle="tab">Approved
-                                    ({{counter}})</a>
+                                    ({{counter}}) / <span class="text-success">New Loan Top-Up</span></a>
                             </li>
                             <li class="nav-item flex-fill">
                                 <a href="#reject" class="nav-link" data-bs-toggle="tab">Rejected
@@ -53,24 +53,24 @@
                                         style="width:100%">
                                         <thead>
                                             <tr id="tops">
-                                                <th id="long">Document No</th>
-                                                <th>School Name</th>
-                                                <th>Date Created</th>
-                                                <th>Bank Name</th>
+                                                <th id="long">Loan No</th>
                                                 <th>Loan Product</th>
+                                                <th>Applied Amount</th>
+                                                <th>Interest Rate</th>
+                                                <th>Installments</th>
                                                 <th>Action</th>
                                             </tr>
                                         </thead>
                                         <tbody>
-
+                                            {% for res in res %}
                                             <tr>
-                                                <td>LAP00001</td>
-                                                <td id="rap">Kenya High</td>
-                                                <td>22-22-2022</td>
-                                                <td>Equity Bank</td>
-                                                <td>Product X</td>
+                                                <td>{{res.Loan_Number}}</td>
+                                                <td id="rap">{{res.Loan_Product}}</td>
+                                                <td>{{res.Applied_Amount}}</td>
+                                                <td>{{res.Interest_rate}}</td>
+                                                <td>{{res.Installments}}</td>
                                                 <td>
-                                                    <a href="{% url 'LoanDetail' %}"
+                                                    <a href="{% url 'LoanDetail' res.Loan_Number %}"
                                                         class="btn btn-success btn-icon-text" type="button"
                                                         data-toggle="tooltip" data-placement="top" title="Continue"
                                                         style="background: #25CC88;"> Next <i
@@ -78,6 +78,7 @@
                                                     </a>
                                                 </td>
                                             </tr>
+                                            {% endfor %}
                                         </tbody>
                                     </table>
                                 </div>
@@ -90,29 +91,36 @@
                                         style="width:100%">
                                         <thead>
                                             <tr id="tops">
-                                                <th id="long">Document No</th>
-                                                <th>School Name</th>
-                                                <th>Date Created</th>
-                                                <th>Bank Name</th>
+                                                <th id="long">Loan No</th>
                                                 <th>Loan Product</th>
+                                                <th>Applied Amount</th>
+                                                <th>Interest Rate</th>
+                                                <th>Installments</th>
                                                 <th>Action</th>
                                             </tr>
                                         </thead>
                                         <tbody>
-
                                             <tr>
-                                                <td>LAP00001</td>
-                                                <td id="rap">Kenya High</td>
-                                                <td>22-22-2022</td>
-                                                <td>Equity Bank</td>
-                                                <td>Product X</td>
+                                                {% for res in response %}
+                                                <td>{{res.Loan_Number}}</td>
+                                                <td id="rap">{{res.Loan_Product}}</td>
+                                                <td>{{res.Applied_Amount}}</td>
+                                                <td>{{res.Interest_rate}}</td>
+                                                <td>{{res.Installments}}</td>
                                                 <td>
-                                                    <a href="{% url 'LoanDetail' %}"
+                                                    <a href="#" class="btn btn-success btn-icon-text" type="button"
+                                                        data-toggle="tooltip" data-placement="top" title="Continue"
+                                                        style="background: #25CC88;"> Offset Loan <i
+                                                            class="las la-angle-double-right"></i>
+                                                    </a>
+                                                    <a href="{% url 'LoanDetail' res.Loan_Number %}"
                                                         class="btn btn-success btn-icon-text" type="button"
-                                                        data-toggle="tooltip" data-placement="top" title="View"
-                                                        style="background: #25CC88;"><i class="las la-eye"></i> View
+                                                        data-toggle="tooltip" data-placement="top" title="Continue"
+                                                        style="background: #25CC88;"> View <i
+                                                            class="las la-angle-double-right"></i>
                                                     </a>
                                                 </td>
+                                                {% endfor %}
                                             </tr>
                                         </tbody>
                                     </table>
@@ -143,8 +151,7 @@
                                                 <td>Equity Bank</td>
                                                 <td>Product X</td>
                                                 <td>
-                                                    <a href="{% url 'LoanDetail' %}"
-                                                        class="btn btn-success btn-icon-text" type="button"
+                                                    <a href="" class="btn btn-success btn-icon-text" type="button"
                                                         data-toggle="tooltip" data-placement="top" title="View"
                                                         style="background: #25CC88;"><i class="las la-eye"></i> View
                                                     </a>
@@ -179,8 +186,7 @@
                                                 <td>Equity Bank</td>
                                                 <td>Product X</td>
                                                 <td>
-                                                    <a href="{% url 'LoanDetail' %}"
-                                                        class="btn btn-success btn-icon-text" type="button"
+                                                    <a href="" class="btn btn-success btn-icon-text" type="button"
                                                         data-toggle="tooltip" data-placement="top" title="View"
                                                         style="background: #25CC88;"><i class="las la-eye"></i> View
                                                     </a>
@@ -207,9 +213,10 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <form class="myForm needs-validation" action="{% url 'ApplyLoan' %}" id="LoanForm" method="post"
-                        novalidate>
+                    <form class="myForm " action="{% url 'ApplyLoan' %}" id="LoanForm" method="post" novalidate>
                         {% csrf_token %}
+                        <input type="hidden" name="myAction" value="insert">
+                        <input type="hidden" name="loanNo" value="">
                         <div class="row my-2">
                             <div class="col-md-4">
                                 <label class="form-label">Student Count <span class="text-danger">*</span></label>
@@ -253,7 +260,7 @@
                         <div class="row my-2">
                             <div class="col-md-4">
                                 <label class="form-label">Loan Product <span class="text-danger">*</span></label>
-                                <select class="form-select" name="loanProduct">
+                                <select class="form-select" name="loanProduct" id="loanProduct">
                                     <option value="" disabled selected>--Select--</option>
                                     {% for res in loanProducts %}
                                     <option value="{{res.Code}}">{{res.Description}}</option>
@@ -262,8 +269,8 @@
                             </div>
                             <div class="col-md-4">
                                 <label class="form-label">Sub Product <span class="text-danger">*</span></label>
-                                <select class="form-select" name="subProductCode">
-                                    <option value="" disabled selected>--Select--</option>
+                                <select class="form-select" name="subProductCode" id="subProductCode">
+                                    <option class="after" selected value="" disabled selected>--Select--</option>
                                 </select>
                             </div>
                             <div class="col-md-4">
@@ -272,10 +279,15 @@
                                     required>
                             </div>
                         </div>
-                        <div class="row my-2">
+                        <div class="row my-3">
                             <div class="col-md-12">
                                 <label class="form-label">Loan Purpose</label>
-                                <textarea class="form-control" name="loanPurpose" rows="3"></textarea>
+                                <select class="form-select" name="loanPurpose">
+                                    <option value="" disabled selected>--Select--</option>
+                                    {% for res in Purpose %}
+                                    <option value="{{res.Code}}">{{res.Description}}</option>
+                                    {% endfor %}
+                                </select>
                             </div>
                         </div>
                         <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Discard</button>
@@ -315,6 +327,7 @@
                             .after(
                                 options);
 
+
                     },
                     error: function (response) {
                         console.log('Something went wrong');
@@ -324,6 +337,46 @@
                 $("#LoanForm select[name='subBranch']").find('.after').nextAll().remove();
             }
         });
+    })
+    $(document).ready(function () {
+        $('#loanProduct').on('change', function (e) {
+            e.preventDefault();
+            var LoanCode = $("#loanProduct").val();
+            if (LoanCode != null) {
+                $("#LoanForm select[name='subProductCode']").find('.after').nextAll().remove();
+                $.ajax({
+                    type: 'get',
+                    url: '{% url "subProductCode" %}',
+                    dataType: 'json',
+                    data: {
+                        LoanCode: LoanCode
+                    },
+                    success: function (response) {
+                        let options = '';
+                        for (var i = 0; i < response.value.length; i++) {
+                            if (response.value[i]
+                                .Loan_Product_Code == LoanCode) {
+                                options += '<option value=' + response.value[i]
+                                    .Code + '>' + response.value[i].Code +
+                                    '</option>';
+                            }
+
+                        }
+                        $("#LoanForm select[name='subProductCode']").find('.after')
+                            .after(
+                                options);
+                    },
+                    error: function (response) {
+                        console.log('Something went wrong');
+                    }
+                });
+            } else {
+                $("#LoanForm select[name='subProductCode']").find('.after').nextAll().remove();
+            }
+        });
+
+
+
     })
 </script>
 

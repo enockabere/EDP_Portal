@@ -1,3 +1,4 @@
+from curses.ascii import isdigit
 from django.shortcuts import render, redirect
 import requests
 from requests import Session
@@ -35,7 +36,8 @@ def dashboard(request):
         PotentialResponse = session.get(PotentialData, timeout=10).json()  
         for potential in PotentialResponse['value']:
             if potential['No'] == CustomerNumber and potential['Email_Address']==CustomerEmail:
-                PotentialRes = potential 
+                PotentialRes = potential
+                Coordinates = potential['Coordinates'] 
     except KeyError as e:
         messages.success(request, "Session Expired. Please Login")
         print(e)
@@ -71,6 +73,9 @@ def ApplicationDetails(request):
             for applicant in ApplicantResponse['value']:
                 if applicant['No'] == CustomerNumber:
                     res = applicant
+            ExpenseHead = config.O_DATA.format("/SchoolExpenses")
+            ExpenseHeadResponse = session.get(ExpenseHead, timeout=10).json()
+            Expense = ExpenseHeadResponse['value']
         except requests.exceptions.RequestException as e:
             print(e)
             messages.info(request, "Whoops! Something went wrong. Please Login to Continue")
@@ -83,31 +88,30 @@ def ApplicationDetails(request):
         return redirect('auth')
 
     ctx = {"today": todays_date, "loanProducts":loanProducts,
-        "stage":stage, "data":res,"full": CustomerName,
+        "stage":stage, "data":res,"full": CustomerName,"Expense":Expense,
             }
     return render(request,'main/AppDetails.html',ctx)
 
 def FnSchoolEnrolment(request):
     if request.method == 'POST':
         try:
-            entryNo = ""
-            applicantNo = "000001"
-            # applicantNo = request.session['CustomerNo']
-            academicYear = int(request.POST.get('academicYear'))
+            entryNo = 0
+            applicantNo = request.session['CustomerNo']
+            academicYear = request.POST.get('academicYear')
             schoolStrength = request.POST.get('schoolStrength')
             myAction = request.POST.get('myAction')
-        except ValueError:
-            messages.info(request,"Missing Input!")
-            return redirect('ApplicationDetails')
         except KeyError:
             messages.info(request, "Session Expired. Please Login")
             return redirect('auth')
-
+        
+        if academicYear.isdigit() == False:
+            messages.info(request, "Academic year has to be an integer")
+            return redirect('ApplicationDetails')
         try:
             response = config.CLIENT.service.FnSchoolEnrolment(
-                entryNo, applicantNo, academicYear, schoolStrength, myAction)
-            messages.success(request, "Successfully Added")
+                entryNo, applicantNo, int(academicYear), schoolStrength, myAction)
             print(response)
+            messages.success(request, "Successfully Added")
             return redirect('ApplicationDetails')
         except Exception as e:
             print(e)
@@ -118,12 +122,11 @@ def FnSchoolEnrolment(request):
 def FnSchoolPassRate(request):
     if request.method == 'POST':
         try:
-            entryNo = ""
-            applicantNo = "000001"
-            # applicantNo = request.session['CustomerNo']
+            entryNo = 0
+            applicantNo = request.session['CustomerNo']
             kcpeStudents = request.POST.get('kcpeStudents')
             passRate = request.POST.get('passRate')
-            year = int(request.POST.get('year'))
+            year = request.POST.get('year')
             myAction = request.POST.get('myAction')
         except ValueError:
             messages.info(request,"Missing Input!")
@@ -131,10 +134,13 @@ def FnSchoolPassRate(request):
         except KeyError:
             messages.info(request, "Session Expired. Please Login")
             return redirect('auth')
+        if year.isdigit() == False:
+            messages.info(request, "Year has to be an number")
+            return redirect('ApplicationDetails')
 
         try:
             response = config.CLIENT.service.FnSchoolPassRate(
-                entryNo, applicantNo,kcpeStudents,passRate, year, myAction)
+                entryNo, applicantNo,kcpeStudents,passRate, int(year), myAction)
             messages.success(request, "Successfully Added")
             print(response)
             return redirect('ApplicationDetails')
@@ -147,9 +153,8 @@ def FnSchoolPassRate(request):
 def FnSchoolProjectDetails(request):
     if request.method == 'POST':
         try:
-            entryNo = ""
-            applicantNo = "000001"
-            # applicantNo = request.session['CustomerNo']
+            entryNo = 0
+            applicantNo = request.session['CustomerNo']
             projectDescription = request.POST.get('projectDescription')
             estimatedCost = float(request.POST.get('estimatedCost'))
             costType = int(request.POST.get('costType'))
@@ -164,8 +169,8 @@ def FnSchoolProjectDetails(request):
         try:
             response = config.CLIENT.service.FnSchoolProjectDetails(
                 entryNo, applicantNo,projectDescription,estimatedCost, costType, myAction)
-            messages.success(request, "Successfully Added")
             print(response)
+            messages.success(request, "Successfully Added")
             return redirect('ApplicationDetails')
         except Exception as e:
             print(e)
@@ -176,9 +181,8 @@ def FnSchoolProjectDetails(request):
 def FnSchoolRevenue(request):
     if request.method == 'POST':
         try:
-            entryNo = ""
-            applicantNo = "000001"
-            # applicantNo = request.session['CustomerNo']
+            entryNo = 0
+            applicantNo = request.session['CustomerNo']
             edpClass = request.POST.get('edpClass')
             streams = request.POST.get('streams')
             termOneFees = float(request.POST.get('termOneFees'))
@@ -198,8 +202,8 @@ def FnSchoolRevenue(request):
             response = config.CLIENT.service.FnSchoolRevenue(
                 entryNo, applicantNo,edpClass,streams, termOneFees,termTwoFees,termThreeFees,
                 newStudentAdmission,admissionFees, myAction)
-            messages.success(request, "Successfully Added")
             print(response)
+            messages.success(request, "Successfully Added")
             return redirect('ApplicationDetails')
         except Exception as e:
             print(e)
@@ -210,9 +214,8 @@ def FnSchoolRevenue(request):
 def FnSchoolExpenses(request):
     if request.method == 'POST':
         try:
-            entryNo = ""
-            applicantNo = "000001"
-            # applicantNo = request.session['CustomerNo']
+            entryNo = 0
+            applicantNo = request.session['CustomerNo']
             expenseHead = request.POST.get('expenseHead')
             monthlyExpense = float(request.POST.get('monthlyExpense'))
             multiplierFactor = float(request.POST.get('multiplierFactor'))
@@ -227,8 +230,8 @@ def FnSchoolExpenses(request):
         try:
             response = config.CLIENT.service.FnSchoolExpenses(
                 entryNo, applicantNo,expenseHead,monthlyExpense,multiplierFactor,myAction)
-            messages.success(request, "Successfully Added")
             print(response)
+            messages.success(request, "Successfully Added")
             return redirect('ApplicationDetails')
         except Exception as e:
             print(e)
@@ -239,9 +242,8 @@ def FnSchoolExpenses(request):
 def FnSchoolTransportDetails(request):
     if request.method == 'POST':
         try:
-            entryNo = ""
-            applicantNo = "000001"
-            # applicantNo = request.session['CustomerNo']
+            entryNo = 0
+            applicantNo = request.session['CustomerNo']
             transportDescription = request.POST.get('transportDescription')
             count = int(request.POST.get('count'))
             myAction = request.POST.get('myAction')
@@ -255,8 +257,8 @@ def FnSchoolTransportDetails(request):
         try:
             response = config.CLIENT.service.FnSchoolTransportDetails(
                 entryNo, applicantNo,transportDescription,count,myAction)
-            messages.success(request, "Successfully Added")
             print(response)
+            messages.success(request, "Successfully Added")
             return redirect('ApplicationDetails')
         except Exception as e:
             print(e)
@@ -267,9 +269,8 @@ def FnSchoolTransportDetails(request):
 def FnSchoolCoapplicantAssets(request):
     if request.method == 'POST':
         try:
-            entryNo = ""
-            applicantNo = "000001"
-            # applicantNo = request.session['CustomerNo']
+            entryNo = 0
+            applicantNo = request.session['CustomerNo']
             assetName = request.POST.get('assetName')
             estimatedValue = float(request.POST.get('estimatedValue'))
             assetOwner = request.POST.get('assetOwner')
@@ -284,8 +285,8 @@ def FnSchoolCoapplicantAssets(request):
         try:
             response = config.CLIENT.service.FnSchoolCoapplicantAssets(
                 entryNo, applicantNo,assetName,estimatedValue,assetOwner,myAction)
-            messages.success(request, "Successfully Added")
             print(response)
+            messages.success(request, "Successfully Added")
             return redirect('ApplicationDetails')
         except Exception as e:
             print(e)
@@ -296,16 +297,17 @@ def FnSchoolCoapplicantAssets(request):
 def FnSchoolLiabilities(request):
     if request.method == 'POST':
         try:
-            entryNo = ""
-            applicantNo = "000001"
-            # applicantNo = request.session['CustomerNo']
+            entryNo = 0
+            applicantNo = request.session['CustomerNo']
             nameofborrower = request.POST.get('nameofborrower')
             bankName = request.POST.get('bankName')
             loanAmount = float(request.POST.get('loanAmount'))
             loanBalance = float(request.POST.get('loanBalance'))
             expectedMonthlyInstalment = request.POST.get('expectedMonthlyInstalment')
-            loanTenure = request.POST.get('loanTenure')
-            balanceTenure = request.POST.get('balanceTenure')
+            loanTenures = request.POST.get('loanTenure')
+            TenurePeriod = request.POST.get('TenurePeriod')
+            balanceTenures = request.POST.get('balanceTenure')
+            TenureBalancePeriod = request.POST.get('TenureBalancePeriod')
             myAction = request.POST.get('myAction')
         except ValueError:
             messages.info(request,"Missing Input!")
@@ -313,13 +315,14 @@ def FnSchoolLiabilities(request):
         except KeyError:
             messages.info(request, "Session Expired. Please Login")
             return redirect('auth')
-
+        loanTenure = loanTenures + TenurePeriod
+        balanceTenure = balanceTenures + TenureBalancePeriod
         try:
             response = config.CLIENT.service.FnSchoolLiabilities(
                 entryNo, applicantNo,nameofborrower,bankName,loanAmount,
                 loanBalance,expectedMonthlyInstalment,loanTenure,balanceTenure,myAction)
-            messages.success(request, "Successfully Added")
             print(response)
+            messages.success(request, "Successfully Added")
             return redirect('ApplicationDetails')
         except Exception as e:
             print(e)
@@ -330,9 +333,8 @@ def FnSchoolLiabilities(request):
 def FnSchoolCommitments(request):
     if request.method == 'POST':
         try:
-            entryNo = ""
-            applicantNo = "000001"
-            # applicantNo = request.session['CustomerNo']
+            entryNo = 0
+            applicantNo = request.session['CustomerNo']
             nameOfProduct = request.POST.get('nameOfProduct')
             monthlyCommitment = float(request.POST.get('monthlyCommitment'))
             annualCommitment = float(request.POST.get('annualCommitment'))
@@ -348,8 +350,8 @@ def FnSchoolCommitments(request):
             response = config.CLIENT.service.FnSchoolCommitments(
                 entryNo, applicantNo,nameOfProduct,monthlyCommitment,
                 annualCommitment,myAction)
-            messages.success(request, "Successfully Added")
             print(response)
+            messages.success(request, "Successfully Added")
             return redirect('ApplicationDetails')
         except Exception as e:
             print(e)
@@ -360,9 +362,8 @@ def FnSchoolCommitments(request):
 def FnSchoolSecurityProvided(request):
     if request.method == 'POST':
         try:
-            entryNo = ""
-            applicantNo = "000001"
-            # applicantNo = request.session['CustomerNo']
+            entryNo = 0
+            applicantNo = request.session['CustomerNo']
             typeOfSecurity = request.POST.get('typeOfSecurity')
             available = eval(request.POST.get('available'))
             myAction = request.POST.get('myAction')
@@ -376,8 +377,8 @@ def FnSchoolSecurityProvided(request):
         try:
             response = config.CLIENT.service.FnSchoolSecurityProvided(
                 entryNo, applicantNo,typeOfSecurity,available,myAction)
-            messages.success(request, "Successfully Added")
             print(response)
+            messages.success(request, "Successfully Added")
             return redirect('ApplicationDetails')
         except Exception as e:
             print(e)
@@ -388,9 +389,8 @@ def FnSchoolSecurityProvided(request):
 def FnSchoolVehicleSecurity(request):
     if request.method == 'POST':
         try:
-            entryNo = ""
-            applicantNo = "000001"
-            # applicantNo = request.session['CustomerNo']
+            entryNo = 0
+            applicantNo = request.session['CustomerNo']
             registrationNo = request.POST.get('registrationNo')
             ownerName = request.POST.get('ownerName')
             yearOfManufacture = request.POST.get('yearOfManufacture')
@@ -407,8 +407,8 @@ def FnSchoolVehicleSecurity(request):
             response = config.CLIENT.service.FnSchoolVehicleSecurity(
                 entryNo, applicantNo,registrationNo,ownerName,yearOfManufacture,
                 approximateValue,myAction)
-            messages.success(request, "Successfully Added")
             print(response)
+            messages.success(request, "Successfully Added")
             return redirect('ApplicationDetails')
         except Exception as e:
             print(e)
@@ -419,24 +419,24 @@ def FnSchoolVehicleSecurity(request):
 def FnSchoolProjectSecurityDetails(request):
     if request.method == 'POST':
         try:
-            entryNo = ""
-            applicantNo = "000001"
-            # applicantNo = request.session['CustomerNo']
+            entryNo = 0
+            applicantNo = request.session['CustomerNo']
             propertySecurityDetails = request.POST.get('propertySecurityDetails')
             description = request.POST.get('description')
             myAction = request.POST.get('myAction')
         except ValueError:
             messages.info(request,"Missing Input!")
             return redirect('ApplicationDetails')
-        except KeyError:
+        except KeyError as e:
+            print(e)
             messages.info(request, "Session Expired. Please Login")
             return redirect('auth')
 
         try:
             response = config.CLIENT.service.FnSchoolProjectSecurityDetails(
                 entryNo, applicantNo,propertySecurityDetails,description,myAction)
-            messages.success(request, "Successfully Added")
             print(response)
+            messages.success(request, "Successfully Added")
             return redirect('ApplicationDetails')
         except Exception as e:
             print(e)

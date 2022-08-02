@@ -4,16 +4,30 @@
 {% block main %}
 <section class="dash2">
     <div class="content-wrapper" style="padding-bottom: 5rem;">
-
         <div class="row">
-            <div class="col-md-12">
-                <div class="alert alert-success l-bg-original" role="alert">
-                    <h4 class="alert-heading">Hello, {{data.Full_Name}}</h4>
-                    <p>
-                        Your application has been received and it's being reviewed.
-                        Please Fill all the required Information.
-                    </p>
-                    <hr>
+            <div class="col-md-12 container">
+                <div class="alert bg-success mb-3 py-3" role="alert">
+                    <div class="d-flex">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none"
+                            stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                            class="feather feather-check-circle">
+                            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                            <polyline points="22 4 12 14.01 9 11.01"></polyline>
+                        </svg>
+                        <div class="px-3">
+                            <h5 class="alert-heading">Hello, {{data.Full_Name}}. Your application has been received
+                                and it's
+                                being reviewed!</h5>
+                            <p>Please Fill all the required Information.</p>
+                            <a href="#" class="btn text-white btn-danger" data-dismiss="alert" aria-label="Close"
+                                data-abc="true">Dismiss</a>
+                            <button type="button" class="btn text-white mx-1 btn-primary" data-bs-toggle="modal"
+                                data-bs-target="#staticBackdrop">
+                                View RM
+                                <i class="las la-arrow-right"></i>
+                            </button>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -62,7 +76,7 @@
                 </div>
             </div>
         </div>
-        <div class="row">
+        <!-- <div class="row">
             <div class="col-md-12">
                 <form class="row g-3">
                     <div class="col-md-4">
@@ -115,7 +129,7 @@
                     </div>
                 </form>
             </div>
-        </div>
+        </div> -->
         <div class="row mt-4">
             <div class="col-md-12">
                 <div class="card" id="d-card">
@@ -186,15 +200,14 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <form class="myForm needs-validation" action="{% url 'FnSchoolEnrolment' %}" method="post"
-                        novalidate>
+                    <form class="myForm" action="{% url 'FnSchoolEnrolment' %}" method="post" novalidate>
+                        <input type="hidden" name="myAction" value="insert">
                         {% csrf_token %}
                         <div class="row">
                             <div class="col-md-12">
                                 <label class="form-label">Academic Year <span class="text-danger">*</span></label>
-                                <select class="form-select" name="academicYear" required>
-                                    <option value="" disabled selected>--Select--</option>
-                                </select>
+                                <input type="number" class="form-control" name="academicYear" placeholder="2000"
+                                    required>
                             </div>
                         </div>
 
@@ -206,13 +219,10 @@
                                 </div>
                             </div>
                         </div>
-
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Submit</button>
+                    </form>
                 </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary">Submit</button>
-                </div>
-                </form>
             </div>
         </div>
     </div>
@@ -227,14 +237,14 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <form class="myForm needs-validation" action="{% url 'FnSchoolPassRate' %}" method="post"
-                        novalidate>
+                    <form class="myForm" action="{% url 'FnSchoolPassRate' %}" method="post" novalidate>
                         {% csrf_token %}
+                        <input type="hidden" name="myAction" value="insert">
                         <div class="row">
                             <div class="col-md-12">
                                 <div class="mb-2">
                                     <label class="form-label">KCPE Students<span class="text-danger">*</span></label>
-                                    <input type="text" class="form-control" name="kcpeStudents" required>
+                                    <input type="number" class="form-control" name="kcpeStudents" required>
                                 </div>
                             </div>
                         </div>
@@ -246,20 +256,16 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="row">
+                        <div class="row my-3">
                             <div class="col-md-12">
                                 <label class="form-label">Year <span class="text-danger">*</span></label>
-                                <select class="form-select" name="year" required>
-                                    <option value="" disabled selected>--Select--</option>
-                                </select>
+                                <input type="number" class="form-control" name="year" placeholder="2000" required>
                             </div>
                         </div>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Submit</button>
+                    </form>
                 </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary">Submit</button>
-                </div>
-                </form>
             </div>
         </div>
     </div>
@@ -274,15 +280,9 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <form class="myForm needs-validation" action="{% url 'FnSchoolProjectDetails' %}" method="post"
-                        novalidate>
+                    <form class="myForm" action="{% url 'FnSchoolProjectDetails' %}" method="post" novalidate>
                         {% csrf_token %}
-                        <div class="row">
-                            <div class="col-md-12">
-                                <label class="form-label">Project Description <span class="text-danger">*</span></label>
-                                <textarea class="form-control" name="projectDescription" rows="5"></textarea>
-                            </div>
-                        </div>
+                        <input type="hidden" name="myAction" value="insert">
                         <div class="row">
                             <div class="col-md-12">
                                 <div class="mb-2">
@@ -296,16 +296,22 @@
                             <div class="col-md-12">
                                 <label class="form-label">Cost Type <span class="text-danger">*</span></label>
                                 <select class="form-select" name="costType" required>
-                                    <option value="" disabled selected>--Select--</option>
+                                    <option value="0" disabled selected>--Select--</option>
+                                    <option value="1">Project Cost</option>
+                                    <option value="2">Owner Contribution</option>
                                 </select>
                             </div>
                         </div>
+                        <div class="row my-2">
+                            <div class="col-md-12">
+                                <label class="form-label">Project Description <span class="text-danger">*</span></label>
+                                <textarea class="form-control" name="projectDescription" rows="5"></textarea>
+                            </div>
+                        </div>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Submit</button>
+                    </form>
                 </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary">Submit</button>
-                </div>
-                </form>
             </div>
         </div>
     </div>
@@ -320,8 +326,9 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <form class="myForm needs-validation" action="{% url 'FnSchoolRevenue' %}" method="post" novalidate>
+                    <form class="myForm" action="{% url 'FnSchoolRevenue' %}" method="post" novalidate>
                         {% csrf_token %}
+                        <input type="hidden" name="myAction" value="insert">
                         <div class="row">
                             <div class="col-md-12">
                                 <div class="mb-2">
@@ -376,7 +383,7 @@
                             </div>
                         </div>
 
-                        <div class="row">
+                        <div class="row my-2">
                             <div class="col-md-12">
                                 <div class="mb-2">
                                     <label class="form-label">Admission Fees <span class="text-danger">*</span></label>
@@ -385,13 +392,10 @@
                                 </div>
                             </div>
                         </div>
-
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Submit</button>
+                    </form>
                 </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary">Submit</button>
-                </div>
-                </form>
             </div>
         </div>
     </div>
@@ -406,18 +410,20 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <form class="myForm needs-validation" action="{% url 'FnSchoolExpenses' %}" method="post"
-                        novalidate>
+                    <form class="myForm" action="{% url 'FnSchoolExpenses' %}" method="post" novalidate>
                         {% csrf_token %}
+                        <input type="hidden" name="myAction" value="insert">
                         <div class="row">
                             <div class="col-md-12">
-                                <div class="mb-2">
-                                    <label class="form-label">Expense Head <span class="text-danger">*</span></label>
-                                    <input type="text" class="form-control" name="expenseHead" required>
-                                </div>
+                                <label class="form-label">Expense Head <span class="text-danger">*</span></label>
+                                <select class="form-select" name="expenseHead" required>
+                                    <option value="0" disabled selected>--Select--</option>
+                                    {% for res in Expense %}
+                                    <option value="{{res.Code}}">{{res.Description}}</option>
+                                    {% endfor %}
+                                </select>
                             </div>
                         </div>
-
                         <div class="row">
                             <div class="col-md-12">
                                 <div class="mb-2">
@@ -427,7 +433,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="row">
+                        <div class="row my-3">
                             <div class="col-md-12">
                                 <div>
                                     <label class="form-label">Multiplier Factor<span
@@ -437,12 +443,10 @@
                                 </div>
                             </div>
                         </div>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Submit</button>
+                    </form>
                 </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary">Submit</button>
-                </div>
-                </form>
             </div>
         </div>
     </div>
@@ -456,16 +460,9 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <form class="myForm needs-validation py-5" action="{% url 'FnSchoolTransportDetails' %}"
-                        method="post" novalidate>
+                    <form class="myForm" action="{% url 'FnSchoolTransportDetails' %}" method="post" novalidate>
                         {% csrf_token %}
-                        <div class="row">
-                            <div class="col-md-12">
-                                <label class="form-label">Transport Description <span
-                                        class="text-danger">*</span></label>
-                                <textarea class="form-control" name="transportDescription" rows="5"></textarea>
-                            </div>
-                        </div>
+                        <input type="hidden" name="myAction" value="insert">
                         <div class="row">
                             <div class="col-md-12">
                                 <div class="mb-2">
@@ -474,8 +471,16 @@
                                 </div>
                             </div>
                         </div>
+                        <div class="row my-2">
+                            <div class="col-md-12">
+                                <label class="form-label">Transport Description <span
+                                        class="text-danger">*</span></label>
+                                <textarea class="form-control" name="transportDescription" rows="5"></textarea>
+                            </div>
+                        </div>
+
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                        <button type="button" class="btn btn-primary">Submit</button>
+                        <button type="submit" class="btn btn-primary">Submit</button>
                     </form>
                 </div>
 
@@ -492,9 +497,9 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <form class="myForm needs-validation py-5" action="{% url 'FnSchoolCoapplicantAssets' %}"
-                        method="post" novalidate>
+                    <form class="myForm" action="{% url 'FnSchoolCoapplicantAssets' %}" method="post" novalidate>
                         {% csrf_token %}
+                        <input type="hidden" name="myAction" value="insert">
                         <div class="row">
                             <div class="col-md-12">
                                 <div class="mb-2">
@@ -521,7 +526,7 @@
                             </div>
                         </div>
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                        <button type="button" class="btn btn-primary">Submit</button>
+                        <button type="submit" class="btn btn-primary">Submit</button>
                     </form>
                 </div>
 
@@ -532,26 +537,24 @@
     <!-- Modal FnSchoolLiabilities -->
     <div class="modal fade" id="ModalFnSchoolLiabilities" data-bs-backdrop="static" data-bs-keyboard="false"
         tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-scrollable">
+        <div class="modal-dialog modal-dialog-scrollable modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="staticBackdropLabel">School Liabilities</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <form class="myForm needs-validation py-5" action="{% url 'FnSchoolLiabilities' %}" method="post"
-                        novalidate>
+                    <form class="myForm" action="{% url 'FnSchoolLiabilities' %}" method="post" novalidate>
                         {% csrf_token %}
+                        <input type="hidden" name="myAction" value="insert">
                         <div class="row">
-                            <div class="col-md-12">
+                            <div class="col-md-6">
                                 <div class="mb-2">
                                     <label class="form-label">Name of Borrower<span class="text-danger">*</span></label>
                                     <input type="text" class="form-control" name="nameofborrower" required>
                                 </div>
                             </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-12">
+                            <div class="col-md-6">
                                 <div class="mb-2">
                                     <label class="form-label">Bank Name<span class="text-danger">*</span></label>
                                     <input type="text" class="form-control" name="bankName" placeholder="" required>
@@ -559,16 +562,14 @@
                             </div>
                         </div>
                         <div class="row">
-                            <div class="col-md-12">
+                            <div class="col-md-6">
                                 <div class="mb-2">
                                     <label class="form-label">Loan Amount <span class="text-danger">*</span></label>
                                     <input type="text" class="form-control" name="loanAmount" placeholder="0000.00"
                                         required>
                                 </div>
                             </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-12">
+                            <div class="col-md-6">
                                 <div class="mb-2">
                                     <label class="form-label">Loan Balance <span class="text-danger">*</span></label>
                                     <input type="text" class="form-control" name="loanBalance" placeholder="0000.00"
@@ -576,6 +577,7 @@
                                 </div>
                             </div>
                         </div>
+
                         <div class="row">
                             <div class="col-md-12">
                                 <div class="mb-2">
@@ -586,25 +588,45 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="row">
-                            <div class="col-md-12">
+                        <div class="row gx-1">
+                            <div class="col-md-8">
                                 <div class="mb-2">
                                     <label class="form-label">Loan Tenure <span class="text-danger">*</span></label>
                                     <input type="text" class="form-control" name="loanTenure" placeholder="" required>
                                 </div>
                             </div>
+                            <div class="col-md-4">
+                                <div class="mb-2">
+                                    <label class="form-label">Tenure Period <span class="text-danger">*</span></label>
+                                    <select class="form-select" name="TenurePeriod" required>
+                                        <option value="" disabled selected>--Select--</option>
+                                        <option value="m">Month(s)</option>
+                                        <option value="y">Year(s)</option>
+                                    </select>
+                                </div>
+                            </div>
                         </div>
-                        <div class="row">
-                            <div class="col-md-12">
+                        <div class="row gx-1">
+                            <div class="col-md-8">
                                 <div class="mb-2">
                                     <label class="form-label">Balance Tenure <span class="text-danger">*</span></label>
                                     <input type="text" class="form-control" name="balanceTenure" placeholder=""
                                         required>
                                 </div>
                             </div>
+                            <div class="col-md-4">
+                                <div class="mb-2">
+                                    <label class="form-label">Tenure Period <span class="text-danger">*</span></label>
+                                    <select class="form-select" name="TenureBalancePeriod" required>
+                                        <option value="" disabled selected>--Select--</option>
+                                        <option value="m">Month(s)</option>
+                                        <option value="y">Year(s)</option>
+                                    </select>
+                                </div>
+                            </div>
                         </div>
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                        <button type="button" class="btn btn-primary">Submit</button>
+                        <button type="submit" class="btn btn-primary">Submit</button>
                     </form>
                 </div>
 
@@ -622,9 +644,9 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <form class="myForm needs-validation py-5" action="{% url 'FnSchoolCommitments' %}" method="post"
-                        novalidate>
+                    <form class="myForm" action="{% url 'FnSchoolCommitments' %}" method="post" novalidate>
                         {% csrf_token %}
+                        <input type="hidden" name="myAction" value="insert">
                         <div class="row">
                             <div class="col-md-12">
                                 <label class="form-label">Product Name <span class="text-danger">*</span></label>
@@ -636,7 +658,6 @@
                                 </select>
                             </div>
                         </div>
-
                         <div class="row">
                             <div class="col-md-12">
                                 <div class="mb-2">
@@ -658,7 +679,7 @@
                             </div>
                         </div>
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                        <button type="button" class="btn btn-primary">Submit</button>
+                        <button type="submit" class="btn btn-primary">Submit</button>
                     </form>
                 </div>
 
@@ -676,15 +697,13 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <form class="myForm needs-validation py-5" action="{% url 'FnSchoolSecurityProvided' %}"
-                        method="post" novalidate>
+                    <form class="myForm" action="{% url 'FnSchoolSecurityProvided' %}" method="post" novalidate>
                         {% csrf_token %}
+                        <input type="hidden" name="myAction" value="insert">
                         <div class="row">
                             <div class="col-md-12">
                                 <label class="form-label">Type Of Security <span class="text-danger">*</span></label>
-                                <select class="form-select" name="typeOfSecurity">
-                                    <option value="" disabled selected>--Select--</option>
-                                </select>
+                                <input type="text" class="form-control" name="typeOfSecurity" required>
                             </div>
                         </div>
                         <div class="row my-3">
@@ -698,7 +717,7 @@
                             </div>
                         </div>
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                        <button type="button" class="btn btn-primary">Submit</button>
+                        <button type="submit" class="btn btn-primary">Submit</button>
                     </form>
                 </div>
 
@@ -716,9 +735,9 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <form class="myForm needs-validation py-5" action="{% url 'FnSchoolVehicleSecurity' %}"
-                        method="post" novalidate>
+                    <form class="myForm" action="{% url 'FnSchoolVehicleSecurity' %}" method="post" novalidate>
                         {% csrf_token %}
+                        <input type="hidden" name="myAction" value="insert">
                         <div class="row">
                             <div class="col-md-12">
                                 <label class="form-label">Registration No <span class="text-danger">*</span></label>
@@ -744,7 +763,7 @@
                             </div>
                         </div>
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                        <button type="button" class="btn btn-primary">Submit</button>
+                        <button type="submit" class="btn btn-primary">Submit</button>
                     </form>
                 </div>
 
@@ -758,13 +777,14 @@
         <div class="modal-dialog modal-dialog-scrollable">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="staticBackdropLabel">School Property Security Details</h5>
+                    <h5 class="modal-title" id="staticBackdropLabel">School Property Security Details </h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <form class="myForm needs-validation py-5" action="{% url 'FnSchoolProjectSecurityDetails' %}"
-                        method="post" novalidate>
+
+                    <form class="myForm" action="{% url 'FnSchoolProjectSecurityDetails' %}" method="post" novalidate>
                         {% csrf_token %}
+                        <input type="hidden" name="myAction" value="insert">
                         <div class="row">
                             <div class="col-md-12">
                                 <label class="form-label">Property Security Details <span
@@ -779,7 +799,7 @@
                             </div>
                         </div>
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                        <button type="button" class="btn btn-primary">Submit</button>
+                        <button type="submit" class="btn btn-primary">Submit</button>
                     </form>
                 </div>
 

@@ -1,57 +1,64 @@
+<style>
+    .mapouter {
+        position: relative;
+        overflow: hidden;
+        width: 100%;
+        height: 100% !important;
+        padding-top: 56.25%;
+    }
+</style>
+<style>
+    .responsive-iframe {
+        position: absolute;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        right: 0;
+        width: 100%;
+        height: 100%;
+    }
+
+
+    .LeadCard {
+        box-shadow: 0px 0px 10px 0px rgba(82, 63, 105, 0.1);
+        -webkit-box-shadow: 0px 0px 10px 0px rgba(82, 63, 105, 0.1);
+        -moz-box-shadow: 0px 0px 10px 0px rgba(82, 63, 105, 0.1);
+        -ms-box-shadow: 0px 0px 10px 0px rgba(82, 63, 105, 0.1);
+        background-clip: border-box;
+        border-radius: 8px;
+    }
+</style>
 <div class="row">
-    <div class="col-md-12">
-        <div class="alert alert-success l-bg-original" role="alert">
-            <h4 class="alert-heading">Hello, {{PotentialRes.Name}}</h4>
-            <p>
-                Your application has been received and it's being reviewed.
-
-                We have assigned you a Relationship Manager(RM).
-            </p>
-            <!-- Button trigger modal -->
-            <button type="button" class="btn btn-secondary RMBtn" data-bs-toggle="modal"
-                data-bs-target="#staticBackdrop">
-                View RM <i class="las la-address-card"></i>
-            </button>
-
-            <!-- Modal -->
-            <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
-                aria-labelledby="staticBackdropLabel" aria-hidden="true">
-                <div class="modal-dialog">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="staticBackdropLabel">Relationship Manager Details</h5>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                        </div>
-                        <div class="modal-body">
-                            <div class="mx-auto text-center">
-                                <img src="../../../static/img/logo/pp.png" class="img-fluid" alt="" srcset=""
-                                    style="height: 100px; width:100px;border-radius:50%">
-                            </div>
-                            <form class="row">
-                                <div class="col-md-6">
-                                    <label class="form-label">RM Name</label>
-                                    <input type="text" class="form-control" placeholder="John Doe" readonly>
-                                </div>
-                                <div class="col-md-6">
-                                    <label class="form-label">RM Contact No </label>
-                                    <input type="text" class="form-control" placeholder="+254700000000" readonly>
-                                </div>
-                                <div class="col-md-12">
-                                    <label class="form-label">RM Email</label>
-                                    <input type="text" class="form-control" placeholder="johndoe@gmail.com" readonly>
-                                </div>
-                            </form>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                            <button type="button" class="btn btn-primary"><i class="las la-plus"></i> Create Appointment
-                                <i class="las la-calendar-plus"></i></button>
-                        </div>
-                    </div>
+    <div class="col-md-12 container">
+        <div class="alert bg-success mb-3 py-3" role="alert">
+            <div class="d-flex">
+                <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none"
+                    stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                    class="feather feather-check-circle">
+                    <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                    <polyline points="22 4 12 14.01 9 11.01"></polyline>
+                </svg>
+                <div class="px-3">
+                    <h5 class="alert-heading">Hello, {{PotentialRes.Name}}. Your application has been received and it's
+                        being reviewed!</h5>
+                    <p>We have assigned you a Relationship Manager(RM).</p>
+                    <a href="#" class="btn text-white btn-danger" data-dismiss="alert" aria-label="Close"
+                        data-abc="true">Dismiss</a>
+                    <button type="button" class="btn text-white mx-1 btn-primary" data-bs-toggle="modal"
+                        data-bs-target="#staticBackdrop">
+                        View RM
+                        <i class="las la-arrow-right"></i>
+                    </button>
                 </div>
             </div>
+        </div>
+    </div>
+</div>
+<div class="row gx-2 pb-3">
+    <div class="col-md-6">
+        <div class="alert card h-100 l-bg-original LeadCard" role="alert">
+            <h4 class="alert-heading text-white">Make Document Attachment</h4>
             <hr>
-            <h5 class="mb-0">Make Document Attachment</h5>
             <div class="card p-3 my-3">
                 <form>
                     <div class="row">
@@ -118,6 +125,52 @@
             </div>
         </div>
     </div>
+    <div class="col-md-6">
+        <div class="card h-100">
+            <div class="mapouter" id="LocationMap">
+                <div class="gmap_canvas">
+                    <iframe class="responsive-iframe" id="gmap_canvas" src=""></iframe>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Modal -->
+    <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+        aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="staticBackdropLabel">Relationship Manager Details</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mx-auto text-center">
+                        <img src="../../../static/img/logo/pp.png" class="img-fluid" alt="" srcset=""
+                            style="height: 100px; width:100px;border-radius:50%">
+                    </div>
+                    <form class="row">
+                        <div class="col-md-6">
+                            <label class="form-label">RM Name</label>
+                            <input type="text" class="form-control" placeholder="John Doe" readonly>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">RM Contact No </label>
+                            <input type="text" class="form-control" placeholder="+254700000000" readonly>
+                        </div>
+                        <div class="col-md-12">
+                            <label class="form-label">RM Email</label>
+                            <input type="text" class="form-control" placeholder="johndoe@gmail.com" readonly>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary"><i class="las la-plus"></i> Create Appointment
+                        <i class="las la-calendar-plus"></i></button>
+                </div>
+            </div>
+        </div>
+    </div>
     <script>
         $(document).ready(function () {
             var Coordinates = '{{Coordinates}}'
@@ -125,5 +178,6 @@
             detailUrl = 'https://maps.google.com/maps?q=' + Coordinates +
                 '&t=&z=13&ie=UTF8&iwloc=&output=embed';
             $("#gmap_canvas").attr('src', detailUrl);
+
         });
     </script>

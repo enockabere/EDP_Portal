@@ -151,9 +151,43 @@
         <nav class="sidebar sidebar-offcanvas" id="sidebar">
             <ul class="nav">
                 <li class="nav-item nav-category">CLIENT'S SELF SERVICE</li>
-                {% if stage == 'Lead' or stage == 'Potential' or stage == 'Applicant'  %}
+                {% if stage == 'Lead' or stage == 'Potential'  %}
                 <li class="nav-item">
                     <a class="nav-link" href="{% url 'dashboard' %}" max="1">
+                        <span class="icon-bg"><i class="las la-grip-horizontal nav_icon"></i></span>
+                        <span class="menu-title">Dashboard</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'appointments' %}">
+                        <span class="icon-bg"><i class="las la-calendar-plus"></i></span>
+                        <span class="menu-title">Appointments</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">
+                        <span class="icon-bg"><i class="las la-poll"></i></span>
+                        <span class="menu-title">Survey</span>
+                    </a>
+                </li>
+                <li class="nav-item sidebar-user-actions" style="margin-top:.1rem;">
+                    <div class="sidebar-user-menu">
+                        <a href="{% url 'logout' %}" class="nav-link"><i class="las la-sign-out-alt"></i>
+                            <span class="menu-title">Sign Out</span></a>
+                    </div>
+                </li>
+                <li class="nav-item documentation-link" style="margin-top:-.8rem !important;">
+                    <a class="nav-link" href="#">
+                        <span class="icon-bg">
+                            <i class="las la-external-link-alt"></i>
+                        </span>
+                        <span class="menu-title" style="font-size: 12px !important">{{today}} <span
+                                id="timer"></span></span>
+                    </a>
+                </li>
+                {% elif stage == 'Applicant'  %}
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'ApplicationDetails' %}" max="1">
                         <span class="icon-bg"><i class="las la-grip-horizontal nav_icon"></i></span>
                         <span class="menu-title">Dashboard</span>
                     </a>
@@ -208,10 +242,11 @@
                                 </a>
                             </li>
                             <li class="nav-item"> <a class="nav-link" href="{% url 'loan' %}"><i
-                                        class="las la-arrow-right mr-2"></i> New Loan</a>
+                                        class="las la-arrow-right mr-2"></i> Loans</a>
                             </li>
-                            <li class="nav-item"> <a class="nav-link" href="{% url 'TopUpsRequest' %}"><i
-                                        class="las la-arrow-right mr-2"></i>Loan Top Ups</a></li>
+                            <li class="nav-item"> <a class="nav-link" href="{% url 'LoanTopUp' %}"><i
+                                        class="las la-arrow-right mr-2"></i> Loan Top Up</a>
+                            </li>
                             <li class="nav-item">
                                 <a class="nav-link" href="{% url 'payslip' %}"><i
                                         class="las la-arrow-right mr-2"></i>Loan Repayment</a>

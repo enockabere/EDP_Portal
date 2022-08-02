@@ -29,148 +29,90 @@
             <div class="col-md-12">
                 <div class="card card-body text-center mt-5">
                     <h1 class="heading display-5 pb-3">Loan Calculator</h1>
-                    <form id="loan-form">
+                    <form id="loanForm" action="{% url 'Loan_Calculator' %}" method="POST">
+                        {% csrf_token %}
                         <div class="form-group">
                             <div class="input-group">
                                 <div class="input-group-prepend">
-                                    <span class="input-group-text">$</span>
+                                    <span class="input-group-text"><i class="las la-calculator"></i></span>
                                 </div>
-                                <input type="number" class="form-control" id="amount" placeholder="Loan Amount" />
+                                <select class="form-select" name="calculatorType" id="calculatorType" required>
+                                    <option value="0" disabled selected>--Select Calculator Type--</option>
+                                    <option value="1">Instalment From Requested Amount</option>
+                                    <option value="2">Qualifying Amount From Proposed Instalment</option>
+                                    <option value="3">Eligibility Calculator</option>
+                                </select>
                             </div>
                         </div>
                         <div class="form-group">
                             <div class="input-group">
                                 <div class="input-group-prepend">
-                                    <span class="input-group-text">%</span>
+                                    <span class="input-group-text"><i class="las la-coins"></i></span>
                                 </div>
-                                <input type="number" class="form-control" id="interest" placeholder="Interest" />
+                                <select class="form-select" name="loanType" id="loanType" required>
+                                    <option value="0" disabled selected>--Select Loan Product--</option>
+                                    {% for res in loanProducts %}
+                                    <option value="{{res.Code}}">{{res.Description}}</option>
+                                    {% endfor %}
+                                </select>
                             </div>
                         </div>
                         <div class="form-group">
-                            <input type="number" id="years" class="form-control" placeholder="Years To Repay" />
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text"><i class="las la-coins"></i></span>
+                                </div>
+                                <input type="number" class="form-control" id="requestedAmount" name="requestedAmount"
+                                    placeholder="Loan Amount" />
+                            </div>
                         </div>
                         <div class="form-group">
-                            <input type="submit" value="Calculate" class="btn btn-dark btn-block" />
+                            <label class=" form-label" style="float: left;">Disbursement Date<span
+                                    class="text-danger">*</span></label>
+                            <input type="date" class="form-control" name="disbursementDate" id="disbursementDate"
+                                required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" style="float: left;">Repayment Start Date<span
+                                    class="text-danger">*</span></label>
+                            <input type="date" class="form-control" name="repaymentStartDate" id="repaymentStartDate"
+                                required>
+                        </div>
+                        <div class="form-group">
+                            <input type="submit" class="btn btn-dark btn-block" />
                         </div>
                     </form>
-                    <!-- Loader Here -->
-                    <div id="loading">
-                        <img src="https://media.giphy.com/media/jAYUbVXgESSti/giphy.gif" alt="" />
-                    </div>
-                    <!-- Results -->
-                    <div id="result">
-                        <h5>Results</h5>
-                        <div class="form-group">
-                            <div class="input-group">
-                                <div class="input-group-prepend">
-                                    <span class="input-group-text">Monthly Payment</span>
-                                </div>
-                                <input type="number" class="form-control" id="monthly-payment" disabled />
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <div class="input-group">
-                                <div class="input-group-prepend">
-                                    <span class="input-group-text">Total Payment</span>
-                                </div>
-                                <input type="number" class="form-control" id="total-payment" disabled />
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <div class="input-group">
-                                <div class="input-group-prepend">
-                                    <span class="input-group-text">Total Interest</span>
-                                </div>
-                                <input type="number" class="form-control" id="total-interest" disabled />
-                            </div>
-                        </div>
-                    </div>
+
                 </div>
             </div>
         </div>
     </div>
 </section>
 <script>
-    $(function () {
-        $('[data-toggle="tooltip"]').tooltip();
-    });
-    // Listen for Submit
-    document.getElementById("loan-form").addEventListener("submit", function (e) {
-        // Hide Results
-        document.getElementById("result").style.display = "none";
-
-        // Show Loader
-        document.getElementById("loading").style.display = "block";
-
-        setTimeout(calculateResults, 2000);
-
-        e.preventDefault();
-    });
-
-    // Calculate Results
-    function calculateResults() {
-        // UI Vars
-        const amount = document.getElementById("amount");
-        const interest = document.getElementById("interest");
-        const years = document.getElementById("years");
-        const monthlyPayment = document.getElementById("monthly-payment");
-        const totalPayment = document.getElementById("total-payment");
-        const totalInterest = document.getElementById("total-interest");
-
-        const principal = parseFloat(amount.value);
-        const calculatedInterest = parseFloat(interest.value) / 100 / 12;
-        const calculatedPayments = parseFloat(years.value) * 12;
-
-        // Computed Monthly payment
-        const x = Math.pow(1 + calculatedInterest, calculatedPayments);
-        const monthly = (principal * x * calculatedInterest) / (x - 1);
-
-        if (isFinite(monthly)) {
-            monthlyPayment.value = monthly.toFixed(2);
-            totalPayment.value = (monthly * calculatedPayments).toFixed(2);
-            totalInterest.value = (monthly * calculatedPayments - principal).toFixed(2);
-
-            // Show Results
-            document.getElementById("result").style.display = "block";
-
-            // Hide Loader
-            document.getElementById("loading").style.display = "none";
-        } else {
-            showError("Please check number inputs");
-        }
-    }
-
-    // Show Error
-    function showError(error) {
-        // Hide Results
-        document.getElementById("result").style.display = "none";
-
-        // Hide Loader
-        document.getElementById("loading").style.display = "none";
-
-        // Create a div
-        const errorDiv = document.createElement("div");
-
-        // Get Elements
-        const card = document.querySelector(".card");
-        const heading = document.querySelector(".heading");
-
-        // Add class
-        errorDiv.className = "alert alert-danger";
-
-        // Create text node and append div
-        errorDiv.appendChild(document.createTextNode(error));
-
-        // Insert error above heading
-        card.insertBefore(errorDiv, heading);
-
-        // Clear Error after 3 seconds
-        setTimeout(clearError, 3000);
-
-        // Clear Error
-        function clearError() {
-            document.querySelector(".alert").remove();
-        }
-    }
+    // $(document).on('submit', '#loanForm', function (e) {
+    //     e.preventDefault();
+    //     $.ajax({
+    //         type: 'POST',
+    //         url: '{% url "Loan_Calculator" %}',
+    //         data: {
+    //             calculatorType: $("#calculatorType").val(),
+    //             loanType: $("#loanType").val(),
+    //             requestedAmount: $("#requestedAmount").val(),
+    //             disbursementDate: $("#disbursementDate").val(),
+    //             repaymentStartDate: $("#repaymentStartDate").val(),
+    //             monthlyRepayment: $("#monthlyRepayment").val(),
+    //             csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val()
+    //         },
+    //         success: function (response) {
+    //             alert(response)
+    //             $("#calculatorType").val("")
+    //             $("#loanType").val("")
+    //             $("#requestedAmount").val("")
+    //             $("#disbursementDate").val("")
+    //             $("#repaymentStartDate").val("")
+    //             $("#monthlyRepayment").val("")
+    //         }
+    //     })
+    // });
 </script>
 {% endblock %}

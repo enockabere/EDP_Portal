@@ -1,9 +1,9 @@
 import base64
 from curses.ascii import isdigit
+from ssl import Purpose
 from urllib import request
 from django.shortcuts import render, redirect
 from datetime import date, datetime
-from isodate import date_isoformat
 import requests
 from requests import Session
 from requests_ntlm import HttpNtlmAuth
@@ -24,117 +24,57 @@ def Loan_Calculator(request):
     try:
         session = requests.Session()
         session.auth = config.AUTHS
-
         todays_date = dt.datetime.now().strftime("%b. %d, %Y %A")
-        ctx = {"today": todays_date
+        CustomerName=request.session['CustomerName']
+        CustomerNumber=request.session['CustomerNo']
+        MemberNo=request.session['MemberNo']
+        CustomerEmail=request.session['CustomerEmail']
+        stage=request.session['stage']
+
+        LoanProduct = config.O_DATA.format("/LoanProducts")
+        LoanProductResponse = session.get(LoanProduct, timeout=10).json()
+        loanProducts = LoanProductResponse['value']
+
+        if request.method == 'POST':
+            try:
+                calculatorType = int(request.POST.get('calculatorType'))
+                loanType =request.POST.get('loanType')
+                requestedAmount = float(request.POST.get('requestedAmount'))
+                disbursementDate =datetime.strptime( request.POST.get('disbursementDate'), '%Y-%m-%d').date()
+                repaymentStartDate = datetime.strptime(request.POST.get('repaymentStartDate'), '%Y-%m-%d').date()
+            except ValueError:
+                messages.info(request,"Missing Input!")
+                return redirect('Loan_Calculator')
+            try:
+                response = config.CLIENT.service.FnLoanCalculator(
+                    calculatorType, loanType,requestedAmount,disbursementDate,repaymentStartDate)
+                print(response)
+                return JsonResponse(response)
+            except Exception as e:
+                print(e)
+                messages.info(request, e)
+                return redirect('Loan_Calculator')
+
+        ctx = {"today": todays_date,"full": CustomerName,"stage":stage,
+                "loanProducts":loanProducts,
            }
     except KeyError as e:
+        print(e)
         messages.info(request, "Session Expired. Please Login")
         return redirect('auth')
     return render(request, 'calculator.html', ctx)
 
 
-def CreatePlanner(request):
-    plannerNo = ""
-    employeeNo = request.session['Employee_No_']
-    myAction = ""
-    if request.method == 'POST':
-        try:
-            myAction = request.POST.get('myAction')
-        except ValueError as e:
-            messages.error(request, "Not sent. Invalid Input, Try Again!!")
-            return redirect('LeavePlanner')
-        try:
-            response = config.CLIENT.service.FnLeavePlannerHeader(
-                plannerNo, employeeNo, myAction)
-            messages.success(request, "Request Successful")
-            print(response)
-        
-        except Exception as e:
-            messages.error(request, e)
-            print(e)
-    return redirect('LeavePlanner')
-
-
-def FnSubmitLeavePlanner(request, pk):
-    plannerNo = pk
-    employeeNo = request.session['Employee_No_']
-    if request.method == 'POST':
-        try:
-            response = config.CLIENT.service.FnSubmitLeavePlanner(
-                plannerNo, employeeNo)
-            messages.success(request, "Request Successful")
-            print(response)
-        except Exception as e:
-            messages.error(request, e)
-            print(e)
-    return redirect('PlanDetail', pk=pk)
-
 # Delete leave Planner Header
-
-def CreatePlannerLine(request, pk):
-    lineNo = ""
-    plannerNo = pk
-    startDate = ""
-    endDate = ""
-    myAction = ""
-
-    if request.method == 'POST':
-        try:
-            lineNo = int(request.POST.get('lineNo'))
-            startDate = datetime.strptime(
-                (request.POST.get('startDate')), '%Y-%m-%d').date()
-            endDate = datetime.strptime(
-                (request.POST.get('endDate')), '%Y-%m-%d').date()
-            myAction = request.POST.get('myAction')
-        except ValueError as e:
-            messages.error(request, "Not sent. Invalid Input, Try Again!!")
-            return redirect('PlanDetail', pk=pk)
-    if not lineNo:
-        lineNo = 0
-    try:
-        response = config.CLIENT.service.FnLeavePlannerLine(
-            lineNo, plannerNo, startDate, endDate, myAction)
-        messages.success(request, "Request Successful")
-        print(response)
-    except Exception as e:
-        messages.error(request, e)
-        print(e)
-    return redirect('PlanDetail', pk=pk)
-
-
-def FnDeleteLeavePlannerLine(request, pk):
-    plannerNo = pk
-    lineNo = ""
-
-    if request.method == 'POST':
-        try:
-            lineNo = int(request.POST.get('lineNo'))
-        except ValueError as e:
-            messages.error(request, "Not sent. Invalid Input, Try Again!!")
-            return redirect('PlanDetail', pk=pk)
-        print(plannerNo,lineNo)
-        try:
-            response = config.CLIENT.service.FnDeleteLeavePlannerLine(plannerNo,
-                                                                    lineNo)
-            messages.success(request, "Successfully  Deleted!!")
-            print(response)
-        except Exception as e:
-            messages.error(request, e)
-            print(e)
-    return redirect('PlanDetail', pk=pk)
 
 
 def Loan_Request(request):
     try:
-        stage = 'Customer'
-        CustomerNumber= '00002'
-        # CustomerName=request.session['CustomerName']
-        # CustomerNumber=request.session['CustomerNo']
-        # MemberNo=request.session['MemberNo']
-        # CustomerEmail=request.session['CustomerEmail']
-        # stage=request.session['stage']
-        # Coordinates=request.session['Coordinates'] 
+        CustomerName=request.session['CustomerName']
+        CustomerNumber=request.session['CustomerNo']
+        MemberNo=request.session['MemberNo']
+        CustomerEmail=request.session['CustomerEmail']
+        stage=request.session['stage']
         session = requests.Session()
         session.auth = config.AUTHS
 
@@ -143,25 +83,30 @@ def Loan_Request(request):
         Loans = config.O_DATA.format("/Loans")
         try:
             response = session.get(Loans, timeout=10).json()
-            open = []
+            openDoc = []
             Approved = []
             Rejected = []
             Pending = []
             for document in response['value']:
-                if document['Approval_Status'] == 'Open' and document['Member_Number'] == CustomerNumber:
+                if document['Approval_Status'] == 'Open' and document['Member_Number'] == MemberNo:
                     output_json = json.dumps(document)
-                    open.append(json.loads(output_json))
-                if document['Approval_Status'] == 'Released' and document['Member_Number'] == CustomerNumber:
+                    openDoc.append(json.loads(output_json))
+                if document['Approval_Status'] == 'Approved' and document['Member_Number'] == MemberNo:
                     output_json = json.dumps(document)
                     Approved.append(json.loads(output_json))
-                if document['Approval_Status'] == 'Disapproved' and document['Member_Number'] == CustomerNumber:
+                if document['Approval_Status'] == 'Disapproved' and document['Member_Number'] == MemberNo:
                     output_json = json.dumps(document)
                     Rejected.append(json.loads(output_json))
-                if document['Approval_Status'] == "Pending Approval" and document['Member_Number'] == CustomerNumber:
+                if document['Approval_Status'] == "Pending Approval" and document['Member_Number'] == MemberNo:
                     output_json = json.dumps(document)
                     Pending.append(json.loads(output_json))
             LoanProductResponse = session.get(LoanProduct, timeout=10).json()
             loanProducts = LoanProductResponse['value']
+            
+            LoanPurposes = config.O_DATA.format("/LoanPurposes")
+            LoanPurposesResponse = session.get(LoanPurposes, timeout=10).json()
+            Purpose = LoanPurposesResponse['value']
+
             BranchResponse = session.get(EDPBranch, timeout=10).json()
             Branch = []
             for branch in BranchResponse['value']:
@@ -178,16 +123,16 @@ def Loan_Request(request):
     except KeyError:
         messages.info(request, "Session Expired. Please Login")
         return redirect('auth')
-    counts = len(open)
+    counts = len(openDoc)
     counter = len(Approved)
     reject = len(Rejected)
     pend = len(Pending)
     ctx = {"today": todays_date, "loanProducts":loanProducts,
-        "stage":stage, "branch":Branch, "res": open,
+        "stage":stage, "branch":Branch, "res": openDoc,
             "count": counts, "response": Approved,
             "counter": counter, "rej": Rejected,
             'reject': reject, "pend": pend,
-            "pending": Pending, 
+            "pending": Pending, "Purpose":Purpose
             }
     return render(request, 'loan.html', ctx)
 
@@ -195,9 +140,8 @@ def Loan_Request(request):
 def ApplyLoan(request):
     if request.method == 'POST':
         try:
-            loanNo = ''
-            clientCode = '0000001'
-            # clientCode = request.session['CustomerNo']
+            loanNo = request.POST.get('loanNo')
+            clientCode = request.session['MemberNo']
             studentCount = int(request.POST.get('studentCount'))
             noOfTeachers = int(request.POST.get('noOfTeachers'))
             minFeesPerStudent = float(request.POST.get('minFeesPerStudent'))
@@ -205,23 +149,26 @@ def ApplyLoan(request):
             branchCode = request.POST.get('branchName')
             subBranchCode = request.POST.get('subBranch')
             loanProduct = request.POST.get('loanProduct')
-            subProductCode = request.POST.get('subProductCode')
+            subProductCode = ""
             loanPurpose = request.POST.get('loanPurpose')
-            appliedAmount = float(request.POST.get('subProductCode'))
+            appliedAmount = float(request.POST.get('appliedAmount'))
             myAction = request.POST.get('myAction')
-        except ValueError:
+        except ValueError as e:
+            print(e)
             messages.error(request,"Missing Input")
             return redirect('loan')
         except KeyError:
             messages.info(request, "Session Expired. Please Login")
             return redirect('auth')
+        print(clientCode)
         try:
             response = config.CLIENT.service.FnLoanApplication(
                 loanNo, clientCode, studentCount, noOfTeachers, minFeesPerStudent,
                 maxFeesPerStudent, branchCode,subBranchCode, loanProduct,subProductCode,
                 loanPurpose,appliedAmount,myAction)
-            messages.success(request, "Request Successful")
+            
             print(response)
+            messages.success(request, "Request Successful")
         except Exception as e:
             messages.error(request, e)
             print(e)
@@ -240,16 +187,27 @@ def SubBranch(request):
         pass
     return redirect('loan')
 
-def LoanDetail(request):
+def subProductCode(request):
+    session = requests.Session()
+    session.auth = config.AUTHS
+    subProduct = config.O_DATA.format("/LoanSubProducts")
+    LoanCode = request.GET.get('LoanCode')
     try:
-        stage = 'Customer'
-        CustomerNumber= 'CRML00047'
-        # CustomerName=request.session['CustomerName']
-        # CustomerNumber=request.session['CustomerNo']
-        # MemberNo=request.session['MemberNo']
-        # CustomerEmail=request.session['CustomerEmail']
-        # stage=request.session['stage']
-        # Coordinates=request.session['Coordinates'] 
+        Sub_res = session.get(subProduct, timeout=10).json()
+        return JsonResponse(Sub_res)
+
+    except  Exception as e:
+        pass
+    return redirect('loan')
+
+
+def LoanDetail(request,pk):
+    try:
+        CustomerName=request.session['CustomerName']
+        CustomerNumber=request.session['CustomerNo']
+        MemberNo=request.session['MemberNo']
+        CustomerEmail=request.session['CustomerEmail']
+        stage=request.session['stage']
         session = requests.Session()
         session.auth = config.AUTHS
 
@@ -262,6 +220,14 @@ def LoanDetail(request):
             for applicant in ApplicantResponse['value']:
                 if applicant['No'] == CustomerNumber:
                     res = applicant
+            Loans = config.O_DATA.format("/Loans")
+            response = session.get(Loans, timeout=10).json()
+            for loan in response['value']:
+                if loan['Loan_Number'] == pk:
+                    Loan = loan
+            ExpenseHead = config.O_DATA.format("/SchoolExpenses")
+            ExpenseHeadResponse = session.get(ExpenseHead, timeout=10).json()
+            Expense = ExpenseHeadResponse['value']
         except requests.exceptions.RequestException as e:
             print(e)
             messages.info(request, "Whoops! Something went wrong. Please Login to Continue")
@@ -274,27 +240,26 @@ def LoanDetail(request):
         return redirect('auth')
 
     ctx = {"today": todays_date, "loanProducts":loanProducts,
-        "stage":stage, "data":res,
+        "stage":stage, "data":res, "res":Loan,"Expense":Expense
             }
     return render(request, 'loanDetail.html', ctx)
 
-def FnSchoolLoanRevenue(request):
+def FnSchoolLoanRevenue(request,pk):
     if request.method == 'POST':
         try:
-            entryNo = ""
-            applicantNo = "000001"
-            # applicantNo = request.session['CustomerNo']
+            entryNo = 0
+            applicantNo = request.session['CustomerNo']
             edpClass = request.POST.get('edpClass')
-            streams = request.POST.get('streams')
+            streams = int(request.POST.get('streams'))
             termOneFees = float(request.POST.get('termOneFees'))
             termTwoFees = float(request.POST.get('termTwoFees'))
             termThreeFees = float(request.POST.get('termThreeFees'))
             newStudentAdmission = float(request.POST.get('newStudentAdmission'))
             admissionFees = float(request.POST.get('admissionFees'))
-            myAction = request.POST.get('myAction')
+            myAction = 'insert'
         except ValueError:
             messages.info(request,"Missing Input!")
-            return redirect('LoanDetail')
+            return redirect('LoanDetail',pk=pk)
         except KeyError:
             messages.info(request, "Session Expired. Please Login")
             return redirect('auth')
@@ -303,28 +268,27 @@ def FnSchoolLoanRevenue(request):
             response = config.CLIENT.service.FnSchoolLoanRevenue(
                 entryNo, applicantNo,edpClass,streams, termOneFees,termTwoFees,termThreeFees,
                 newStudentAdmission,admissionFees, myAction)
-            messages.success(request, "Successfully Added")
             print(response)
-            return redirect('LoanDetail')
+            messages.success(request, "Successfully Added")
+            return redirect('LoanDetail',pk=pk)
         except Exception as e:
             print(e)
             messages.info(request, e)
-            return redirect('LoanDetail')
-    return redirect('LoanDetail')
+            return redirect('LoanDetail',pk=pk)
+    return redirect('LoanDetail',pk=pk)
 
-def FnSchoolLoanExpenses(request):
+def FnSchoolLoanExpenses(request,pk):
     if request.method == 'POST':
         try:
-            entryNo = ""
-            applicantNo = "000001"
-            # applicantNo = request.session['CustomerNo']
+            entryNo = 0
+            applicantNo = request.session['CustomerNo']
             expenseHead = request.POST.get('expenseHead')
             monthlyExpense = float(request.POST.get('monthlyExpense'))
             multiplierFactor = float(request.POST.get('multiplierFactor'))
-            myAction = request.POST.get('myAction')
+            myAction = 'insert'
         except ValueError:
             messages.info(request,"Missing Input!")
-            return redirect('LoanDetail')
+            return redirect('LoanDetail',pk=pk)
         except KeyError:
             messages.info(request, "Session Expired. Please Login")
             return redirect('auth')
@@ -332,154 +296,339 @@ def FnSchoolLoanExpenses(request):
         try:
             response = config.CLIENT.service.FnSchoolLoanExpenses(
                 entryNo, applicantNo,expenseHead,monthlyExpense,multiplierFactor,myAction)
-            messages.success(request, "Successfully Added")
             print(response)
-            return redirect('LoanDetail')
+            messages.success(request, "Successfully Added")
+            return redirect('LoanDetail',pk=pk)
         except Exception as e:
             print(e)
             messages.info(request, e)
-            return redirect('LoanDetail')
-    return redirect('LoanDetail')
+            return redirect('LoanDetail',pk=pk)
+    return redirect('LoanDetail',pk=pk)
 
 
-def UploadLeaveAttachment(request, pk):
-    docNo = pk
-    response = ""
-    fileName = ""
-    attachment = ""
-    tableID = 52177494
-
-    if request.method == "POST":
+def FnSchoolLoanEnrolment(request,pk):
+    if request.method == 'POST':
         try:
-            attach = request.FILES.getlist('attachment')
+            entryNo = 0
+            applicantNo = request.session['CustomerNo']
+            academicYear = request.POST.get('academicYear')
+            schoolStrength = request.POST.get('schoolStrength')
+            myAction = request.POST.get('myAction')
+        except KeyError:
+            messages.info(request, "Session Expired. Please Login")
+            return redirect('auth')
+        
+        if academicYear.isdigit() == False:
+            messages.info(request, "Academic year has to be an integer")
+            return redirect('LoanDetail',pk=pk)
+        try:
+            response = config.CLIENT.service.FnSchoolEnrolment(
+                entryNo, applicantNo, int(academicYear), schoolStrength, myAction)
+            print(response)
+            messages.success(request, "Successfully Added")
+            return redirect('LoanDetail',pk=pk)
         except Exception as e:
-            return redirect('IMPDetails', pk=pk)
-        for files in attach:
-            fileName = request.FILES['attachment'].name
-            attachment = base64.b64encode(files.read())
-            try:
-                response = config.CLIENT.service.FnUploadAttachedDocument(
-                    docNo, fileName, attachment, tableID)
-            except Exception as e:
-                messages.error(request, e)
-                print(e)
-        if response == True:
-            messages.success(request, "Successfully Sent !!")
-
-            return redirect('LeaveDetail', pk=pk)
-        else:
-            messages.error(request, "Not Sent !!")
-            return redirect('LeaveDetail', pk=pk)
-
-    return redirect('LeaveDetail', pk=pk)
+            print(e)
+            messages.info(request, e)
+            return redirect('LoanDetail',pk=pk)
+    return redirect('LoanDetail',pk=pk)
 
 
-def LeaveApproval(request, pk):
-    employeeNo = request.session['Employee_No_']
-    applicationNo = ""
+def FnSchoolLoanPassRate(request,pk):
     if request.method == 'POST':
         try:
-            applicationNo = request.POST.get('applicationNo')
-        except ValueError as e:
-            messages.error(request, "Not sent. Invalid Input, Try Again!!")
-            return redirect('LeaveDetail', pk=pk)
-    try:
-        response = config.CLIENT.service.FnRequestLeaveApproval(
-            employeeNo, applicationNo)
-        messages.success(request, "Approval Request Successfully Sent!!")
-        print(response)
-        return redirect('LeaveDetail', pk=pk)
-    except Exception as e:
-        messages.error(request, e)
-        print(e)
-    return redirect('LeaveDetail', pk=pk)
+            entryNo = 0
+            applicantNo = request.session['CustomerNo']
+            kcpeStudents = request.POST.get('kcpeStudents')
+            passRate = request.POST.get('passRate')
+            year = request.POST.get('year')
+            myAction = request.POST.get('myAction')
+        except ValueError:
+            messages.info(request,"Missing Input!")
+            return redirect('LoanDetail',pk=pk)
+        except KeyError:
+            messages.info(request, "Session Expired. Please Login")
+            return redirect('auth')
+        if year.isdigit() == False:
+            messages.info(request, "Year has to be an number")
+            return redirect('LoanDetail',pk=pk)
+
+        try:
+            response = config.CLIENT.service.FnSchoolPassRate(
+                entryNo, applicantNo,kcpeStudents,passRate, int(year), myAction)
+            messages.success(request, "Successfully Added")
+            print(response)
+            return redirect('LoanDetail',pk=pk)
+        except Exception as e:
+            print(e)
+            messages.info(request, e)
+            return redirect('LoanDetail',pk=pk)
+    return redirect('LoanDetail',pk=pk)
 
 
-def LeaveCancelApproval(request, pk):
-    employeeNo = request.session['Employee_No_']
-    applicationNo = ""
+def FnSchoolLoanProjectDetails(request,pk):
     if request.method == 'POST':
         try:
-            applicationNo = request.POST.get('applicationNo')
-        except ValueError as e:
-            messages.error(request, "Not sent. Invalid Input, Try Again!!")
-            return redirect('LeaveDetail', pk=pk)
-    try:
-        response = config.CLIENT.service.FnCancelLeaveApproval(
-            employeeNo, applicationNo)
-        messages.success(request, "Cancel Approval Request Successful !!")
-        print(response)
-        return redirect('LeaveDetail', pk=pk)
-    except Exception as e:
-        messages.error(request, e)
-        print(e)
-    return redirect('LeaveDetail', pk=pk)
+            entryNo = 0
+            applicantNo = request.session['CustomerNo']
+            projectDescription = request.POST.get('projectDescription')
+            estimatedCost = float(request.POST.get('estimatedCost'))
+            costType = int(request.POST.get('costType'))
+            myAction = request.POST.get('myAction')
+        except ValueError:
+            messages.info(request,"Missing Input!")
+            return redirect('LoanDetail',pk=pk)
+        except KeyError:
+            messages.info(request, "Session Expired. Please Login")
+            return redirect('auth')
 
+        try:
+            response = config.CLIENT.service.FnSchoolProjectDetails(
+                entryNo, applicantNo,projectDescription,estimatedCost, costType, myAction)
+            print(response)
+            messages.success(request, "Successfully Added")
+            return redirect('LoanDetail',pk=pk)
+        except Exception as e:
+            print(e)
+            messages.info(request, e)
+            return redirect('LoanDetail',pk=pk)
+    return redirect('LoanDetail',pk=pk)
+
+def FnSchoolLoanTransportDetails(request,pk):
+    if request.method == 'POST':
+        try:
+            entryNo = 0
+            applicantNo = request.session['CustomerNo']
+            transportDescription = request.POST.get('transportDescription')
+            count = int(request.POST.get('count'))
+            myAction = request.POST.get('myAction')
+        except ValueError:
+            messages.info(request,"Missing Input!")
+            return redirect('LoanDetail',pk=pk)
+        except KeyError:
+            messages.info(request, "Session Expired. Please Login")
+            return redirect('auth')
+
+        try:
+            response = config.CLIENT.service.FnSchoolTransportDetails(
+                entryNo, applicantNo,transportDescription,count,myAction)
+            print(response)
+            messages.success(request, "Successfully Added")
+            return redirect('LoanDetail',pk=pk)
+        except Exception as e:
+            print(e)
+            messages.info(request, e)
+            return redirect('LoanDetail',pk=pk)
+    return redirect('LoanDetail',pk=pk)
+
+def FnCustomerAssets(request,pk):
+    if request.method == 'POST':
+        try:
+            entryNo = 0
+            applicantNo = request.session['CustomerNo']
+            assetName = request.POST.get('assetName')
+            estimatedValue = float(request.POST.get('estimatedValue'))
+            assetOwner = request.POST.get('assetOwner')
+            myAction = request.POST.get('myAction')
+        except ValueError:
+            messages.info(request,"Missing Input!")
+            return redirect('LoanDetail',pk=pk)
+        except KeyError:
+            messages.info(request, "Session Expired. Please Login")
+            return redirect('auth')
+
+        try:
+            response = config.CLIENT.service.FnSchoolCoapplicantAssets(
+                entryNo, applicantNo,assetName,estimatedValue,assetOwner,myAction)
+            print(response)
+            messages.success(request, "Successfully Added")
+            return redirect('LoanDetail',pk=pk)
+        except Exception as e:
+            print(e)
+            messages.info(request, e)
+            return redirect('LoanDetail',pk=pk)
+    return redirect('LoanDetail',pk=pk)
+
+def FnCustomerLiabilities(request,pk):
+    if request.method == 'POST':
+        try:
+            entryNo = 0
+            applicantNo = request.session['CustomerNo']
+            nameofborrower = request.POST.get('nameofborrower')
+            bankName = request.POST.get('bankName')
+            loanAmount = float(request.POST.get('loanAmount'))
+            loanBalance = float(request.POST.get('loanBalance'))
+            expectedMonthlyInstalment = request.POST.get('expectedMonthlyInstalment')
+            loanTenures = request.POST.get('loanTenure')
+            TenurePeriod = request.POST.get('TenurePeriod')
+            balanceTenures = request.POST.get('balanceTenure')
+            TenureBalancePeriod = request.POST.get('TenureBalancePeriod')
+            myAction = request.POST.get('myAction')
+        except ValueError:
+            messages.info(request,"Missing Input!")
+            return redirect('LoanDetail',pk=pk)
+        except KeyError:
+            messages.info(request, "Session Expired. Please Login")
+            return redirect('auth')
+        loanTenure = loanTenures + TenurePeriod
+        balanceTenure = balanceTenures + TenureBalancePeriod
+        try:
+            response = config.CLIENT.service.FnSchoolLiabilities(
+                entryNo, applicantNo,nameofborrower,bankName,loanAmount,
+                loanBalance,expectedMonthlyInstalment,loanTenure,balanceTenure,myAction)
+            print(response)
+            messages.success(request, "Successfully Added")
+            return redirect('LoanDetail',pk=pk)
+        except Exception as e:
+            print(e)
+            messages.info(request, e)
+            return redirect('LoanDetail',pk=pk)
+    return redirect('LoanDetail',pk=pk)
+
+def FnCustomerCommitments(request,pk):
+    if request.method == 'POST':
+        try:
+            entryNo = 0
+            applicantNo = request.session['CustomerNo']
+            nameOfProduct = request.POST.get('nameOfProduct')
+            monthlyCommitment = float(request.POST.get('monthlyCommitment'))
+            annualCommitment = float(request.POST.get('annualCommitment'))
+            myAction = request.POST.get('myAction')
+        except ValueError:
+            messages.info(request,"Missing Input!")
+            return redirect('LoanDetail',pk=pk)
+        except KeyError:
+            messages.info(request, "Session Expired. Please Login")
+            return redirect('auth')
+
+        try:
+            response = config.CLIENT.service.FnSchoolCommitments(
+                entryNo, applicantNo,nameOfProduct,monthlyCommitment,
+                annualCommitment,myAction)
+            print(response)
+            messages.success(request, "Successfully Added")
+            return redirect('LoanDetail',pk=pk)
+        except Exception as e:
+            print(e)
+            messages.info(request, e)
+            return redirect('LoanDetail',pk=pk)
+    return redirect('LoanDetail',pk=pk)
+
+def FnCustomerSecurityProvided(request,pk):
+    if request.method == 'POST':
+        try:
+            entryNo = 0
+            applicantNo = request.session['CustomerNo']
+            typeOfSecurity = request.POST.get('typeOfSecurity')
+            available = eval(request.POST.get('available'))
+            myAction = request.POST.get('myAction')
+        except ValueError:
+            messages.info(request,"Missing Input!")
+            return redirect('LoanDetail',pk=pk)
+        except KeyError:
+            messages.info(request, "Session Expired. Please Login")
+            return redirect('auth')
+
+        try:
+            response = config.CLIENT.service.FnSchoolSecurityProvided(
+                entryNo, applicantNo,typeOfSecurity,available,myAction)
+            print(response)
+            messages.success(request, "Successfully Added")
+            return redirect('LoanDetail',pk=pk)
+        except Exception as e:
+            print(e)
+            messages.info(request, e)
+            return redirect('LoanDetail',pk=pk)
+    return redirect('LoanDetail',pk=pk)
+
+def FnCustomerVehicleSecurity(request,pk):
+    if request.method == 'POST':
+        try:
+            entryNo = 0
+            applicantNo = request.session['CustomerNo']
+            registrationNo = request.POST.get('registrationNo')
+            ownerName = request.POST.get('ownerName')
+            yearOfManufacture = request.POST.get('yearOfManufacture')
+            approximateValue = float(request.POST.get('yearOfManufacture'))
+            myAction = request.POST.get('myAction')
+        except ValueError:
+            messages.info(request,"Missing Input!")
+            return redirect('LoanDetail',pk=pk)
+        except KeyError:
+            messages.info(request, "Session Expired. Please Login")
+            return redirect('auth')
+
+        try:
+            response = config.CLIENT.service.FnSchoolVehicleSecurity(
+                entryNo, applicantNo,registrationNo,ownerName,yearOfManufacture,
+                approximateValue,myAction)
+            print(response)
+            messages.success(request, "Successfully Added")
+            return redirect('LoanDetail',pk=pk)
+        except Exception as e:
+            print(e)
+            messages.info(request, e)
+            return redirect('LoanDetail',pk=pk)
+    return redirect('LoanDetail',pk=pk)
+
+def FnCustomerProjectSecurityDetails(request,pk):
+    if request.method == 'POST':
+        try:
+            entryNo = 0
+            applicantNo = request.session['CustomerNo']
+            propertySecurityDetails = request.POST.get('propertySecurityDetails')
+            description = request.POST.get('description')
+            myAction = request.POST.get('myAction')
+        except ValueError:
+            messages.info(request,"Missing Input!")
+            return redirect('LoanDetail',pk=pk)
+        except KeyError as e:
+            print(e)
+            messages.info(request, "Session Expired. Please Login")
+            return redirect('auth')
+
+        try:
+            response = config.CLIENT.service.FnSchoolProjectSecurityDetails(
+                entryNo, applicantNo,propertySecurityDetails,description,myAction)
+            print(response)
+            messages.success(request, "Successfully Added")
+            return redirect('LoanDetail',pk=pk)
+        except Exception as e:
+            print(e)
+            messages.info(request, e)
+            return redirect('LoanDetail',pk=pk)
+    return redirect('LoanDetail',pk=pk)
 
 def TopUpsRequest(request):
     try:
-        fullname = request.session['User_ID']
-        year = request.session['years']
+        CustomerName=request.session['CustomerName']
+        CustomerNumber=request.session['CustomerNo']
+        MemberNo=request.session['MemberNo']
+        CustomerEmail=request.session['CustomerEmail']
+        stage=request.session['stage']
 
         session = requests.Session()
         session.auth = config.AUTHS
-
-        Access_Point = config.O_DATA.format("/QyTrainingRequests")
-        currency = config.O_DATA.format("/QyCurrencies")
-        trainingNeed = config.O_DATA.format("/QyTrainingNeeds")
        
-        try:
-            response = session.get(Access_Point, timeout=10).json()
-            res_currency = session.get(currency, timeout=10).json()
-            res_train = session.get(trainingNeed, timeout=10).json()
-            
-            open = []
-            Approved = []
-            Rejected = []
-            Pending = []
-            cur = res_currency['value']
-            trains = res_train['value']
+        Loans = config.O_DATA.format("/Loans")
+        response = session.get(Loans, timeout=10).json()
+        Approved = []
 
-            for imprest in response['value']:
-                if imprest['Status'] == 'Open' and imprest['Employee_No'] == request.session['Employee_No_']:
-                    output_json = json.dumps(imprest)
-                    open.append(json.loads(output_json))
-                if imprest['Status'] == 'Released' and imprest['Employee_No'] == request.session['Employee_No_']:
-                    output_json = json.dumps(imprest)
-                    Approved.append(json.loads(output_json))
-                if imprest['Status'] == 'Rejected' and imprest['Employee_No'] == request.session['Employee_No_']:
-                    output_json = json.dumps(imprest)
-                    Rejected.append(json.loads(output_json))
-                if imprest['Status'] == 'Pending Approval' and imprest['Employee_No'] == request.session['Employee_No_']:
-                    output_json = json.dumps(imprest)
-                    Pending.append(json.loads(output_json))
-            counts = len(open)
-
-            counter = len(Approved)
-
-            reject = len(Rejected)
-
-            pend = len(Pending)
-        except requests.exceptions.ConnectionError as e:
-            print(e)
-            messages.error(request,"500 Server Error, Try Again in a few")
-            return redirect('dashboard')
-
+        for document in response['value']:
+            if document['Approval_Status'] == 'Released' and document['Member_Number'] == MemberNo:
+                output_json = json.dumps(document)
+                Approved.append(json.loads(output_json))
+        counts = len(Approved)
         todays_date = dt.datetime.now().strftime("%b. %d, %Y %A")
-        ctx = {"today": todays_date, "res": open,
-            "count": counts, "response": Approved,
-            "counter": counter, "rej": Rejected,
-            'reject': reject, 'cur': cur,
-            "train": trains,
-            "pend": pend, "pending": Pending,
-            "year": year, "full": fullname}
     except KeyError:
         messages.info(request, "Session Expired. Please Login")
         return redirect('auth')
+    ctx = {"today": todays_date,"full": CustomerName,"stage":stage,
+            "count": counts, "response": Approved}
     return render(request, 'topUps.html', ctx)
 
 
-def CreateTrainingRequest(request):
+def FnLoanTopUp(request,pk):
     requestNo = ''
     employeeNo = request.session['Employee_No_']
     usersId = request.session['User_ID']
@@ -494,22 +643,22 @@ def CreateTrainingRequest(request):
             myAction = request.POST.get('myAction')
         except ValueError:
             messages.error(request, "Not sent. Invalid Input, Try Again!!")
-            return redirect('training_request')
+            return redirect('LoanDetail',pk=pk)
         if not requestNo:
             requestNo = ""
         
         if not trainingNeed:
             trainingNeed = ''
         try:
-            response = config.CLIENT.service.FnTrainingRequest(
+            response = config.CLIENT.service.FnLoanTopUp(
                 requestNo, employeeNo, usersId, isAdhoc, trainingNeed, myAction)
             messages.success(request, "Successfully Added!!")
             print(response)
         except Exception as e:
             messages.error(request, e)
             print(e)
-            return redirect('training_request')
-    return redirect('training_request')
+            return redirect('LoanDetail',pk=pk)
+    return redirect('LoanDetail',pk=pk)
 
 
 def TopUpDetail(request):

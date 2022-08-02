@@ -95,8 +95,7 @@
 }
 
 .modal-header {
-    background: #008080;
-    color: white;
+    font-family: var(--normal-font);
 }
 
 /* #rap {

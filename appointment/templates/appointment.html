@@ -27,25 +27,20 @@
                     <div class="m-4">
                         <ul class="nav nav-tabs d-flex" id="myTab">
                             <li class="nav-item flex-fill">
-                                <a href="#openApp" class="nav-link active" data-bs-toggle="tab">Open
-                                    ({{0}})</a>
-                            </li>
-                            <li class="nav-item flex-fill">
-                                <a href="#pendApp" class="nav-link" data-bs-toggle="tab">Pending Approval
-                                    ({{0}})</a>
+                                <a href="#openApp" class="nav-link active" data-bs-toggle="tab">Pending Confirmation
+                                    ({{countOpen}})</a>
                             </li>
                             <li class="nav-item flex-fill">
                                 <a href="#app" class="nav-link" data-bs-toggle="tab">Approved
                                     ({{0}})</a>
                             </li>
                             <li class="nav-item flex-fill">
-                                <a href="#rejApp" class="nav-link" data-bs-toggle="tab">rejected
+                                <a href="#rejApp" class="nav-link" data-bs-toggle="tab">Rejected
                                     ({{0}})</a>
                             </li>
                         </ul>
                         <div class="tab-content">
-                            <div class="tab-pane fade show active" id="home">
-                                <h4 class="mt-2 text-dark">Documents Pending Your Approval</h4>
+                            <div class="tab-pane fade show active" id="openApp">
                                 <div class="card-body">
                                     <table id="example"
                                         class="display table table-striped table-bordered dt-responsive table-responsive-lg"
@@ -53,35 +48,28 @@
                                         <thead>
                                             <tr id="tops">
                                                 <th id="long">Appointment No</th>
-                                                <th>Appointment Date</th>
-                                                <th>Sender</th>
-                                                <th>Status</th>
-                                                <th>Appointment Time</th>
-                                                <th>Action</th>
+                                                <th>Date Created</th>
+                                                <th>Appointment Date & Time</th>
+                                                <th>RM Name</th>
+                                                <th>Appointment Description</th>
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            {% for res in res %}
+                                            {% for res in appoint %}
                                             <tr>
-                                                <td>{{res.Document_No_}}</td>
-                                                <td id="rap">{{res.Document_Type}}</td>
-                                                <td>{{res.Sender_ID}}</td>
-                                                <td>{{res.Status}}</td>
-                                                <td>{{res.Due_Date}}</td>
-                                                <td>
-                                                    <a href="" class="btn btn-success btn-icon-text" type="button"
-                                                        data-toggle="tooltip" data-placement="top" title="View"
-                                                        style="background: #25CC88;"><i class="fa fa-table"></i>
-                                                    </a>
-                                                </td>
+                                                <td>{{res.No}}</td>
+                                                <td>{{res.Date_Created}}</td>
+                                                <td id="rap">{{res.Appointment_Date}} at <span
+                                                        class="text-primary">{{res.Appointment_Time}}</span></td>
+                                                <td>{{res.RM_Name}}</td>
+                                                <td>{{res.Brief_Description}}</td>
                                             </tr>
                                             {% endfor %}
                                         </tbody>
                                     </table>
                                 </div>
                             </div>
-                            <div class="tab-pane fade" id="profile">
-                                <h4 class="mt-2">Approved Documents</h4>
+                            <div class="tab-pane fade" id="app">
                                 <div class="card-body">
                                     <table id="example"
                                         class="display table table-striped table-bordered dt-responsive table-responsive-lg"
@@ -116,8 +104,7 @@
                                     </table>
                                 </div>
                             </div>
-                            <div class="tab-pane fade" id="reject">
-                                <h4 class="mt-2">Rejected Documents</h4>
+                            <div class="tab-pane fade" id="rejApp">
                                 <div class="card-body">
                                     <table id="example"
                                         class="display table table-striped table-bordered dt-responsive table-responsive-lg"
@@ -170,32 +157,21 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <form class="myForm needs-validation" action="{% url 'create' %}" method="post" novalidate>
+                <form class="myForm" action="{% url 'FnBookAppointment' %}" method="post" novalidate>
                     {% csrf_token %}
                     <div class="row">
                         <div class="col-md-12">
-                            <input type="hidden" name="imprestNo" value="">
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-12">
-                            <label class="form-label">Select Relationship Manager <span
-                                    class="text-danger">*</span></label>
-                            <select class="form-select" name="isImprest" required>
-                                <option selected disabled value="">Select Option</option>
-                                <option value="">John Doe</option>
-                                <option value="">Jane Doe</option>
-                            </select>
+                            <input type="hidden" name="appointmentNo" value="">
                         </div>
                     </div>
                     <div class="row">
                         <div class="col-md-6">
                             <label class="form-label">Appointment Date <span class="text-danger">*</span></label>
-                            <input type="date" name="" class="form-control" required>
+                            <input type="date" name="appointmentDate" class="form-control" required>
                         </div>
                         <div class="col-md-6">
                             <label class="form-label">Appointment Time <span class="text-danger">*</span></label>
-                            <input type="time" name="" class="form-control" required>
+                            <input type="time" name="appointmentTime" class="form-control" required>
                         </div>
                     </div>
 
@@ -204,20 +180,19 @@
                             <input type="hidden" name="myAction" value="insert">
                         </div>
                     </div>
-                    <div class="row">
+                    <div class="row my-3">
                         <div class="col-md-12">
                             <label for="purpose" class="form-label">Purpose <span class="text-danger">*</span></label>
-                            <textarea class="form-control" name="purpose" rows="3" required></textarea>
+                            <textarea class="form-control" name="description" rows="3" required></textarea>
 
                         </div>
                     </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Discard</button>
-                <button type="submit" id="sasa" class="btn btn-primary">Submit</button>
+                    <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Discard</button>
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                </form>
             </div>
         </div>
-        </form>
+
     </div>
 </div>
 {% endblock %}

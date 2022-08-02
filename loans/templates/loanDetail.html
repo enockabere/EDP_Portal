@@ -17,85 +17,234 @@
         </div>
         <!--alert -->
         {% include 'alerts.html' %}
+        <div class="row my-3 gx-2">
+            <div class="col-md-3">
+                <div class="card l-bg-dark  statCard h-100">
+                    <div class="card-statistic-3 p-4">
+                        <div class="card-icon card-icon-large"><i class="fas fa-users"></i></div>
+                        <div class="mb-4">
+                            <h5 class="card-title mb-0">Loan Status</h5>
+                        </div>
+                        {% if res.Approval_Status == "Open" %}
+                        <div class="row align-items-center mb-2 d-flex">
+                            <div class="col-md-12">
+                                <h2 class="d-flex align-items-center mb-0">
+                                    {{res.Approval_Status}}
+                                </h2>
+                            </div>
+                        </div>
+                        <div class="progress mt-1 " data-height="8" style="height: 8px;">
+                            <div class="progress-bar l-bg-red" role="progressbar" data-width="50%" aria-valuenow="25"
+                                aria-valuemin="0" aria-valuemax="100"
+                                style="width: 50%; background: linear-gradient(to right, #a86008, #c18b39) !important;">
+                            </div>
+                        </div>
+                        {% elif res.Approval_Status == "Pending Approval" %}
+                        <div class="row align-items-center mb-2 d-flex">
+                            <div class="col-md-12">
+                                <h2 class="d-flex align-items-center mb-0">
+                                    {{res.Approval_Status}}
+                                </h2>
+                            </div>
+                        </div>
+                        <div class="progress mt-1 " data-height="8" style="height: 8px;">
+                            <div class="progress-bar l-bg-yellow" role="progressbar" data-width="25%" aria-valuenow="25"
+                                aria-valuemin="0" aria-valuemax="100"
+                                style="width: 75%; background: linear-gradient(to right, #a86008, #c18b39) !important;">
+                            </div>
+                        </div>
+                        {% elif res.Approval_Status == "Released" %}
+                        <div class="row align-items-center mb-2 d-flex">
+                            <div class="col-md-12">
+                                <h2 class="d-flex align-items-center mb-0">
+                                    {{res.Approval_Status}}
+                                </h2>
+                            </div>
+                        </div>
+                        <div class="progress mt-1 " data-height="8" style="height: 8px;">
+                            <div class="progress-bar l-bg-green" role="progressbar" data-width="75%" aria-valuenow="75"
+                                aria-valuemin="0" aria-valuemax="100"
+                                style="width: 100%; background: linear-gradient(to right, #a86008, #c18b39) !important;">
+                            </div>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card l-orange statCard h-100">
+                    <div class="card-statistic-3 p-4">
+                        <div class="card-icon card-icon-large"><i class="fas fa-coins"></i></div>
+                        <div class="mb-4">
+                            <h5 class="card-title mb-0" id="yesa">Applied Amount</h5>
+                        </div>
+                        <div class="row align-items-center mb-2 d-flex">
+                            <div class="col-md-12">
+                                <h2 class="d-flex align-items-center  mb-0">
+                                    Kshs {{res.Applied_Amount}}
+                                </h2>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card l-bg-dark  statCard h-100">
+                    <div class="card-statistic-3 p-4">
+                        <div class="card-icon card-icon-large"><i class="fas fa-coins"></i></div>
+                        <div class="mb-4">
+                            <h5 class="card-title mb-0 ">Approved Amount</h5>
+                        </div>
+                        <div class="row align-items-center mb-2 d-flex">
+                            <div class="col-md-12">
+                                <h2 class="d-flex align-items-center mb-0">
+                                    Kshs {{res.Approved_Amount}}
+                                </h2>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card l-orange statCard h-100">
+                    <div class="card-statistic-3 p-4">
+                        <div class="card-icon card-icon-large"><i class="fas fa-coins"></i></div>
+                        <div class="mb-4">
+                            <h5 class="card-title mb-0">Net Disbursed Amount</h5>
+                        </div>
+                        <div class="row align-items-center mb-2 d-flex">
+                            <div class="col-md-12">
+                                <h2 class="d-flex align-items-center mb-0">
+                                    Kshs {{res.Net_Disbursed_Amount}}
+                                </h2>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
         <div class="row">
             <div class="col-md-12">
                 <div class="d-grid gap-2 d-md-block">
-
+                    <button class="btn btn-primary my-2" type="button" data-bs-toggle="modal"
+                        data-bs-target="#staticBackdrop"><i class="las la-plus"></i> Add School Enrollment
+                        History</button>
+                    <button class="btn btn-primary" type="button" data-bs-toggle="modal"
+                        data-bs-target="#staticBackdropPassRate"><i class="las la-plus"></i> Add School Pass
+                        Rate</button>
+                    <button class="btn btn-primary" type="button" data-bs-toggle="modal"
+                        data-bs-target="#ModalFnSchoolProjectDetails"><i class="las la-plus"></i> Add School Project
+                        Details</button>
                     <button class="btn btn-primary" type="button" data-bs-toggle="modal"
                         data-bs-target="#ModalFnSchoolLoanRevenue"><i class="las la-plus"></i> Add School
                         Revenue</button>
                     <button class="btn btn-primary" type="button" data-bs-toggle="modal"
                         data-bs-target="#ModalFnSchoolLoanExpenses"><i class="las la-plus"></i> Add School
                         Expenses</button>
+                    <button class="btn btn-primary my-2" type="button" data-bs-toggle="modal"
+                        data-bs-target="#ModalFnSchoolTransportDetails"><i class="las la-plus"></i> Add School Transport
+                        Details</button>
+                    <button class="btn btn-primary" type="button" data-bs-toggle="modal"
+                        data-bs-target="#ModalFnSchoolCoapplicantAssets"><i class="las la-plus"></i> Add School
+                        Assets</button>
+                    <button class="btn btn-primary" type="button" data-bs-toggle="modal"
+                        data-bs-target="#ModalFnSchoolLiabilities"><i class="las la-plus"></i> Add School
+                        Liabilities</button>
+                    <button class="btn btn-primary" type="button" data-bs-toggle="modal"
+                        data-bs-target="#ModalFnSchoolCommitments"><i class="las la-plus"></i> Add School
+                        Commitments</button>
+                    <button class="btn btn-primary" type="button" data-bs-toggle="modal"
+                        data-bs-target="#ModalFnSchoolSecurityProvided"><i class="las la-plus"></i> Add Security
+                        Provided</button>
+                    <button class="btn btn-primary" type="button" data-bs-toggle="modal"
+                        data-bs-target="#ModalFnSchoolVehicleSecurity"><i class="las la-plus"></i> Add Vehicle Security
+                        Details</button>
+                    <button class="btn btn-primary" type="button" data-bs-toggle="modal"
+                        data-bs-target="#ModalFnSchoolProjectSecurityDetails"><i class="las la-plus"></i> Add Property
+                        Security
+                        Details</button>
                 </div>
             </div>
         </div>
         <div class="row">
             <div class="col-md-12">
                 <form class="row g-3">
-                    <div class="col-md-6">
-                        <label class="form-label">Testing</label>
-                        <input type="text" class="form-control" placeholder="Testing" readonly>
+                    <div class="col-md-4">
+                        <label class="form-label">Loan Number</label>
+                        <input type="text" class="form-control" placeholder="{{res.Loan_Number}}" readonly>
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label">Loan Balance</label>
+                        <input type="text" class="form-control" placeholder="{{res.Loan_Balance}}" readonly>
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label">Loan Product</label>
+                        <input type="text" class="form-control" placeholder="{{res.Loan_Product}}" readonly>
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label">Interest Rate</label>
+                        <input type="text" class="form-control" placeholder="{{res.Interest_rate}}" readonly>
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label">Installments</label>
+                        <input type="text" class="form-control" placeholder="{{res.Installments}}" readonly>
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label">Applied Amount</label>
+                        <input type="text" class="form-control" placeholder="{{res.Applied_Amount}}" readonly>
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label">Approved Amount</label>
+                        <input type="text" class="form-control" placeholder="{{res.Approved_Amount}}" readonly>
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label">Total Upfront Deductions</label>
+                        <input type="text" class="form-control" placeholder="{{res.Total_Upfront_Deductions}}" readonly>
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label">Net Disbursed Amount</label>
+                        <input type="text" class="form-control" placeholder="{{res.Net_Disbursed_Amount}}" readonly>
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label">Loan Category</label>
+                        <input type="text" class="form-control" placeholder="{{res.Loan_Category}}" readonly>
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label">Repayment Frequency</label>
+                        <input type="text" class="form-control" placeholder="{{res.Repayment_Frequency}}" readonly>
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label">Branch</label>
+                        <input type="text" class="form-control" placeholder="{{res.Branch_Code}}" readonly>
                     </div>
                     <div class="col-md-6">
-                        <label class="form-label">Testing</label>
-                        <input type="text" class="form-control" placeholder="Testing" readonly>
+                        <label class="form-label">Loan Purpose</label>
+                        <input type="text" class="form-control" placeholder="{{res.Loan_Purpose}}" readonly>
                     </div>
                     <div class="col-md-6">
-                        <label class="form-label">Testing</label>
-                        <input type="text" class="form-control" placeholder="Testing" readonly>
+                        <label class="form-label">Interest Calculation Method</label>
+                        <input type="text" class="form-control" placeholder="{{res.Interest_Calculation_Method}}"
+                            readonly>
                     </div>
-                    <div class="col-md-6">
-                        <label class="form-label">Testing</label>
-                        <input type="text" class="form-control" placeholder="Testing" readonly>
+
+                    <div class="col-md-4">
+                        <label class="form-label">Amount in Arrears</label>
+                        <input type="text" class="form-control" placeholder="{{res.Amount_in_Arrears}}" readonly>
                     </div>
-                    <div class="col-md-12">
-                        <label class="form-label">Testing</label>
-                        <input type="text" class="form-control" placeholder="Testing" readonly>
+                    <div class="col-md-4">
+                        <label class="form-label">Months in Arrears</label>
+                        <input type="text" class="form-control" placeholder="{{res.Months_in_Arrears}}" readonly>
                     </div>
+                    <div class="col-md-4">
+                        <label class="form-label">Fully Disbursed</label>
+                        <input type="text" class="form-control" placeholder="{{res.Fully_Disbursed}}" readonly>
+                    </div>
+
                 </form>
             </div>
         </div>
-        <div class="row mt-4">
-            <div class="col-md-12">
-                <div class="card" id="d-card">
-                    <h4 class="mt-2 mx-2 text-dark">School Enrollment
-                        History</h4>
-                    <div class="card-body">
-                        <table id="example"
-                            class="display table table-striped table-bordered dt-responsive table-responsive-lg"
-                            style="width:100%">
-                            <thead>
-                                <tr id="tops">
-                                    <th id="long">School Name</th>
-                                    <th>School Detail A</th>
-                                    <th>School Detail B</th>
-                                    <th>School Detail C</th>
-                                    <th>Action</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>Kenya High</td>
-                                    <td>Detail X</td>
-                                    <td>Detail Y</td>
-                                    <td>Detail Z</td>
-                                    <td>
-                                        <form action="" method="post" style="display: inline-block;">
-                                            {% csrf_token %}
-                                            <input type="hidden" name="lineNo" value="{{res.Line_No}}">
-                                            <button type="submit" class="btn btn-danger" data-toggle="tooltip"
-                                                data-placement="top" title="Delete"><i class="fas fa-trash-alt"></i>
-                                            </button>
-                                        </form>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-        </div>
+
         <div class="row my-3 pb-3">
             <div class="d-grid gap-2 d-md-block">
                 <div style="display: inline-block;">
@@ -117,7 +266,134 @@
         </div>
     </div>
     </div>
+    <!-- Modal Enrollment History -->
+    <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+        aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="staticBackdropLabel">School Enrollment History</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form class="myForm" action="{% url 'FnSchoolLoanEnrolment' res.Loan_Number %}" method="post"
+                        novalidate>
+                        <input type="hidden" name="myAction" value="insert">
+                        {% csrf_token %}
+                        <div class="row">
+                            <div class="col-md-12">
+                                <label class="form-label">Academic Year <span class="text-danger">*</span></label>
+                                <input type="number" class="form-control" name="academicYear" placeholder="2000"
+                                    required>
+                            </div>
+                        </div>
 
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="mb-2">
+                                    <label class="form-label">School Strength <span class="text-danger">*</span></label>
+                                    <input type="text" class="form-control" name="schoolStrength" required>
+                                </div>
+                            </div>
+                        </div>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Submit</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- end -->
+    <!-- Modal Pass Rate -->
+    <div class="modal fade" id="staticBackdropPassRate" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+        aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="staticBackdropLabel">School Pass Rate</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form class="myForm" action="{% url 'FnSchoolLoanPassRate' res.Loan_Number  %}" method="post"
+                        novalidate>
+                        {% csrf_token %}
+                        <input type="hidden" name="myAction" value="insert">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="mb-2">
+                                    <label class="form-label">KCPE Students<span class="text-danger">*</span></label>
+                                    <input type="number" class="form-control" name="kcpeStudents" required>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="mb-2">
+                                    <label class="form-label">Pass Rate<span class="text-danger">*</span></label>
+                                    <input type="text" class="form-control" name="passRate" required>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row my-3">
+                            <div class="col-md-12">
+                                <label class="form-label">Year <span class="text-danger">*</span></label>
+                                <input type="number" class="form-control" name="year" placeholder="2000" required>
+                            </div>
+                        </div>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Submit</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- End -->
+    <!-- Modal SchoolProjectDetails -->
+    <div class="modal fade" id="ModalFnSchoolProjectDetails" data-bs-backdrop="static" data-bs-keyboard="false"
+        tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="staticBackdropLabel">School Project Details</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form class="myForm" action="{% url 'FnSchoolLoanProjectDetails' res.Loan_Number %}" method="post"
+                        novalidate>
+                        {% csrf_token %}
+                        <input type="hidden" name="myAction" value="insert">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="mb-2">
+                                    <label class="form-label">Estimated Cost <span class="text-danger">*</span></label>
+                                    <input type="text" class="form-control" name="estimatedCost" placeholder="000.000"
+                                        required>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <label class="form-label">Cost Type <span class="text-danger">*</span></label>
+                                <select class="form-select" name="costType" required>
+                                    <option value="0" disabled selected>--Select--</option>
+                                    <option value="1">Project Cost</option>
+                                    <option value="2">Owner Contribution</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="row my-2">
+                            <div class="col-md-12">
+                                <label class="form-label">Project Description <span class="text-danger">*</span></label>
+                                <textarea class="form-control" name="projectDescription" rows="5"></textarea>
+                            </div>
+                        </div>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Submit</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
     <!-- Modal -->
     <div class="modal fade" id="Attachment" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog">
@@ -154,8 +430,8 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <form class="myForm needs-validation" action="{% url 'FnSchoolLoanRevenue' %}" method="post"
-                        novalidate>
+                    <form class="myForm needs-validation" action="{% url 'FnSchoolLoanRevenue' res.Loan_Number %}"
+                        method="post" novalidate>
                         {% csrf_token %}
                         <div class="row">
                             <div class="col-md-12">
@@ -221,7 +497,7 @@
                             </div>
                         </div>
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                        <button type="button" class="btn btn-primary">Submit</button>
+                        <button type="submit" class="btn btn-primary">Submit</button>
                     </form>
                 </div>
             </div>
@@ -238,14 +514,19 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <form class="myForm needs-validation" action="{% url 'FnSchoolLoanExpenses' %}" method="post"
-                        novalidate>
+                    <form class="myForm needs-validation" action="{% url 'FnSchoolLoanExpenses' res.Loan_Number %}"
+                        method="post" novalidate>
                         {% csrf_token %}
                         <div class="row">
                             <div class="col-md-12">
                                 <div class="mb-2">
                                     <label class="form-label">Expense Head <span class="text-danger">*</span></label>
-                                    <input type="text" class="form-control" name="expenseHead" required>
+                                    <select class="form-select" name="expenseHead" required>
+                                        <option value="0" disabled selected>--Select--</option>
+                                        {% for res in Expense %}
+                                        <option value="{{res.Code}}">{{res.Description}}</option>
+                                        {% endfor %}
+                                    </select>
                                 </div>
                             </div>
                         </div>
@@ -270,8 +551,430 @@
                             </div>
                         </div>
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                        <button type="button" class="btn btn-primary">Submit</button>
+                        <button type="submit" class="btn btn-primary">Submit</button>
                     </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Modal FnSchoolTransportDetails -->
+    <div class="modal fade" id="ModalFnSchoolTransportDetails" data-bs-backdrop="static" data-bs-keyboard="false"
+        tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-scrollable">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="staticBackdropLabel">School Transport Details</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form class="myForm" action="{% url 'FnSchoolLoanTransportDetails' res.Loan_Number %}" method="post"
+                        novalidate>
+                        {% csrf_token %}
+                        <input type="hidden" name="myAction" value="insert">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="mb-2">
+                                    <label class="form-label">Count<span class="text-danger">*</span></label>
+                                    <input type="text" class="form-control" name="count" required>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row my-2">
+                            <div class="col-md-12">
+                                <label class="form-label">Transport Description <span
+                                        class="text-danger">*</span></label>
+                                <textarea class="form-control" name="transportDescription" rows="5"></textarea>
+                            </div>
+                        </div>
+
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Submit</button>
+                    </form>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <!-- Modal FnSchoolCoapplicantAssets -->
+    <div class="modal fade" id="ModalFnSchoolCoapplicantAssets" data-bs-backdrop="static" data-bs-keyboard="false"
+        tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-scrollable">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="staticBackdropLabel">School Assets</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form class="myForm" action="{% url 'FnCustomerAssets' res.Loan_Number %}" method="post" novalidate>
+                        {% csrf_token %}
+                        <input type="hidden" name="myAction" value="insert">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="mb-2">
+                                    <label class="form-label">Asset Name<span class="text-danger">*</span></label>
+                                    <input type="text" class="form-control" name="assetName" required>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="mb-2">
+                                    <label class="form-label">Estimated Value<span class="text-danger">*</span></label>
+                                    <input type="text" class="form-control" name="estimatedValue"
+                                        placeholder="00000.000" required>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row my-3">
+                            <div class="col-md-12">
+                                <div class="mb-2">
+                                    <label class="form-label">Asset Owner<span class="text-danger">*</span></label>
+                                    <input type="text" class="form-control" name="assetOwner" required>
+                                </div>
+                            </div>
+                        </div>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Submit</button>
+                    </form>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <!-- end -->
+    <!-- Modal FnSchoolLiabilities -->
+    <div class="modal fade" id="ModalFnSchoolLiabilities" data-bs-backdrop="static" data-bs-keyboard="false"
+        tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-scrollable modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="staticBackdropLabel">School Liabilities</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form class="myForm" action="{% url 'FnCustomerLiabilities' res.Loan_Number %}" method="post"
+                        novalidate>
+                        {% csrf_token %}
+                        <input type="hidden" name="myAction" value="insert">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-2">
+                                    <label class="form-label">Name of Borrower<span class="text-danger">*</span></label>
+                                    <input type="text" class="form-control" name="nameofborrower" required>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-2">
+                                    <label class="form-label">Bank Name<span class="text-danger">*</span></label>
+                                    <input type="text" class="form-control" name="bankName" placeholder="" required>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-2">
+                                    <label class="form-label">Loan Amount <span class="text-danger">*</span></label>
+                                    <input type="text" class="form-control" name="loanAmount" placeholder="0000.00"
+                                        required>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-2">
+                                    <label class="form-label">Loan Balance <span class="text-danger">*</span></label>
+                                    <input type="text" class="form-control" name="loanBalance" placeholder="0000.00"
+                                        required>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="mb-2">
+                                    <label class="form-label">Expected Monthly Instalment <span
+                                            class="text-danger">*</span></label>
+                                    <input type="text" class="form-control" name="expectedMonthlyInstalment"
+                                        placeholder="0000.00" required>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row gx-1">
+                            <div class="col-md-8">
+                                <div class="mb-2">
+                                    <label class="form-label">Loan Tenure <span class="text-danger">*</span></label>
+                                    <input type="text" class="form-control" name="loanTenure" placeholder="" required>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="mb-2">
+                                    <label class="form-label">Tenure Period <span class="text-danger">*</span></label>
+                                    <select class="form-select" name="TenurePeriod" required>
+                                        <option value="" disabled selected>--Select--</option>
+                                        <option value="m">Month(s)</option>
+                                        <option value="y">Year(s)</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row gx-1">
+                            <div class="col-md-8">
+                                <div class="mb-3">
+                                    <label class="form-label">Balance Tenure <span class="text-danger">*</span></label>
+                                    <input type="text" class="form-control" name="balanceTenure" placeholder=""
+                                        required>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="mb-3">
+                                    <label class="form-label">Tenure Period <span class="text-danger">*</span></label>
+                                    <select class="form-select" name="TenureBalancePeriod" required>
+                                        <option value="" disabled selected>--Select--</option>
+                                        <option value="m">Month(s)</option>
+                                        <option value="y">Year(s)</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Submit</button>
+                    </form>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <!-- Modal FnSchoolCommitments -->
+    <div class="modal fade" id="ModalFnSchoolCommitments" data-bs-backdrop="static" data-bs-keyboard="false"
+        tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-scrollable">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="staticBackdropLabel">School Commitments</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form class="myForm" action="{% url 'FnCustomerCommitments' res.Loan_Number %}" method="post"
+                        novalidate>
+                        {% csrf_token %}
+                        <input type="hidden" name="myAction" value="insert">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <label class="form-label">Product Name <span class="text-danger">*</span></label>
+                                <select class="form-select" name="nameOfProduct">
+                                    <option value="" disabled selected>--Select--</option>
+                                    {% for res in loanProducts %}
+                                    <option value="{{res.Code}}">{{res.Description}}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="mb-2">
+                                    <label class="form-label">Monthly Commitment<span
+                                            class="text-danger">*</span></label>
+                                    <input type="text" class="form-control" name="monthlyCommitment"
+                                        placeholder="0000.000" required>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="mb-2">
+                                    <label class="form-label">Annual Commitment <span
+                                            class="text-danger">*</span></label>
+                                    <input type="text" class="form-control" name="annualCommitment"
+                                        placeholder="0000.00" required>
+                                </div>
+                            </div>
+                        </div>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Submit</button>
+                    </form>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <!-- end -->
+    <!-- Modal FnSchoolSecurityProvided -->
+    <div class="modal fade" id="ModalFnSchoolSecurityProvided" data-bs-backdrop="static" data-bs-keyboard="false"
+        tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-scrollable">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="staticBackdropLabel">School Security Provided</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form class="myForm" action="{% url 'FnCustomerSecurityProvided' res.Loan_Number %}" method="post"
+                        novalidate>
+                        {% csrf_token %}
+                        <input type="hidden" name="myAction" value="insert">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <label class="form-label">Type Of Security <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" name="typeOfSecurity" required>
+                            </div>
+                        </div>
+                        <div class="row my-3">
+                            <div class="col-md-12">
+                                <label class="form-label">Available <span class="text-danger">*</span></label>
+                                <select class="form-select" name="available" required>
+                                    <option value="" disabled selected>--Select--</option>
+                                    <option value="True">True</option>
+                                    <option value="False">False</option>
+                                </select>
+                            </div>
+                        </div>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Submit</button>
+                    </form>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <!-- end -->
+    <!-- Modal FnSchoolVehicleSecurity -->
+    <div class="modal fade" id="ModalFnSchoolVehicleSecurity" data-bs-backdrop="static" data-bs-keyboard="false"
+        tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-scrollable">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="staticBackdropLabel">School Vehicle Security</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form class="myForm" action="{% url 'FnCustomerVehicleSecurity' res.Loan_Number %}" method="post"
+                        novalidate>
+                        {% csrf_token %}
+                        <input type="hidden" name="myAction" value="insert">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <label class="form-label">Registration No <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" name="registrationNo">
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <label class="form-label">Owner Name <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" name="ownerName">
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <label class="form-label">Year Of Manufacture <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" name="yearOfManufacture">
+                            </div>
+                        </div>
+                        <div class="row my-3">
+                            <div class="col-md-12">
+                                <label class="form-label">Approximate Value<span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" name="approximateValue" placeholder="0000.000">
+                            </div>
+                        </div>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Submit</button>
+                    </form>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <!-- end -->
+    <!-- Modal FnSchoolProjectSecurityDetails -->
+    <div class="modal fade" id="ModalFnSchoolProjectSecurityDetails" data-bs-backdrop="static" data-bs-keyboard="false"
+        tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-scrollable">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="staticBackdropLabel">School Property Security Details </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+
+                    <form class="myForm" action="{% url 'FnCustomerProjectSecurityDetails' res.Loan_Number %}"
+                        method="post" novalidate>
+                        {% csrf_token %}
+                        <input type="hidden" name="myAction" value="insert">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <label class="form-label">Property Security Details <span
+                                        class="text-danger">*</span></label>
+                                <input type="text" class="form-control" name="propertySecurityDetails">
+                            </div>
+                        </div>
+                        <div class="row my-3">
+                            <div class="col-md-12">
+                                <label class="form-label">Description</label>
+                                <textarea class="form-control" name="description" rows="5"></textarea>
+                            </div>
+                        </div>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Submit</button>
+                    </form>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+
+
+    <!-- Modal -->
+    <div class="modal fade" id="submissions" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+        aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog modal-fullscreen modal-xl  modal-dialog-scrollable">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="staticBackdropLabel">Submission</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row mt-4">
+                        <div class="col-md-12">
+                            <div class="card" id="d-card">
+                                <h4 class="mt-2 mx-2 text-dark">School Enrollment
+                                    History</h4>
+                                <div class="card-body">
+                                    <table id="example"
+                                        class="display table table-striped table-bordered dt-responsive table-responsive-lg"
+                                        style="width:100%">
+                                        <thead>
+                                            <tr id="tops">
+                                                <th id="long">School Name</th>
+                                                <th>School Detail A</th>
+                                                <th>School Detail B</th>
+                                                <th>School Detail C</th>
+                                                <th>Action</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td>Kenya High</td>
+                                                <td>Detail X</td>
+                                                <td>Detail Y</td>
+                                                <td>Detail Z</td>
+                                                <td>
+                                                    <form action="" method="post" style="display: inline-block;">
+                                                        {% csrf_token %}
+                                                        <input type="hidden" name="lineNo" value="{{res.Line_No}}">
+                                                        <button type="submit" class="btn btn-danger"
+                                                            data-toggle="tooltip" data-placement="top" title="Delete"><i
+                                                                class="fas fa-trash-alt"></i>
+                                                        </button>
+                                                    </form>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                 </div>
             </div>
         </div>

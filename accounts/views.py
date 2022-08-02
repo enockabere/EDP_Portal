@@ -58,77 +58,76 @@ def login_request(request):
         print(email,password)
         Leads = config.O_DATA.format("/LeadsList")
         try:
-            # Customer = config.O_DATA.format("/CustomersList")
-            # CustomerResponse = session.get(Customer, timeout=10).json()
-            # for applicant in CustomerResponse['value']:
-            #     if applicant['Email_Address'] == email and applicant['Verified']==True:
-            #         Portal_Password = base64.urlsafe_b64decode(
-            #             applicant['Password'])
-            #         cipher_suite = Fernet(config.ENCRYPT_KEY)
-            #         try:
-            #             decoded_text = cipher_suite.decrypt(
-            #                 Portal_Password).decode("ascii")
-            #         except Exception as e:
-            #             print(e)
-            #         if decoded_text == password:
-            #             request.session['CustomerName'] = applicant['Full_Name']
-            #             request.session['CustomerNo'] = applicant['No']
-            #             request.session['MemberNo'] = applicant['Member_Number']
-            #             request.session['CustomerEmail'] = applicant['Email_Address']
-            #             request.session['stage'] = 'Customer'
-            #             return redirect('dashboard')
-            #         else:
-            #             messages.error(
-            #                 request, "Invalid Credentials. Please reset your password else create a new account")
-            #             return redirect('auth')
-            # Applicant = config.O_DATA.format("/ApplicantsList")
-            # ApplicantResponse = session.get(Applicant, timeout=10).json()
-            # for applicant in ApplicantResponse['value']:
-            #     if applicant['Email_Address'] == email and applicant['Verified']==True:
-            #         Portal_Password = base64.urlsafe_b64decode(
-            #             applicant['Password'])
-            #         cipher_suite = Fernet(config.ENCRYPT_KEY)
-            #         try:
-            #             decoded_text = cipher_suite.decrypt(
-            #                 Portal_Password).decode("ascii")
-            #         except Exception as e:
-            #             print(e)
-            #         if decoded_text == password:
-            #             request.session['CustomerName'] = applicant['Full_Name']
-            #             request.session['CustomerNo'] = applicant['No']
-            #             request.session['MemberNo'] = applicant['Business_Company_Reg_No']
-            #             request.session['CustomerEmail'] = applicant['Email_Address']
-            #             request.session['stage'] = 'Applicant'
-            #             return redirect('ApplicationDetails')
-            #         else:
-            #             messages.error(
-            #                 request, "Invalid Credentials. Please reset your password else create a new account")
-            #             return redirect('auth')
+            Customer = config.O_DATA.format("/CustomersList")
+            CustomerResponse = session.get(Customer, timeout=10).json()
+            for applicant in CustomerResponse['value']:
+                if applicant['Email_Address'] == email and applicant['Verified']==True:
+                    Portal_Password = base64.urlsafe_b64decode(
+                        applicant['Password'])
+                    cipher_suite = Fernet(config.ENCRYPT_KEY)
+                    try:
+                        decoded_text = cipher_suite.decrypt(
+                            Portal_Password).decode("ascii")
+                    except Exception as e:
+                        print(e)
+                    if decoded_text == password:
+                        request.session['CustomerName'] = applicant['Full_Name']
+                        request.session['CustomerNo'] = applicant['No']
+                        request.session['MemberNo'] = applicant['Member_Number']
+                        request.session['CustomerEmail'] = applicant['Email_Address']
+                        request.session['stage'] = 'Customer'
+                        return redirect('dashboard')
+                    else:
+                        messages.error(
+                            request, "Invalid Credentials. Please reset your password else create a new account")
+                        return redirect('auth')
+            Applicant = config.O_DATA.format("/ApplicantsList")
+            ApplicantResponse = session.get(Applicant, timeout=10).json()
+            for applicant in ApplicantResponse['value']:
+                if applicant['Email_Address'] == email and applicant['Verified']==True:
+                    Portal_Password = base64.urlsafe_b64decode(
+                        applicant['Password'])
+                    cipher_suite = Fernet(config.ENCRYPT_KEY)
+                    try:
+                        decoded_text = cipher_suite.decrypt(
+                            Portal_Password).decode("ascii")
+                    except Exception as e:
+                        print(e)
+                    if decoded_text == password:
+                        request.session['CustomerName'] = applicant['Full_Name']
+                        request.session['CustomerNo'] = applicant['No']
+                        request.session['MemberNo'] = applicant['Business_Company_Reg_No']
+                        request.session['CustomerEmail'] = applicant['Email_Address']
+                        request.session['stage'] = 'Applicant'
+                        return redirect('ApplicationDetails')
+                    else:
+                        messages.error(
+                            request, "Invalid Credentials. Please reset your password else create a new account")
+                        return redirect('auth')
 
-            # Potential = config.O_DATA.format("/PotentialsList")
-            # PotentialResponse = session.get(Potential, timeout=10).json()
-            # for applicant in PotentialResponse['value']:
-            #     if applicant['Email_Address'] == email and applicant['Verified']==True:
-            #         Portal_Password = base64.urlsafe_b64decode(
-            #             applicant['Password'])
-            #         cipher_suite = Fernet(config.ENCRYPT_KEY)
-            #         try:
-            #             decoded_text = cipher_suite.decrypt(
-            #                 Portal_Password).decode("ascii")
-            #         except Exception as e:
-            #             print(e)
-            #         if decoded_text == password:
-            #             request.session['CustomerName'] = applicant['Name']
-            #             request.session['CustomerNo'] = applicant['No']
-            #             request.session['MemberNo'] = applicant['Business_Company_Reg_No']
-            #             request.session['CustomerEmail'] = applicant['Email_Address']
-            #             request.session['stage'] = 'Potential'
-            #             return redirect('dashboard')
-            #         else:
-            #             messages.error(
-            #                 request, "Invalid Credentials. Please reset your password else create a new account")
-            #             return redirect('auth')
-            
+            Potential = config.O_DATA.format("/PotentialsList")
+            PotentialResponse = session.get(Potential, timeout=10).json()
+            for applicant in PotentialResponse['value']:
+                if applicant['Email_Address'] == email and applicant['Verified']==True:
+                    Portal_Password = base64.urlsafe_b64decode(
+                        applicant['Password'])
+                    cipher_suite = Fernet(config.ENCRYPT_KEY)
+                    try:
+                        decoded_text = cipher_suite.decrypt(
+                            Portal_Password).decode("ascii")
+                    except Exception as e:
+                        print(e)
+                    if decoded_text == password:
+                        request.session['CustomerName'] = applicant['Name']
+                        request.session['CustomerNo'] = applicant['No']
+                        request.session['MemberNo'] = applicant['Business_Company_Reg_No']
+                        request.session['CustomerEmail'] = applicant['Email_Address']
+                        request.session['stage'] = 'Potential'
+                        return redirect('dashboard')
+                    else:
+                        messages.error(
+                            request, "Invalid Credentials. Please reset your password else create a new account")
+                        return redirect('auth')
             LeadResponse = session.get(Leads, timeout=10).json()
             for lead in LeadResponse['value']:
                 if lead['Email_Address'] == email and lead['Verified']==True:
@@ -182,7 +181,7 @@ def register_request(request):
 def RegisterLead(request):
     if request.method == 'POST':
         try:
-            leadNo = 'CRM00423'
+            leadNo = ''
             schoolName = request.POST.get('schoolName')            
             leadSource = request.POST.get('leadSource')
             branchName = request.POST.get('branchName')  
@@ -201,7 +200,7 @@ def RegisterLead(request):
             coord = request.POST.get('coordinates')
             password = request.POST.get('password')
             password2 = request.POST.get('password2')
-            myAction = 'modify'
+            myAction = 'insert'
 
             if len(password) < 6:
                 messages.error(request, "Password should be at least 6 characters")
