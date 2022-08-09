@@ -13,9 +13,8 @@ import datetime as dt
 from django.contrib import messages
 from django.http import HttpResponse
 import io as BytesIO
-import secrets
-import string
 from django.http import JsonResponse
+import simplejson as jsons
 
 # Create your views here.
 
@@ -48,8 +47,14 @@ def Loan_Calculator(request):
             try:
                 response = config.CLIENT.service.FnLoanCalculator(
                     calculatorType, loanType,requestedAmount,disbursementDate,repaymentStartDate)
-                print(response)
-                return JsonResponse(response)
+
+                print("Month Repayment:", response)
+                mp = jsons.dumps(response,use_decimal=True)
+                return JsonResponse(mp,safe=False)
+                # return response
+                # if response:
+                #     messages.success(request,f"Your Monthly Repayment is {response}")
+                #     return redirect("Loan_Calculator")
             except Exception as e:
                 print(e)
                 messages.info(request, e)
@@ -166,9 +171,10 @@ def ApplyLoan(request):
                 loanNo, clientCode, studentCount, noOfTeachers, minFeesPerStudent,
                 maxFeesPerStudent, branchCode,subBranchCode, loanProduct,subProductCode,
                 loanPurpose,appliedAmount,myAction)
-            
             print(response)
-            messages.success(request, "Request Successful")
+            if response['return_value'] == True:
+                messages.success(request, "Request Successful")
+                return redirect('LoanDetail', pk=response['loanNo'])
         except Exception as e:
             messages.error(request, e)
             print(e)
@@ -213,6 +219,7 @@ def LoanDetail(request,pk):
 
         LoanProduct = config.O_DATA.format("/LoanProducts")
         Applicant = config.O_DATA.format("/ApplicantsList")
+        Approved =[]
         try:
             LoanProductResponse = session.get(LoanProduct, timeout=10).json()
             loanProducts = LoanProductResponse['value']
@@ -225,6 +232,9 @@ def LoanDetail(request,pk):
             for loan in response['value']:
                 if loan['Loan_Number'] == pk:
                     Loan = loan
+                if loan['Approval_Status'] == 'Approved' and loan['Member_Number'] == MemberNo:
+                    output_json = json.dumps(loan)
+                    Approved.append(json.loads(output_json))
             ExpenseHead = config.O_DATA.format("/SchoolExpenses")
             ExpenseHeadResponse = session.get(ExpenseHead, timeout=10).json()
             Expense = ExpenseHeadResponse['value']
@@ -240,7 +250,8 @@ def LoanDetail(request,pk):
         return redirect('auth')
 
     ctx = {"today": todays_date, "loanProducts":loanProducts,
-        "stage":stage, "data":res, "res":Loan,"Expense":Expense
+        "stage":stage, "data":res, "res":Loan,"Expense":Expense,
+        "response": Approved
             }
     return render(request, 'loanDetail.html', ctx)
 
@@ -599,508 +610,4 @@ def FnCustomerProjectSecurityDetails(request,pk):
             return redirect('LoanDetail',pk=pk)
     return redirect('LoanDetail',pk=pk)
 
-def TopUpsRequest(request):
-    try:
-        CustomerName=request.session['CustomerName']
-        CustomerNumber=request.session['CustomerNo']
-        MemberNo=request.session['MemberNo']
-        CustomerEmail=request.session['CustomerEmail']
-        stage=request.session['stage']
 
-        session = requests.Session()
-        session.auth = config.AUTHS
-       
-        Loans = config.O_DATA.format("/Loans")
-        response = session.get(Loans, timeout=10).json()
-        Approved = []
-
-        for document in response['value']:
-            if document['Approval_Status'] == 'Released' and document['Member_Number'] == MemberNo:
-                output_json = json.dumps(document)
-                Approved.append(json.loads(output_json))
-        counts = len(Approved)
-        todays_date = dt.datetime.now().strftime("%b. %d, %Y %A")
-    except KeyError:
-        messages.info(request, "Session Expired. Please Login")
-        return redirect('auth')
-    ctx = {"today": todays_date,"full": CustomerName,"stage":stage,
-            "count": counts, "response": Approved}
-    return render(request, 'topUps.html', ctx)
-
-
-def FnLoanTopUp(request,pk):
-    requestNo = ''
-    employeeNo = request.session['Employee_No_']
-    usersId = request.session['User_ID']
-    isAdhoc = ""
-    trainingNeed = ""
-    myAction = ''
-    if request.method == 'POST':
-        try:
-            requestNo = request.POST.get('requestNo')
-            isAdhoc = eval(request.POST.get('isAdhoc'))
-            trainingNeed = request.POST.get('trainingNeed')
-            myAction = request.POST.get('myAction')
-        except ValueError:
-            messages.error(request, "Not sent. Invalid Input, Try Again!!")
-            return redirect('LoanDetail',pk=pk)
-        if not requestNo:
-            requestNo = ""
-        
-        if not trainingNeed:
-            trainingNeed = ''
-        try:
-            response = config.CLIENT.service.FnLoanTopUp(
-                requestNo, employeeNo, usersId, isAdhoc, trainingNeed, myAction)
-            messages.success(request, "Successfully Added!!")
-            print(response)
-        except Exception as e:
-            messages.error(request, e)
-            print(e)
-            return redirect('LoanDetail',pk=pk)
-    return redirect('LoanDetail',pk=pk)
-
-
-def TopUpDetail(request):
-    session = requests.Session()
-    session.auth = config.AUTHS
-    todays_date = dt.datetime.now().strftime("%b. %d, %Y %A")
-    ctx = {"today": todays_date}
-    return render(request, 'topUpDetail.html', ctx)
-
-
-def FnAdhocTrainingNeedRequest(request, pk):
-    requestNo = pk
-    no = ""
-    employeeNo = request.session['Employee_No_']
-    trainingName = ""
-    trainingArea = ""
-    trainingObjectives = ""
-    venue = ""
-    provider = ""
-    myAction = "insert"
-    if request.method == 'POST':
-        try:
-            trainingName = request.POST.get('trainingName')
-            startDate = request.POST.get('startDate')
-            endDate = request.POST.get('endDate')
-            trainingArea = request.POST.get('trainingArea')
-            trainingObjectives = request.POST.get('trainingObjectives')
-            venue = request.POST.get('venue')
-            sponsor = request.POST.get('sponsor')
-            destination = request.POST.get('destination')
-            OtherDestinationName = request.POST.get('OtherDestinationName')
-            provider = request.POST.get('provider')
-
-        except ValueError as e:
-            messages.error(request, "Invalid Input, Try Again!!")
-            return redirect('TrainingDetail', pk=pk)
-        if not sponsor:
-            sponsor = 0
-        sponsor = int(sponsor)
-
-        if not destination:
-            destination = 'none'
-        
-        if not venue:
-            venue = "Online"
-
-        if OtherDestinationName:
-            destination = OtherDestinationName
-        try:
-            response = config.CLIENT.service.FnAdhocTrainingNeedRequest(requestNo,
-                                                                        no, employeeNo, trainingName, trainingArea, trainingObjectives, venue, provider, myAction,sponsor,startDate,endDate,destination)
-            messages.success(request, "Successfully Added!!")
-            print(response)
-            return redirect('TrainingDetail', pk=pk)
-        except Exception as e:
-            messages.error(request, e)
-            print(e)
-    return redirect('TrainingDetail', pk=pk)
-
-
-def UploadTrainingAttachment(request, pk):
-    docNo = pk
-    response = ""
-    fileName = ""
-    attachment = ""
-    tableID = 52177501
-
-    if request.method == "POST":
-        try:
-            attach = request.FILES.getlist('attachment')
-        except Exception as e:
-            return redirect('IMPDetails', pk=pk)
-        for files in attach:
-            fileName = request.FILES['attachment'].name
-            attachment = base64.b64encode(files.read())
-            try:
-                response = config.CLIENT.service.FnUploadAttachedDocument(
-                    docNo, fileName, attachment, tableID)
-            except Exception as e:
-                messages.error(request, e)
-                print(e)
-        if response == True:
-            messages.success(request, "Successfully Sent !!")
-
-            return redirect('TrainingDetail', pk=pk)
-        else:
-            messages.error(request, "Not Sent !!")
-            return redirect('TrainingDetail', pk=pk)
-
-    return redirect('TrainingDetail', pk=pk)
-
-
-def FnAdhocTrainingEdit(request, pk, no):
-    requestNo = pk
-    no = no
-    employeeNo = request.session['Employee_No_']
-    trainingName = ""
-    trainingArea = ""
-    trainingObjectives = ""
-    venue = ""
-    provider = ""
-    myAction = "modify"
-
-    if request.method == 'POST':
-        try:
-            trainingName = request.POST.get('trainingName')
-            trainingArea = request.POST.get('trainingArea')
-            trainingObjectives = request.POST.get('trainingObjectives')
-            venue = request.POST.get('venue')
-            provider = request.POST.get('provider')
-
-        except ValueError as e:
-            messages.error(request, "Not sent. Invalid Input, Try Again!!")
-            return redirect('TrainingDetail', pk=pk)
-    try:
-        response = config.CLIENT.service.FnAdhocTrainingNeedRequest(requestNo,
-                                                                    no, employeeNo, trainingName, trainingArea, trainingObjectives, venue, provider, myAction)
-        messages.success(request, "Successfully Edited!!")
-        print(response)
-        return redirect('TrainingDetail', pk=pk)
-    except Exception as e:
-        messages.error(request, e)
-        print(e)
-    return redirect('TrainingDetail', pk=pk)
-
-def FnAdhocLineDelete(request, pk):
-    requestNo = pk
-    needNo = ''
-    if request.method == 'POST':
-        try:
-            needNo = request.POST.get('needNo')
-        except ValueError as e:
-            messages.error(request, "Not sent. Invalid Input, Try Again!!")
-            return redirect('TrainingDetail', pk=pk)
-        print("requestNo", requestNo)
-        print("needno", needNo)
-        try:
-            response = config.CLIENT.service.FnDeleteAdhocTrainingNeedRequest(
-                needNo,requestNo)
-            messages.success(request, "Successfully Deleted!!")
-            print(response)
-            return redirect('TrainingDetail', pk=pk)
-        except Exception as e:
-            messages.error(request, e)
-            print(e)
-    return redirect('TrainingDetail', pk=pk)
-
-
-def TrainingApproval(request, pk):
-    myUserID = request.session['User_ID']
-    trainingNo = ""
-    if request.method == 'POST':
-        try:
-            trainingNo = request.POST.get('trainingNo')
-        except ValueError as e:
-            messages.error(request, "Not sent. Invalid Input, Try Again!!")
-            return redirect('TrainingDetail', pk=pk)
-    try:
-        response = config.CLIENT.service.FnRequestTrainingApproval(
-            myUserID, trainingNo)
-        messages.success(request, "Approval Request Successfully Sent!!")
-        print(response)
-        return redirect('TrainingDetail', pk=pk)
-    except Exception as e:
-        messages.error(request, e)
-        print(e)
-    return redirect('TrainingDetail', pk=pk)
-
-
-def TrainingCancelApproval(request, pk):
-    myUserID = request.session['User_ID']
-    trainingNo = ""
-    if request.method == 'POST':
-        try:
-            trainingNo = request.POST.get('trainingNo')
-        except ValueError as e:
-            messages.error(request, "Not sent. Invalid Input, Try Again!!")
-            return redirect('TrainingDetail', pk=pk)
-    try:
-        response = config.CLIENT.service.FnCancelTrainingApproval(
-            myUserID, trainingNo)
-        messages.success(request, "Cancel Approval Request Successful !!")
-        print(response)
-        return redirect('TrainingDetail', pk=pk)
-    except Exception as e:
-        messages.error(request, e)
-        print(e)
-    return redirect('TrainingDetail', pk=pk)
-
-
-def PNineRequest(request):
-    try:
-        nameChars = ''.join(secrets.choice(string.ascii_uppercase + string.digits)
-                        for i in range(5))
-        fullname = request.session['User_ID']
-        year = request.session['years']
-        todays_date = dt.datetime.now().strftime("%b. %d, %Y %A")
-        session = requests.Session()
-        session.auth = config.AUTHS
-        
-        Access_Point = config.O_DATA.format("/QyPayrollPeriods")
-        
-        try:
-            response = session.get(Access_Point, timeout=10).json()
-            res = response['value']
-        except requests.exceptions.ConnectionError as e:
-            print(e)
-        employeeNo = request.session['Employee_No_']
-        filenameFromApp = ""
-        startDate = ""
-        year = ''
-        if request.method == 'POST':
-            try:
-                startDate = request.POST.get('startDate')[0:4]
-            except ValueError as e:
-                messages.error(request, "Not sent. Invalid Input, Try Again!!")
-                return redirect('pNine')
-            filenameFromApp = "P9_For_" + str(nameChars) + year + ".pdf"
-            year = int(startDate)
-            try:
-                response = config.CLIENT.service.FnGeneratePNine(
-                    employeeNo, filenameFromApp, year)
-                try:
-                    buffer = BytesIO.BytesIO()
-                    content = base64.b64decode(response)
-                    buffer.write(content)
-                    responses = HttpResponse(
-                        buffer.getvalue(),
-                        content_type="application/pdf",
-                    )
-                    responses['Content-Disposition'] = f'inline;filename={filenameFromApp}'
-                    return responses
-                except:
-                    messages.error(request, "Payslip not found for the selected period")
-                    return redirect('pNine')
-            except Exception as e:
-                messages.error(request, e)
-                print(e)
-                return redirect('pNine')
-        ctx = {"today": todays_date, "year": year, "full": fullname,"res":res}
-    except KeyError:
-        messages.info(request, "Session Expired. Please Login")
-        return redirect('auth')
-    return render(request, "p9.html", ctx)
-
-
-def PayslipRequest(request):
-    try:
-        nameChars = ''.join(secrets.choice(string.ascii_uppercase + string.digits)
-                        for i in range(5))
-        fullname = request.session['User_ID']
-        year = request.session['years']
-        session = requests.Session()
-        session.auth = config.AUTHS
-        
-        Access_Point = config.O_DATA.format("/QyPayrollPeriods")
-        try:
-            response = session.get(Access_Point, timeout=10).json()
-            res = response['value']
-        except requests.exceptions.ConnectionError as e:
-            print(e)
-            
-        todays_date = dt.datetime.now().strftime("%b. %d, %Y %A")
-        employeeNo = request.session['Employee_No_']
-        filenameFromApp = ""
-        paymentPeriod = ""
-        if request.method == 'POST':
-            try:
-                paymentPeriod = datetime.strptime(
-                    request.POST.get('paymentPeriod'), '%Y-%m-%d').date()
-
-            except ValueError as e:
-                messages.error(request, "Not sent. Invalid Input, Try Again!!")
-                return redirect('payslip')
-            filenameFromApp = "Payslip" + str(paymentPeriod) + str(nameChars) + ".pdf"
-            try:
-                response = config.CLIENT.service.FnGeneratePayslip(
-                    employeeNo, filenameFromApp, paymentPeriod)
-                try:
-                    buffer = BytesIO.BytesIO()
-                    content = base64.b64decode(response)
-                    buffer.write(content)
-                    responses = HttpResponse(
-                        buffer.getvalue(),
-                        content_type="application/pdf",
-                    )
-                    responses['Content-Disposition'] = f'inline;filename={filenameFromApp}'
-                    return responses
-                except:
-                    messages.error(request, "Payslip not found for the selected period")
-                    return redirect('payslip')
-            except Exception as e:
-                messages.error(request, e)
-                print(e)
-        ctx = {"today": todays_date, "year": year, "full": fullname,"res":res}
-    except KeyError:
-        messages.info(request, "Session Expired. Please Login")
-        return redirect('auth')
-    return render(request, "payslip.html", ctx)
-# Leave Report
-
-
-def FnGenerateLeaveReport(request, pk):
-    nameChars = ''.join(secrets.choice(string.ascii_uppercase + string.digits)
-                        for i in range(5))
-    employeeNo = request.session['Employee_No_']
-    filenameFromApp = ''
-    applicationNo = pk
-    if request.method == 'POST':
-        try:
-            filenameFromApp = pk
-        except ValueError as e:
-            messages.error(request, "Invalid Line number, Try Again!!")
-            return redirect('LeaveDetail', pk=pk)
-        filenameFromApp = filenameFromApp + str(nameChars) + ".pdf"
-        print("filenameFromApp", filenameFromApp)
-        print("applicationNo", applicationNo)
-        try:
-            response = config.CLIENT.service.FnGenerateLeaveReport(
-                employeeNo, filenameFromApp, applicationNo)
-            buffer = BytesIO.BytesIO()
-            content = base64.b64decode(response)
-            buffer.write(content)
-            responses = HttpResponse(
-                buffer.getvalue(),
-                content_type="application/pdf",
-            )
-            responses['Content-Disposition'] = f'inline;filename={filenameFromApp}'
-            return responses
-        except Exception as e:
-            messages.error(request, e)
-            print(e)
-    return redirect('LeaveDetail', pk=pk)
-# Training report
-
-
-def FnGenerateTrainingReport(request, pk):
-    nameChars = ''.join(secrets.choice(string.ascii_uppercase + string.digits)
-                        for i in range(5))
-    employeeNo = request.session['Employee_No_']
-    filenameFromApp = ''
-    applicationNo = pk
-    if request.method == 'POST':
-        try:
-            filenameFromApp = pk
-        except ValueError as e:
-            messages.error(request, "Invalid Line number, Try Again!!")
-            return redirect('TrainingDetail', pk=pk)
-    filenameFromApp = filenameFromApp + str(nameChars) + ".pdf"
-    try:
-        response = config.CLIENT.service.FnGenerateTrainingReport(
-            employeeNo, filenameFromApp, applicationNo)
-        buffer = BytesIO.BytesIO()
-        content = base64.b64decode(response)
-        buffer.write(content)
-        responses = HttpResponse(
-            buffer.getvalue(),
-            content_type="application/pdf",
-        )
-        responses['Content-Disposition'] = f'inline;filename={filenameFromApp}'
-        return responses
-    except Exception as e:
-        messages.error(request, e)
-        print(e)
-    return redirect('TrainingDetail', pk=pk)
-def Disciplinary(request):
-    fullname = request.session['User_ID']
-    year = request.session['years']
-    session = requests.Session()
-    session.auth = config.AUTHS
-
-    Access_Point = config.O_DATA.format("/QyEmployeeDisciplinaryCases")
-    try:
-        response = session.get(Access_Point, timeout=10).json()
-        openCase = []
-        for case in response['value']:
-            if case['Employee_No'] == request.session['Employee_No_'] and case['Posted'] == False and case['Sent_to_employee'] == True and case['Submit'] == False:
-                output_json = json.dumps(case)
-                openCase.append(json.loads(output_json))
-        counts = len(openCase)
-        print(counts)
-    except requests.exceptions.ConnectionError as e:
-        print(e)
-
-    todays_date = dt.datetime.now().strftime("%b. %d, %Y %A")
-    ctx = {"today": todays_date, "res": openCase,
-           "year": year, "full": fullname,
-           "count": counts}
-    return render(request,'disciplinary.html',ctx)
-
-def DisciplineDetail(request,pk):
-    fullname = request.session['User_ID']
-    year = request.session['years']
-    session = requests.Session()
-    session.auth = config.AUTHS
-    res = ''
-    Access_Point = config.O_DATA.format("/QyEmployeeDisciplinaryCases")
-    try:
-        response = session.get(Access_Point, timeout=10).json()
-        Case = []
-        for case in response['value']:
-            if case['Employee_No'] == request.session['Employee_No_'] and case['Posted'] == False and case['Sent_to_employee'] == True and case['Submit'] == False:
-                output_json = json.dumps(case)
-                Case.append(json.loads(output_json))
-                for case in Case:
-                    if case['Disciplinary_Nos'] == pk:
-                        res = case
-    except requests.exceptions.ConnectionError as e:
-        print(e)
-    Lines_Res = config.O_DATA.format("/QyEmployeeDisciplinaryLines")
-    try:
-        responses = session.get(Lines_Res, timeout=10).json()
-        openLines = []
-        for cases in responses['value']:
-            if cases['Refference_No'] == pk and cases['Employee_No'] == request.session['Employee_No_']:
-                output_json = json.dumps(cases)
-                openLines.append(json.loads(output_json))
-    except requests.exceptions.ConnectionError as e:
-        print(e)
-    todays_date = dt.datetime.now().strftime("%b. %d, %Y %A")
-    ctx = {"today": todays_date, "res": res, "full": fullname, "year": year,"line": openLines}
-    return render (request, 'disciplineDetail.html',ctx)
-
-def DisciplinaryResponse(request, pk):
-
-    employeeNo = request.session['Employee_No_']
-    caseNo = pk
-    myResponse = ''
-    
-    if request.method == 'POST':
-        try:
-            myResponse = request.POST.get('myResponse')
-        except ValueError as e:
-            messages.error(request, "Invalid, Try Again!!")
-            return redirect('DisciplineDetail', pk=pk)
-    try:
-        response = config.CLIENT.service.FnEmployeeDisciplinaryResponse(
-            employeeNo, caseNo, myResponse)
-        messages.success(request, "Response Successful Sent!!")
-        print(response)
-        return redirect('DisciplineDetail', pk=pk)
-    except Exception as e:
-        messages.error(request, e)
-        print(e)
-    return redirect('DisciplineDetail', pk=pk)

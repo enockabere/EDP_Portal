@@ -9,9 +9,14 @@
 
             <div class="d-sm-flex justify-content-xl-between align-items-center mb-2">
                 <div class="dropdown ml-0 ml-md-4 mt-2 mt-lg-0">
+                    {% if res.Approval_Status == 'Open' %}
                     <button class="btn btn-successs p-3 d-flex align-items-center" type="button" data-bs-toggle="modal"
                         data-bs-target="#Attachment"> <i class="fas fa-upload mr-1"></i> Upload Attachment
                     </button>
+                    {% elif res.Approval_Status == 'Approved' %}
+                    <button class="btn btn-successs p-3 d-flex align-items-center" type="button" data-bs-toggle="modal"
+                        data-bs-target="#OffsetLoan"> <i class="fas fa-upload mr-1"></i> Top Up Loan </button>
+                    {% endif %}
                 </div>
             </div>
         </div>
@@ -124,6 +129,7 @@
                 </div>
             </div>
         </div>
+        {% if res.Approval_Status == 'Open' %}
         <div class="row">
             <div class="col-md-12">
                 <div class="d-grid gap-2 d-md-block">
@@ -167,6 +173,7 @@
                 </div>
             </div>
         </div>
+        {% endif %}
         <div class="row">
             <div class="col-md-12">
                 <form class="row g-3">
@@ -918,9 +925,6 @@
             </div>
         </div>
     </div>
-
-
-
     <!-- Modal -->
     <div class="modal fade" id="submissions" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
         aria-labelledby="staticBackdropLabel" aria-hidden="true">
@@ -976,6 +980,38 @@
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                 </div>
+            </div>
+        </div>
+    </div>
+    <!-- Modal -->
+    <div class="modal fade" id="OffsetLoan" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Loan Top UP</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form action="{% url 'FnLoanTopUp' res.Loan_Number %}" method="post" class="myForm">
+                        {% csrf_token %}
+                        <div class=" mb-3">
+                            <label class="form-label">Loan To Offset</label>
+                            <select class="form-select" name="loanToOffset">
+                                <option value="" disabled selected>--Select--</option>
+                                {% for loan in response %}
+                                <option value="{{loan.Loan_Number}}">{{loan.Loan_Number}}-{{loan.Approved_Amount}}
+                                </option>
+                                {% endfor %}
+                            </select>
+                        </div>
+
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                </div>
+                </form>
             </div>
         </div>
     </div>

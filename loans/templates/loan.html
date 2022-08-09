@@ -36,7 +36,7 @@
                             </li>
                             <li class="nav-item flex-fill">
                                 <a href="#profile" class="nav-link" data-bs-toggle="tab">Approved
-                                    ({{counter}}) / <span class="text-success">New Loan Top-Up</span></a>
+                                    ({{counter}}) </a>
                             </li>
                             <li class="nav-item flex-fill">
                                 <a href="#reject" class="nav-link" data-bs-toggle="tab">Rejected
@@ -46,7 +46,6 @@
                         </ul>
                         <div class="tab-content">
                             <div class="tab-pane fade show active" id="home">
-                                <h4>Open Leave</h4>
                                 <div class="card-body">
                                     <table id="example"
                                         class="display table table-striped table-bordered dt-responsive table-responsive-lg"
@@ -84,7 +83,6 @@
                                 </div>
                             </div>
                             <div class="tab-pane fade" id="profile">
-                                <h4 class="mt-2">Approved Leave</h4>
                                 <div class="card-body">
                                     <table id="example"
                                         class="display table table-striped table-bordered dt-responsive table-responsive-lg"
@@ -100,19 +98,14 @@
                                             </tr>
                                         </thead>
                                         <tbody>
+                                            {% for res in response %}
                                             <tr>
-                                                {% for res in response %}
                                                 <td>{{res.Loan_Number}}</td>
                                                 <td id="rap">{{res.Loan_Product}}</td>
                                                 <td>{{res.Applied_Amount}}</td>
                                                 <td>{{res.Interest_rate}}</td>
                                                 <td>{{res.Installments}}</td>
                                                 <td>
-                                                    <a href="#" class="btn btn-success btn-icon-text" type="button"
-                                                        data-toggle="tooltip" data-placement="top" title="Continue"
-                                                        style="background: #25CC88;"> Offset Loan <i
-                                                            class="las la-angle-double-right"></i>
-                                                    </a>
                                                     <a href="{% url 'LoanDetail' res.Loan_Number %}"
                                                         class="btn btn-success btn-icon-text" type="button"
                                                         data-toggle="tooltip" data-placement="top" title="Continue"
@@ -120,14 +113,13 @@
                                                             class="las la-angle-double-right"></i>
                                                     </a>
                                                 </td>
-                                                {% endfor %}
                                             </tr>
+                                            {% endfor %}
                                         </tbody>
                                     </table>
                                 </div>
                             </div>
                             <div class="tab-pane fade" id="reject">
-                                <h4 class="mt-2">Rejected Leave</h4>
                                 <div class="card-body">
                                     <table id="example"
                                         class="display table table-striped table-bordered dt-responsive table-responsive-lg"
@@ -162,7 +154,6 @@
                                 </div>
                             </div>
                             <div class="tab-pane fade" id="pending">
-                                <h4 class="mt-2">Pending Approval Leave</h4>
                                 <div class="card-body">
                                     <table id="example"
                                         class="display table table-striped table-bordered dt-responsive table-responsive-lg"

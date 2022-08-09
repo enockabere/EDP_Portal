@@ -3,116 +3,126 @@
 {% load static %}
 {% block main %}
 <style>
-    #loading,
-    #result {
-        display: none;
+    .contt {
+        display: block;
+        justify-content: center;
+        align-items: center;
+        overflow: hidden;
+        background: whitesmoke;
     }
 </style>
 <script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk="
     crossorigin="anonymous"></script>
 <section class="dash2">
-    <div class="content-wrapper general-bg" style="padding-bottom: 5rem;">
-        <div class="row" id="proBanner">
-            <div class="col-md-12">
-                <span class="d-flex align-items-center purchase-popup">
-                    <img src="../../../static/img/logo/fav.png" width="70px" class="img-fluid" alt="" srcset="">
-                    <div style="margin-left: auto;margin-right:0;outline: none;border: none;">
-                        <h2 class="text-dark font-weight-bold"> Loan Calculator</h2>
-                    </div>
-                </span>
 
-            </div>
-        </div>
+    <div class="content-wrapper general-bg" style="padding-bottom: 5rem;" id="results">
         <!--alert -->
         {% include 'alerts.html' %}
         <div class="row">
             <div class="col-md-12">
-                <div class="card card-body text-center mt-5">
+                <div class="card card-body">
                     <h1 class="heading display-5 pb-3">Loan Calculator</h1>
-                    <form id="loanForm" action="{% url 'Loan_Calculator' %}" method="POST">
-                        {% csrf_token %}
-                        <div class="form-group">
-                            <div class="input-group">
-                                <div class="input-group-prepend">
-                                    <span class="input-group-text"><i class="las la-calculator"></i></span>
+                    <div class="row">
+                        <div class="col-md-9">
+                            <form method="POST" id="Loan_Calculator">
+                                {% csrf_token %}
+                                <div class="row my-2">
+                                    <div class="col-md-6">
+                                        <label for="" class="form-label">Calculator Type</label>
+                                        <select class="form-select" name="calculatorType" id="calculatorType" required>
+                                            <option value="0" disabled selected>--Select Calculator Type--</option>
+                                            <option value="1">Instalment From Requested Amount</option>
+                                            <option value="2">Qualifying Amount From Proposed Instalment</option>
+                                            <option value="3">Eligibility Calculator</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="" class="form-label">Loan Product</label>
+                                        <select class="form-select" name="loanType" id="loanType" required>
+                                            <option value="0" disabled selected>--Select Loan Product--</option>
+                                            {% for res in loanProducts %}
+                                            <option value="{{res.Code}}">{{res.Description}}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
                                 </div>
-                                <select class="form-select" name="calculatorType" id="calculatorType" required>
-                                    <option value="0" disabled selected>--Select Calculator Type--</option>
-                                    <option value="1">Instalment From Requested Amount</option>
-                                    <option value="2">Qualifying Amount From Proposed Instalment</option>
-                                    <option value="3">Eligibility Calculator</option>
-                                </select>
+                                <div class="row my-2">
+                                    <div class="col-md-12">
+                                        <label for="" class="form-label">Loan Amount</label>
+                                        <input type="number" class="form-control" id="requestedAmount"
+                                            name="requestedAmount" placeholder="Loan Amount" />
+                                    </div>
+                                </div>
+                                <div class="row my-2">
+                                    <div class="col-md-6">
+                                        <label class=" form-label">Disbursement Date<span
+                                                class="text-danger">*</span></label>
+                                        <input type="date" class="form-control" name="disbursementDate"
+                                            id="disbursementDate" required>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="form-label">Repayment Start Date<span
+                                                class="text-danger">*</span></label>
+                                        <input type="date" class="form-control" name="repaymentStartDate"
+                                            id="repaymentStartDate" required>
+                                    </div>
+                                </div>
+                                <div class="row my-2">
+                                    <div class="col-md-12">
+                                        <input type="submit" class="btn btn-dark btn-block my-2" />
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="col-md-3">
+                            <h6 class="text-primary">
+                                Monthly Repayment (KES)
+                            </h6>
+                            <h1 class="text-primary" id="proOutput" style="font-size: 2.8rem;">
+                                0.00
+                            </h1>
+                            <div class="money-spinner" id="money-spinner" style="display: none;">
+                                <img src="https://upload.wikimedia.org/wikipedia/commons/b/b1/Loading_icon.gif"
+                                    alt="Loading Gif" style="height: 100px;" class="img-fluid">
                             </div>
                         </div>
-                        <div class="form-group">
-                            <div class="input-group">
-                                <div class="input-group-prepend">
-                                    <span class="input-group-text"><i class="las la-coins"></i></span>
-                                </div>
-                                <select class="form-select" name="loanType" id="loanType" required>
-                                    <option value="0" disabled selected>--Select Loan Product--</option>
-                                    {% for res in loanProducts %}
-                                    <option value="{{res.Code}}">{{res.Description}}</option>
-                                    {% endfor %}
-                                </select>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <div class="input-group">
-                                <div class="input-group-prepend">
-                                    <span class="input-group-text"><i class="las la-coins"></i></span>
-                                </div>
-                                <input type="number" class="form-control" id="requestedAmount" name="requestedAmount"
-                                    placeholder="Loan Amount" />
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label class=" form-label" style="float: left;">Disbursement Date<span
-                                    class="text-danger">*</span></label>
-                            <input type="date" class="form-control" name="disbursementDate" id="disbursementDate"
-                                required>
-                        </div>
-                        <div class="form-group">
-                            <label class="form-label" style="float: left;">Repayment Start Date<span
-                                    class="text-danger">*</span></label>
-                            <input type="date" class="form-control" name="repaymentStartDate" id="repaymentStartDate"
-                                required>
-                        </div>
-                        <div class="form-group">
-                            <input type="submit" class="btn btn-dark btn-block" />
-                        </div>
-                    </form>
-
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 </section>
 <script>
-    // $(document).on('submit', '#loanForm', function (e) {
-    //     e.preventDefault();
-    //     $.ajax({
-    //         type: 'POST',
-    //         url: '{% url "Loan_Calculator" %}',
-    //         data: {
-    //             calculatorType: $("#calculatorType").val(),
-    //             loanType: $("#loanType").val(),
-    //             requestedAmount: $("#requestedAmount").val(),
-    //             disbursementDate: $("#disbursementDate").val(),
-    //             repaymentStartDate: $("#repaymentStartDate").val(),
-    //             monthlyRepayment: $("#monthlyRepayment").val(),
-    //             csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val()
-    //         },
-    //         success: function (response) {
-    //             alert(response)
-    //             $("#calculatorType").val("")
-    //             $("#loanType").val("")
-    //             $("#requestedAmount").val("")
-    //             $("#disbursementDate").val("")
-    //             $("#repaymentStartDate").val("")
-    //             $("#monthlyRepayment").val("")
-    //         }
-    //     })
-    // });
+    $(document).on('submit', '#Loan_Calculator', function (e) {
+        e.preventDefault();
+        $('#money-spinner').show();
+        $.ajax({
+            type: 'POST',
+            url: '{% url "Loan_Calculator" %}',
+            data: {
+                calculatorType: $("#calculatorType").val(),
+                loanType: $("#loanType").val(),
+                requestedAmount: $("#requestedAmount").val(),
+                disbursementDate: $("#disbursementDate").val(),
+                repaymentStartDate: $("#repaymentStartDate").val(),
+                csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val()
+            },
+            success: function (response) {
+                $("#calculatorType").val("")
+                $("#loanType").val("")
+                $("#requestedAmount").val("")
+                $("#disbursementDate").val("")
+                $("#repaymentStartDate").val("")
+                var DecimalSeparator = Number("1.2").toLocaleString().substr(1, 1);
+                var AmountWithCommas = response.toLocaleString();
+                var arParts = String(AmountWithCommas).split(DecimalSeparator);
+                var intPart = arParts[0];
+                var decPart = (arParts.length > 1 ? arParts[1] : '');
+                decPart = (decPart + '00').substr(0, 2);
+                $("#proOutput").empty().append(intPart + DecimalSeparator + decPart);
+                $('#money-spinner').hide();
+            }
+        })
+    });
 </script>
 {% endblock %}
