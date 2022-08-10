@@ -37,9 +37,6 @@ def LoanTopUp(request):
                 if document['Approval_Status'] == 'Disapproved' and document['Member_Number'] == MemberNo:
                     output_json = json.dumps(document)
                     Rejected.append(json.loads(output_json))
-                if document['Approval_Status'] == "Pending Approval" and document['Member_Number'] == MemberNo:
-                    output_json = json.dumps(document)
-                    Pending.append(json.loads(output_json))
             LoanProductResponse = session.get(LoanProduct, timeout=10).json()
             loanProducts = LoanProductResponse['value']
             

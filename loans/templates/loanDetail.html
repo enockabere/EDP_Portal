@@ -3,7 +3,7 @@
 {% load static %}
 {% block main %}
 <section class="dash2">
-    <div class="content-wrapper">
+    <div class="content-wrapper LoanWrapper">
         <div class="d-xl-flex justify-content-between align-items-start">
             <h2 class="text-dark font-weight-bold mb-2"> Loan Details </h2>
 
@@ -133,22 +133,7 @@
         <div class="row">
             <div class="col-md-12">
                 <div class="d-grid gap-2 d-md-block">
-                    <button class="btn btn-primary my-2" type="button" data-bs-toggle="modal"
-                        data-bs-target="#staticBackdrop"><i class="las la-plus"></i> Add School Enrollment
-                        History</button>
-                    <button class="btn btn-primary" type="button" data-bs-toggle="modal"
-                        data-bs-target="#staticBackdropPassRate"><i class="las la-plus"></i> Add School Pass
-                        Rate</button>
-                    <button class="btn btn-primary" type="button" data-bs-toggle="modal"
-                        data-bs-target="#ModalFnSchoolProjectDetails"><i class="las la-plus"></i> Add School Project
-                        Details</button>
-                    <button class="btn btn-primary" type="button" data-bs-toggle="modal"
-                        data-bs-target="#ModalFnSchoolLoanRevenue"><i class="las la-plus"></i> Add School
-                        Revenue</button>
-                    <button class="btn btn-primary" type="button" data-bs-toggle="modal"
-                        data-bs-target="#ModalFnSchoolLoanExpenses"><i class="las la-plus"></i> Add School
-                        Expenses</button>
-                    <button class="btn btn-primary my-2" type="button" data-bs-toggle="modal"
+                    <!-- <button class="btn btn-primary my-2" type="button" data-bs-toggle="modal"
                         data-bs-target="#ModalFnSchoolTransportDetails"><i class="las la-plus"></i> Add School Transport
                         Details</button>
                     <button class="btn btn-primary" type="button" data-bs-toggle="modal"
@@ -169,108 +154,266 @@
                     <button class="btn btn-primary" type="button" data-bs-toggle="modal"
                         data-bs-target="#ModalFnSchoolProjectSecurityDetails"><i class="las la-plus"></i> Add Property
                         Security
-                        Details</button>
+                        Details</button> -->
                 </div>
             </div>
         </div>
         {% endif %}
-        <div class="row">
+        <div class="row my-2">
             <div class="col-md-12">
-                <form class="row g-3">
-                    <div class="col-md-4">
-                        <label class="form-label">Loan Number</label>
-                        <input type="text" class="form-control" placeholder="{{res.Loan_Number}}" readonly>
+                <div class="card">
+                    <div class="card-body">
+                        {% if res.Approval_Status == 'Open' %}
+                        <button type="button" class="btn btn-primary btn-sm my-3" data-bs-toggle="modal"
+                            data-bs-target="#staticBackdrop"><i class="las la-plus"></i> Add School Enrollment
+                            History</button>
+                        {% else %}
+                        <h5 class="text-success my-3">School Enrollment
+                            History</h5>
+                        {% endif %}
+                        <table id="exampleEnrollment"
+                            class="display table table-striped table-bordered dt-responsive table-responsive-lg"
+                            style="width:100%">
+                            <thead>
+                                <tr id="tops">
+                                    <th id="long">Academic Year</th>
+                                    <th>School Population</th>
+                                </tr>
+                            </thead>
+                        </table>
                     </div>
-                    <div class="col-md-4">
-                        <label class="form-label">Loan Balance</label>
-                        <input type="text" class="form-control" placeholder="{{res.Loan_Balance}}" readonly>
-                    </div>
-                    <div class="col-md-4">
-                        <label class="form-label">Loan Product</label>
-                        <input type="text" class="form-control" placeholder="{{res.Loan_Product}}" readonly>
-                    </div>
-                    <div class="col-md-4">
-                        <label class="form-label">Interest Rate</label>
-                        <input type="text" class="form-control" placeholder="{{res.Interest_rate}}" readonly>
-                    </div>
-                    <div class="col-md-4">
-                        <label class="form-label">Installments</label>
-                        <input type="text" class="form-control" placeholder="{{res.Installments}}" readonly>
-                    </div>
-                    <div class="col-md-4">
-                        <label class="form-label">Applied Amount</label>
-                        <input type="text" class="form-control" placeholder="{{res.Applied_Amount}}" readonly>
-                    </div>
-                    <div class="col-md-4">
-                        <label class="form-label">Approved Amount</label>
-                        <input type="text" class="form-control" placeholder="{{res.Approved_Amount}}" readonly>
-                    </div>
-                    <div class="col-md-4">
-                        <label class="form-label">Total Upfront Deductions</label>
-                        <input type="text" class="form-control" placeholder="{{res.Total_Upfront_Deductions}}" readonly>
-                    </div>
-                    <div class="col-md-4">
-                        <label class="form-label">Net Disbursed Amount</label>
-                        <input type="text" class="form-control" placeholder="{{res.Net_Disbursed_Amount}}" readonly>
-                    </div>
-                    <div class="col-md-4">
-                        <label class="form-label">Loan Category</label>
-                        <input type="text" class="form-control" placeholder="{{res.Loan_Category}}" readonly>
-                    </div>
-                    <div class="col-md-4">
-                        <label class="form-label">Repayment Frequency</label>
-                        <input type="text" class="form-control" placeholder="{{res.Repayment_Frequency}}" readonly>
-                    </div>
-                    <div class="col-md-4">
-                        <label class="form-label">Branch</label>
-                        <input type="text" class="form-control" placeholder="{{res.Branch_Code}}" readonly>
-                    </div>
-                    <div class="col-md-6">
-                        <label class="form-label">Loan Purpose</label>
-                        <input type="text" class="form-control" placeholder="{{res.Loan_Purpose}}" readonly>
-                    </div>
-                    <div class="col-md-6">
-                        <label class="form-label">Interest Calculation Method</label>
-                        <input type="text" class="form-control" placeholder="{{res.Interest_Calculation_Method}}"
-                            readonly>
-                    </div>
-
-                    <div class="col-md-4">
-                        <label class="form-label">Amount in Arrears</label>
-                        <input type="text" class="form-control" placeholder="{{res.Amount_in_Arrears}}" readonly>
-                    </div>
-                    <div class="col-md-4">
-                        <label class="form-label">Months in Arrears</label>
-                        <input type="text" class="form-control" placeholder="{{res.Months_in_Arrears}}" readonly>
-                    </div>
-                    <div class="col-md-4">
-                        <label class="form-label">Fully Disbursed</label>
-                        <input type="text" class="form-control" placeholder="{{res.Fully_Disbursed}}" readonly>
-                    </div>
-
-                </form>
+                </div>
             </div>
         </div>
+        <div class="row my-2">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-body">
+                        {% if res.Approval_Status == 'Open' %}
+                        <button type="button" class="btn btn-primary btn-sm my-3" data-bs-toggle="modal"
+                            data-bs-target="#staticBackdropPassRate"><i class="las la-plus"></i> Add School Pass
+                            Rate</button>
+                        {% else %}
+                        <h5 class="text-success my-3">School Pass
+                            Rate</h5>
+                        {% endif %}
+                        <table id="examplePassRate"
+                            class="display table table-striped table-bordered dt-responsive table-responsive-lg"
+                            style="width:100%">
+                            <thead>
+                                <tr id="tops">
+                                    <th id="long">Class 8 KCPE Students</th>
+                                    <th>Pass Rate</th>
+                                    <th>Year</th>
+                                </tr>
+                            </thead>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row my-2">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-body">
+                        {% if res.Approval_Status == 'Open' %}
+                        <button type="button" class="btn btn-primary btn-sm my-3" data-bs-toggle="modal"
+                            data-bs-target="#ModalFnSchoolProjectDetails"><i class="las la-plus"></i> Add School Project
+                            Details</button>
+                        {% else %}
+                        <h5 class="text-success my-3">School Project
+                            Details</h5>
+                        {% endif %}
+                        <table id="exampleProjectDetails"
+                            class="display table table-striped table-bordered dt-responsive table-responsive-lg"
+                            style="width:100%">
+                            <thead>
+                                <tr id="tops">
+                                    <th id="long">Cost Type</th>
+                                    <th>Estimated Cost</th>
+                                    <th>Brief Project Description</th>
+                                </tr>
+                            </thead>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row my-2">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-body">
+                        {% if res.Approval_Status == 'Open' %}
+                        <button type="button" class="btn btn-primary btn-sm my-3" data-bs-toggle="modal"
+                            data-bs-target="#ModalFnSchoolLoanRevenue"><i class="las la-plus"></i> Add School
+                            Revenue</button>
+                        {% else %}
+                        <h5 class="text-success my-3">School
+                            Revenue</h5>
+                        {% endif %}
 
+                        <table id="exampleSchoolLoanRevenue"
+                            class="display table table-striped table-bordered dt-responsive table-responsive-lg"
+                            style="width:100%">
+                            <thead>
+                                <tr id="tops">
+                                    <th id="long">Class</th>
+                                    <th>Streams</th>
+                                    <th>Total Student</th>
+                                    <th>Termly Fee</th>
+                                    <th>Annual Fee</th>
+                                    <th>Admission Fees</th>
+                                    <th>Total Income</th>
+                                    <th>New Student Admissions</th>
+                                    <th>Term One Fees</th>
+                                    <th>Term Two Fees</th>
+                                    <th>Term Three Fees</th>
+                                </tr>
+                            </thead>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row my-2">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-body">
+                        {% if res.Approval_Status == 'Open' %}
+                        <button type="button" class="btn btn-primary btn-sm my-3" data-bs-toggle="modal"
+                            data-bs-target="#ModalFnSchoolLoanExpenses"><i class="las la-plus"></i> Add School
+                            Expenses</button>
+                        {% else %}
+                        <h5 class="text-success my-3">School
+                            Expenses</h5>
+                        {% endif %}
+                        <table id="exampleSchoolLoanExpenses"
+                            class="display table table-striped table-bordered dt-responsive table-responsive-lg"
+                            style="width:100%">
+                            <thead>
+                                <tr id="tops">
+                                    <th id="long">Expense Head</th>
+                                    <th>Monthly Expense</th>
+                                    <th>Annual Expense</th>
+                                    <th>Expense Type</th>
+                                    <th>Multiplier Factor</th>
+                                </tr>
+                            </thead>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row my-2">
+            <div class="col-md-12">
+                <div class="card">
+                    <button type="button" class="btn btn-primary btn-sm my-3 mx-3" id="LoanData"> Add
+                        View Loan Details <i class="las la-angle-double-down"></i></button>
+                    <div class="card-body" style="display: none;" id="LoanBody">
+                        <form class="row g-3">
+                            <div class="col-md-4">
+                                <label class="form-label">Loan Number</label>
+                                <input type="text" class="form-control" placeholder="{{res.Loan_Number}}" readonly>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label">Loan Balance</label>
+                                <input type="text" class="form-control" placeholder="{{res.Loan_Balance}}" readonly>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label">Loan Product</label>
+                                <input type="text" class="form-control" placeholder="{{res.Loan_Product}}" readonly>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label">Interest Rate</label>
+                                <input type="text" class="form-control" placeholder="{{res.Interest_rate}}" readonly>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label">Installments</label>
+                                <input type="text" class="form-control" placeholder="{{res.Installments}}" readonly>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label">Applied Amount</label>
+                                <input type="text" class="form-control" placeholder="{{res.Applied_Amount}}" readonly>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label">Approved Amount</label>
+                                <input type="text" class="form-control" placeholder="{{res.Approved_Amount}}" readonly>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label">Total Upfront Deductions</label>
+                                <input type="text" class="form-control" placeholder="{{res.Total_Upfront_Deductions}}"
+                                    readonly>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label">Net Disbursed Amount</label>
+                                <input type="text" class="form-control" placeholder="{{res.Net_Disbursed_Amount}}"
+                                    readonly>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label">Loan Category</label>
+                                <input type="text" class="form-control" placeholder="{{res.Loan_Category}}" readonly>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label">Repayment Frequency</label>
+                                <input type="text" class="form-control" placeholder="{{res.Repayment_Frequency}}"
+                                    readonly>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label">Branch</label>
+                                <input type="text" class="form-control" placeholder="{{res.Branch_Code}}" readonly>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Loan Purpose</label>
+                                <input type="text" class="form-control" placeholder="{{res.Loan_Purpose}}" readonly>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Interest Calculation Method</label>
+                                <input type="text" class="form-control"
+                                    placeholder="{{res.Interest_Calculation_Method}}" readonly>
+                            </div>
+
+                            <div class="col-md-4">
+                                <label class="form-label">Amount in Arrears</label>
+                                <input type="text" class="form-control" placeholder="{{res.Amount_in_Arrears}}"
+                                    readonly>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label">Months in Arrears</label>
+                                <input type="text" class="form-control" placeholder="{{res.Months_in_Arrears}}"
+                                    readonly>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label">Fully Disbursed</label>
+                                <input type="text" class="form-control" placeholder="{{res.Fully_Disbursed}}" readonly>
+                            </div>
+
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% if res.Approval_Status == 'Open' %}
         <div class="row my-3 pb-3">
-            <div class="d-grid gap-2 d-md-block">
-                <div style="display: inline-block;">
+            <div>
+                <div>
                     <form id="myForm" action="" method="post">
                         {% csrf_token %}
                         <div class="row">
                             <div class="col-md-12">
-                                <div class="col-md-12 my-2">
+                                <div class="col-md-12">
                                     <input type="hidden" class="form-control" name="entryNo" value="{{res.Entry_No_}}">
                                 </div>
                             </div>
                         </div>
-                        <button class="btn btn-successs" type="submit">Submit
+                        <button class="btn btn-successs w-100" type="submit">Submit
                             Application <i class="las la-angle-double-right"></i></button>
                     </form>
 
                 </div>
             </div>
         </div>
+        {% endif %}
+
     </div>
     </div>
     <!-- Modal Enrollment History -->
@@ -283,24 +426,33 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <form class="myForm" action="{% url 'FnSchoolLoanEnrolment' res.Loan_Number %}" method="post"
-                        novalidate>
-                        <input type="hidden" name="myAction" value="insert">
+                    <form class="myForm" action="{% url 'FnSchoolLoanEnrolment' %}" method="post"
+                        id="FnSchoolLoanEnrolment" novalidate>
+                        <div class="modal-loaders mx-auto text-center" id="money-spinner1" style="display: none;">
+                            <img src="https://upload.wikimedia.org/wikipedia/commons/b/b1/Loading_icon.gif"
+                                alt="Loading Gif" style="height: 100px;" class="img-fluid">
+                        </div>
                         {% csrf_token %}
                         <div class="row">
                             <div class="col-md-12">
                                 <label class="form-label">Academic Year <span class="text-danger">*</span></label>
-                                <input type="number" class="form-control" name="academicYear" placeholder="2000"
-                                    required>
+                                <input type="number" class="form-control" name="academicYear" id="academicYear"
+                                    placeholder="2000" required>
                             </div>
                         </div>
-
-                        <div class="row">
+                        <div class="row my-2">
                             <div class="col-md-12">
                                 <div class="mb-2">
-                                    <label class="form-label">School Strength <span class="text-danger">*</span></label>
-                                    <input type="text" class="form-control" name="schoolStrength" required>
+                                    <label class="form-label">School Population <span
+                                            class="text-danger">*</span></label>
+                                    <input type="text" class="form-control" name="schoolStrength" id="schoolStrength"
+                                        required>
                                 </div>
+                            </div>
+                        </div>
+                        <div class="row my-2">
+                            <div class="col-md-12">
+                                <h5 class="text-primary" id="historyResult"></h5>
                             </div>
                         </div>
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -321,15 +473,18 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <form class="myForm" action="{% url 'FnSchoolLoanPassRate' res.Loan_Number  %}" method="post"
-                        novalidate>
+                    <form class="myForm" method="post" id="FnSchoolLoanPassRate" novalidate>
+                        <div class="modal-loaders mx-auto text-center" id="money-spinner2" style="display: none;">
+                            <img src="https://upload.wikimedia.org/wikipedia/commons/b/b1/Loading_icon.gif"
+                                alt="Loading Gif" style="height: 100px;" class="img-fluid">
+                        </div>
                         {% csrf_token %}
-                        <input type="hidden" name="myAction" value="insert">
                         <div class="row">
                             <div class="col-md-12">
                                 <div class="mb-2">
                                     <label class="form-label">KCPE Students<span class="text-danger">*</span></label>
-                                    <input type="number" class="form-control" name="kcpeStudents" required>
+                                    <input type="number" class="form-control" name="kcpeStudents" id="kcpeStudents"
+                                        required>
                                 </div>
                             </div>
                         </div>
@@ -337,14 +492,20 @@
                             <div class="col-md-12">
                                 <div class="mb-2">
                                     <label class="form-label">Pass Rate<span class="text-danger">*</span></label>
-                                    <input type="text" class="form-control" name="passRate" required>
+                                    <input type="text" class="form-control" name="passRate" id="passRate" required>
                                 </div>
                             </div>
                         </div>
                         <div class="row my-3">
                             <div class="col-md-12">
                                 <label class="form-label">Year <span class="text-danger">*</span></label>
-                                <input type="number" class="form-control" name="year" placeholder="2000" required>
+                                <input type="number" class="form-control" name="year" id="PassYear" placeholder="2000"
+                                    required>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <h5 class="text-info" id="historyPassRate"></h5>
                             </div>
                         </div>
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -365,23 +526,25 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <form class="myForm" action="{% url 'FnSchoolLoanProjectDetails' res.Loan_Number %}" method="post"
-                        novalidate>
+                    <form class="myForm" method="post" id="FnSchoolLoanProjectDetails" novalidate>
+                        <div class="modal-loaders mx-auto text-center" id="money-spinner3" style="display: none;">
+                            <img src="https://upload.wikimedia.org/wikipedia/commons/b/b1/Loading_icon.gif"
+                                alt="Loading Gif" style="height: 100px;" class="img-fluid">
+                        </div>
                         {% csrf_token %}
-                        <input type="hidden" name="myAction" value="insert">
                         <div class="row">
                             <div class="col-md-12">
                                 <div class="mb-2">
                                     <label class="form-label">Estimated Cost <span class="text-danger">*</span></label>
-                                    <input type="text" class="form-control" name="estimatedCost" placeholder="000.000"
-                                        required>
+                                    <input type="text" class="form-control" name="estimatedCost" id="estimatedCost"
+                                        placeholder="000.000" required>
                                 </div>
                             </div>
                         </div>
                         <div class="row">
                             <div class="col-md-12">
                                 <label class="form-label">Cost Type <span class="text-danger">*</span></label>
-                                <select class="form-select" name="costType" required>
+                                <select class="form-select" name="costType" id="costType" required>
                                     <option value="0" disabled selected>--Select--</option>
                                     <option value="1">Project Cost</option>
                                     <option value="2">Owner Contribution</option>
@@ -391,7 +554,13 @@
                         <div class="row my-2">
                             <div class="col-md-12">
                                 <label class="form-label">Project Description <span class="text-danger">*</span></label>
-                                <textarea class="form-control" name="projectDescription" rows="5"></textarea>
+                                <textarea class="form-control" name="projectDescription" id="projectDescription"
+                                    rows="5"></textarea>
+                            </div>
+                        </div>
+                        <div class="row my-2">
+                            <div class="col-md-12">
+                                <h5 class="text-info" id="ProjectResult"></h5>
                             </div>
                         </div>
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -430,77 +599,77 @@
     <!-- Modal FnSchoolRevenue -->
     <div class="modal fade" id="ModalFnSchoolLoanRevenue" data-bs-backdrop="static" data-bs-keyboard="false"
         tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-scrollable">
+        <div class="modal-dialog modal-dialog-scrollable modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="staticBackdropLabel">School Revenue</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <form class="myForm needs-validation" action="{% url 'FnSchoolLoanRevenue' res.Loan_Number %}"
-                        method="post" novalidate>
+                    <form class="myForm" id="FnSchoolLoanRevenue" method="post" novalidate>
+                        <div class="modal-loaders mx-auto text-center" id="money-spinner4" style="display: none;">
+                            <img src="https://upload.wikimedia.org/wikipedia/commons/b/b1/Loading_icon.gif"
+                                alt="Loading Gif" style="height: 100px;" class="img-fluid">
+                        </div>
                         {% csrf_token %}
                         <div class="row">
-                            <div class="col-md-12">
+                            <div class="col-md-6">
                                 <div class="mb-2">
                                     <label class="form-label">Class <span class="text-danger">*</span></label>
-                                    <input type="text" class="form-control" name="edpClass" required>
+                                    <input type="text" class="form-control" name="edpClass" id="edpClass" required>
                                 </div>
                             </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-12">
+                            <div class="col-md-6">
                                 <div class="mb-2">
                                     <label class="form-label">Streams <span class="text-danger">*</span></label>
-                                    <input type="number" class="form-control" name="streams" required>
+                                    <input type="number" class="form-control" name="streams" id="streams" required>
                                 </div>
                             </div>
                         </div>
                         <div class="row">
-                            <div class="col-md-12">
+                            <div class="col-md-4">
                                 <div class="mb-2">
                                     <label class="form-label">Term One Fees <span class="text-danger">*</span></label>
-                                    <input type="text" class="form-control" name="termOneFees" placeholder="0000.000"
-                                        required>
+                                    <input type="text" class="form-control" name="termOneFees" id="termOneFees"
+                                        placeholder="0000.000" required>
                                 </div>
                             </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-12">
+                            <div class="col-md-4">
                                 <div class="mb-2">
                                     <label class="form-label">Term Two Fees <span class="text-danger">*</span></label>
-                                    <input type="text" class="form-control" name="termTwoFees" placeholder="0000.000"
-                                        required>
+                                    <input type="text" class="form-control" name="termTwoFees" id="termTwoFees"
+                                        placeholder="0000.000" required>
                                 </div>
                             </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-12">
+                            <div class="col-md-4">
                                 <div class="mb-2">
                                     <label class="form-label">Term Three Fees <span class="text-danger">*</span></label>
-                                    <input type="text" class="form-control" name="termThreeFees" placeholder="0000.000"
-                                        required>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-12">
-                                <div class="mb-2">
-                                    <label class="form-label">New Student Admission <span
-                                            class="text-danger">*</span></label>
-                                    <input type="text" class="form-control" name="newStudentAdmission"
+                                    <input type="text" class="form-control" name="termThreeFees" id="termThreeFees"
                                         placeholder="0000.000" required>
                                 </div>
                             </div>
                         </div>
 
-                        <div class="row my-3">
-                            <div class="col-md-12">
+                        <div class="row my-2">
+                            <div class="col-md-6">
+                                <div class="mb-2">
+                                    <label class="form-label">New Student Admission <span
+                                            class="text-danger">*</span></label>
+                                    <input type="text" class="form-control" name="newStudentAdmission"
+                                        id="newStudentAdmission" placeholder="0000.000" required>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
                                 <div class="mb-2">
                                     <label class="form-label">Admission Fees <span class="text-danger">*</span></label>
-                                    <input type="text" class="form-control" name="admissionFees" placeholder="0000.000"
-                                        required>
+                                    <input type="text" class="form-control" name="admissionFees" id="admissionFees"
+                                        placeholder="0000.000" required>
                                 </div>
+                            </div>
+                        </div>
+                        <div class="row my-2">
+                            <div class="col-md-12">
+                                <h5 class="text-info" id="LoanRevenueResult"></h5>
                             </div>
                         </div>
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -521,14 +690,17 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <form class="myForm needs-validation" action="{% url 'FnSchoolLoanExpenses' res.Loan_Number %}"
-                        method="post" novalidate>
+                    <form class="myForm" id="FnSchoolLoanExpenses" method="post" novalidate>
+                        <div class="modal-loaders mx-auto text-center" id="money-spinner5" style="display: none;">
+                            <img src="https://upload.wikimedia.org/wikipedia/commons/b/b1/Loading_icon.gif"
+                                alt="Loading Gif" style="height: 100px;" class="img-fluid">
+                        </div>
                         {% csrf_token %}
                         <div class="row">
                             <div class="col-md-12">
                                 <div class="mb-2">
                                     <label class="form-label">Expense Head <span class="text-danger">*</span></label>
-                                    <select class="form-select" name="expenseHead" required>
+                                    <select class="form-select" name="expenseHead" id="expenseHead" required>
                                         <option value="0" disabled selected>--Select--</option>
                                         {% for res in Expense %}
                                         <option value="{{res.Code}}">{{res.Description}}</option>
@@ -542,8 +714,8 @@
                             <div class="col-md-12">
                                 <div class="mb-2">
                                     <label class="form-label">Monthly Expense<span class="text-danger">*</span></label>
-                                    <input type="text" class="form-control" name="monthlyExpense" placeholder="0000.000"
-                                        required>
+                                    <input type="text" class="form-control" name="monthlyExpense" id="monthlyExpense"
+                                        placeholder="0000.000" required>
                                 </div>
                             </div>
                         </div>
@@ -552,9 +724,14 @@
                                 <div>
                                     <label class="form-label">Multiplier Factor<span
                                             class="text-danger">*</span></label>
-                                    <input type="text" class="form-control" name="multiplierFactor" placeholder="0.0"
-                                        required>
+                                    <input type="text" class="form-control" name="multiplierFactor"
+                                        id="multiplierFactor" placeholder="0.0" required>
                                 </div>
+                            </div>
+                        </div>
+                        <div class="row my-2">
+                            <div class="col-md-12">
+                                <h5 class="text-info" id="LoanExpensesResult"></h5>
                             </div>
                         </div>
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -1019,9 +1196,252 @@
 </section>
 <script>
     $(document).ready(function () {
-        $("#approveBtn").click(function () {
-            $("#approvalForm").toggle(500)
+        $('#LoanData').click(function () {
+            $('#LoanBody').toggle(2000)
         })
     })
+    $(document).on('submit', '#FnSchoolLoanEnrolment', function (e) {
+        e.preventDefault();
+        $('#money-spinner1').show();
+        $.ajax({
+            type: 'POST',
+            url: '{% url "FnSchoolLoanEnrolment" %}',
+            data: {
+                academicYear: $("#academicYear").val(),
+                schoolStrength: $("#schoolStrength").val(),
+                csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val()
+            },
+            success: function (response) {
+                $("#academicYear").val("")
+                $("#schoolStrength").val("")
+                $("#historyResult").empty().append(response);
+                $('#money-spinner1').hide();
+            }
+        })
+    });
+    $.ajax({
+        type: 'get',
+        url: '{% url "GetSchoolEnrollment" %}',
+        dataType: 'json',
+        data: {
+            ItemCode: 1
+        },
+        success: function (response) {
+            $("#exampleEnrollment").DataTable().clear();
+            var length = Object.keys(response.value).length;
+            let options = '';
+            for (var i = 0; i < response.value.length; i++) {
+                if (response.value[i].Document_No == '{{res.Loan_Number}}') {
+                    $('#exampleEnrollment').dataTable().fnAddData([
+                        response.value[i].Academic_Year,
+                        response.value[i].School_Strength,
+                    ]);
+
+                }
+            }
+        },
+        error: function (response) {
+            console.log('Something went wrong');
+        }
+    });
+
+    $(document).on('submit', '#FnSchoolLoanPassRate', function (e) {
+        e.preventDefault();
+        $('#money-spinner2').show();
+        let LoanNumber = '{{res.Loan_Number}}'
+        console.log("LoanNumber:", LoanNumber)
+        $.ajax({
+            type: 'POST',
+            url: '{% url "FnSchoolLoanPassRate" %}',
+            data: {
+                kcpeStudents: $("#kcpeStudents").val(),
+                passRate: $("#passRate").val(),
+                year: $("#PassYear").val(),
+                LoanNumber: LoanNumber,
+                csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val()
+            },
+            success: function (response) {
+                $("#kcpeStudents").val("")
+                $("#passRate").val("")
+                $("#PassYear").val("")
+                $("#historyPassRate").empty().append(response);
+                $('#money-spinner2').hide();
+            }
+        })
+    });
+    $.ajax({
+        type: 'get',
+        url: '{% url "GetSchoolLoanPassRate" %}',
+        dataType: 'json',
+        success: function (response) {
+            $("#examplePassRate").DataTable().clear();
+            for (var i = 0; i < response.value.length; i++) {
+                if (response.value[i].Document_No == '{{res.Loan_Number}}') {
+                    $('#examplePassRate').dataTable().fnAddData([
+                        response.value[i].Class_8_KCPE_Students,
+                        response.value[i].Pass_Rate,
+                        response.value[i].Year,
+                    ]);
+
+                }
+            }
+        },
+        error: function (response) {
+            console.log('Something went wrong');
+        }
+    });
+    $(document).on('submit', '#FnSchoolLoanProjectDetails', function (e) {
+        e.preventDefault();
+        $('#money-spinner3').show();
+        let LoanNumber = '{{res.Loan_Number}}'
+        $.ajax({
+            type: 'POST',
+            url: '{% url "FnSchoolLoanProjectDetails" %}',
+            data: {
+                estimatedCost: $("#estimatedCost").val(),
+                costType: $("#costType").val(),
+                projectDescription: $("#projectDescription").val(),
+                LoanNumber: LoanNumber,
+                csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val()
+            },
+            success: function (response) {
+                $("#estimatedCost").val("")
+                $("#costType").val("")
+                $("#projectDescription").val("")
+                $("#ProjectResult").empty().append(response);
+                $('#money-spinner3').hide();
+            }
+        })
+    });
+    $.ajax({
+        type: 'get',
+        url: '{% url "GetSchoolLoanProjectDetails" %}',
+        dataType: 'json',
+        success: function (response) {
+            $("#exampleProjectDetails").DataTable().clear();
+            for (var i = 0; i < response.value.length; i++) {
+                if (response.value[i].Document_No == '{{res.Loan_Number}}') {
+                    $('#exampleProjectDetails').dataTable().fnAddData([
+                        response.value[i].Cost_Type,
+                        response.value[i].Estimated_Cost,
+                        response.value[i].Brief_Project_Description,
+                    ]);
+
+                }
+            }
+        },
+        error: function (response) {
+            console.log('Something went wrong');
+        }
+    });
+    $(document).on('submit', '#FnSchoolLoanRevenue', function (e) {
+        e.preventDefault();
+        $('#money-spinner4').show();
+        let LoanNumber = '{{res.Loan_Number}}'
+        $.ajax({
+            type: 'POST',
+            url: '{% url "FnSchoolLoanRevenue" %}',
+            data: {
+                edpClass: $("#edpClass").val(),
+                streams: $("#streams").val(),
+                termOneFees: $("#termOneFees").val(),
+                termTwoFees: $("#termTwoFees").val(),
+                termThreeFees: $("#termThreeFees").val(),
+                newStudentAdmission: $("#newStudentAdmission").val(),
+                admissionFees: $("#admissionFees").val(),
+                LoanNumber: LoanNumber,
+                csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val()
+            },
+            success: function (response) {
+                $("#edpClass").val("");
+                $("#streams").val("");
+                $("#termOneFees").val("");
+                $("#termTwoFees").val("");
+                $("#termThreeFees").val("");
+                $("#newStudentAdmission").val("");
+                $("#admissionFees").val("");
+                $("#LoanRevenueResult").empty().append(response);
+                $('#money-spinner4').hide();
+            }
+        })
+    });
+    $.ajax({
+        type: 'get',
+        url: '{% url "GetSchoolLoanRevenue" %}',
+        dataType: 'json',
+        success: function (response) {
+            console.log("response", response)
+            $("#exampleSchoolLoanRevenue").DataTable().clear();
+            for (var i = 0; i < response.value.length; i++) {
+                if (response.value[i].Loan_No == '{{res.Loan_Number}}') {
+
+                    $('#exampleSchoolLoanRevenue').dataTable().fnAddData([
+                        response.value[i].Class,
+                        response.value[i].Streams,
+                        response.value[i].Total_Student,
+                        response.value[i].Termly_Fee,
+                        response.value[i].Annual_Fee,
+                        response.value[i].Admission_Fees,
+                        response.value[i].Total_Income,
+                        response.value[i].New_Student_Admissions,
+                        response.value[i].Term_One_Fees,
+                        response.value[i].Term_Two_Fees,
+                        response.value[i].Term_Three_Fees,
+                    ]);
+
+                }
+            }
+        },
+        error: function (response) {
+            console.log('Something went wrong');
+        }
+    });
+    $(document).on('submit', '#FnSchoolLoanExpenses', function (e) {
+        e.preventDefault();
+        $('#money-spinner5').show();
+        let LoanNumber = '{{res.Loan_Number}}'
+        $.ajax({
+            type: 'POST',
+            url: '{% url "FnSchoolLoanExpenses" %}',
+            data: {
+                expenseHead: $("#expenseHead").val(),
+                monthlyExpense: $("#monthlyExpense").val(),
+                multiplierFactor: $("#multiplierFactor").val(),
+                LoanNumber: LoanNumber,
+                csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val()
+            },
+            success: function (response) {
+                $("#expenseHead").val("");
+                $("#monthlyExpense").val("");
+                $("#multiplierFactor").val("");
+                $("#LoanExpensesResult").empty().append(response);
+                $('#money-spinner5').hide();
+            }
+        })
+    });
+    $.ajax({
+        type: 'get',
+        url: '{% url "GetSchoolLoanExpenses" %}',
+        dataType: 'json',
+        success: function (response) {
+            $("#exampleSchoolLoanExpenses").DataTable().clear();
+            for (var i = 0; i < response.value.length; i++) {
+                if (response.value[i].Loan_No == '{{res.Loan_Number}}') {
+
+                    $('#exampleSchoolLoanExpenses').dataTable().fnAddData([
+                        response.value[i].Expense_Head,
+                        response.value[i].Monthly_Expense,
+                        response.value[i].Annual_Expense,
+                        response.value[i].Expense_Type,
+                        response.value[i].Multiplier_Factor,
+                    ]);
+
+                }
+            }
+        },
+        error: function (response) {
+            console.log('Something went wrong');
+        }
+    });
 </script>
 {% endblock %}

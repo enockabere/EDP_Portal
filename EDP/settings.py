@@ -81,7 +81,7 @@ INSTALLED_APPS = [
     'dashboard',
     'bootstrap5',
     'loans',
-    'Finance',
+    'balance',
     'Procurement',
     'appointment',
     'accounts',

@@ -255,7 +255,7 @@ def LoanDetail(request,pk):
             }
     return render(request, 'loanDetail.html', ctx)
 
-def FnSchoolLoanRevenue(request,pk):
+def FnSchoolLoanRevenue(request):
     if request.method == 'POST':
         try:
             entryNo = 0
@@ -267,28 +267,38 @@ def FnSchoolLoanRevenue(request,pk):
             termThreeFees = float(request.POST.get('termThreeFees'))
             newStudentAdmission = float(request.POST.get('newStudentAdmission'))
             admissionFees = float(request.POST.get('admissionFees'))
+            LoanNumber = request.POST.get('LoanNumber')
             myAction = 'insert'
-        except ValueError:
-            messages.info(request,"Missing Input!")
-            return redirect('LoanDetail',pk=pk)
         except KeyError:
             messages.info(request, "Session Expired. Please Login")
             return redirect('auth')
-
         try:
             response = config.CLIENT.service.FnSchoolLoanRevenue(
                 entryNo, applicantNo,edpClass,streams, termOneFees,termTwoFees,termThreeFees,
                 newStudentAdmission,admissionFees, myAction)
             print(response)
-            messages.success(request, "Successfully Added")
-            return redirect('LoanDetail',pk=pk)
+            if response['return_value'] == True:
+                return JsonResponse("Successfully Added.",safe=False)
+            if response['return_value'] == False:
+                return JsonResponse("Not Added.",safe=False)
         except Exception as e:
             print(e)
             messages.info(request, e)
-            return redirect('LoanDetail',pk=pk)
-    return redirect('LoanDetail',pk=pk)
+    return redirect('LoanDetail',pk=LoanNumber)
 
-def FnSchoolLoanExpenses(request,pk):
+def GetSchoolLoanRevenue(request):
+    session = requests.Session()
+    session.auth = config.AUTHS
+    Item = config.O_DATA.format("/LoanSchoolRevenue")
+    try:
+        Item_res = session.get(Item, timeout=10).json()
+        return JsonResponse(Item_res)
+
+    except  Exception as e:
+        pass
+    return redirect('loan')
+
+def FnSchoolLoanExpenses(request):
     if request.method == 'POST':
         try:
             entryNo = 0
@@ -297,9 +307,7 @@ def FnSchoolLoanExpenses(request,pk):
             monthlyExpense = float(request.POST.get('monthlyExpense'))
             multiplierFactor = float(request.POST.get('multiplierFactor'))
             myAction = 'insert'
-        except ValueError:
-            messages.info(request,"Missing Input!")
-            return redirect('LoanDetail',pk=pk)
+            LoanNumber = request.POST.get('LoanNumber')
         except KeyError:
             messages.info(request, "Session Expired. Please Login")
             return redirect('auth')
@@ -308,44 +316,60 @@ def FnSchoolLoanExpenses(request,pk):
             response = config.CLIENT.service.FnSchoolLoanExpenses(
                 entryNo, applicantNo,expenseHead,monthlyExpense,multiplierFactor,myAction)
             print(response)
-            messages.success(request, "Successfully Added")
-            return redirect('LoanDetail',pk=pk)
+            if response['return_value'] == True:
+                return JsonResponse("Successfully Added.",safe=False)
+            if response['return_value'] == False:
+                return JsonResponse("Not Added.",safe=False)
         except Exception as e:
             print(e)
             messages.info(request, e)
-            return redirect('LoanDetail',pk=pk)
-    return redirect('LoanDetail',pk=pk)
+    return redirect('LoanDetail',pk=LoanNumber)
+
+def GetSchoolLoanExpenses(request):
+    session = requests.Session()
+    session.auth = config.AUTHS
+    Item = config.O_DATA.format("/LoanSchoolExpenses")
+    try:
+        Item_res = session.get(Item, timeout=10).json()
+        return JsonResponse(Item_res)
+
+    except  Exception as e:
+        pass
+    return redirect('loan')
 
 
-def FnSchoolLoanEnrolment(request,pk):
+def FnSchoolLoanEnrolment(request):
     if request.method == 'POST':
-        try:
-            entryNo = 0
-            applicantNo = request.session['CustomerNo']
-            academicYear = request.POST.get('academicYear')
-            schoolStrength = request.POST.get('schoolStrength')
-            myAction = request.POST.get('myAction')
-        except KeyError:
-            messages.info(request, "Session Expired. Please Login")
-            return redirect('auth')
-        
-        if academicYear.isdigit() == False:
-            messages.info(request, "Academic year has to be an integer")
-            return redirect('LoanDetail',pk=pk)
+        entryNo = 0
+        applicantNo = request.session['CustomerNo']
+        academicYear = request.POST.get('academicYear')
+        schoolStrength = request.POST.get('schoolStrength')
+        myAction = 'insert'
+
         try:
             response = config.CLIENT.service.FnSchoolEnrolment(
                 entryNo, applicantNo, int(academicYear), schoolStrength, myAction)
-            print(response)
-            messages.success(request, "Successfully Added")
-            return redirect('LoanDetail',pk=pk)
+            if response['return_value'] == True:
+                return JsonResponse("Successfully Added.",safe=False)
+            if response['return_value'] == False:
+                return JsonResponse("Not Added.",safe=False)
         except Exception as e:
             print(e)
             messages.info(request, e)
-            return redirect('LoanDetail',pk=pk)
-    return redirect('LoanDetail',pk=pk)
+    return redirect('loan')
+def GetSchoolEnrollment(request):
+    session = requests.Session()
+    session.auth = config.AUTHS
+    Item = config.O_DATA.format("/SchoolEnrollment")
+    try:
+        Item_res = session.get(Item, timeout=10).json()
+        return JsonResponse(Item_res)
 
+    except  Exception as e:
+        pass
+    return redirect('loan')
 
-def FnSchoolLoanPassRate(request,pk):
+def FnSchoolLoanPassRate(request):
     if request.method == 'POST':
         try:
             entryNo = 0
@@ -353,31 +377,44 @@ def FnSchoolLoanPassRate(request,pk):
             kcpeStudents = request.POST.get('kcpeStudents')
             passRate = request.POST.get('passRate')
             year = request.POST.get('year')
-            myAction = request.POST.get('myAction')
-        except ValueError:
-            messages.info(request,"Missing Input!")
-            return redirect('LoanDetail',pk=pk)
+            LoanNumber = request.POST.get('LoanNumber')
+            myAction = 'insert'
+            print(kcpeStudents)
+            print(passRate)
+            print(year)
+            print(LoanNumber)
         except KeyError:
             messages.info(request, "Session Expired. Please Login")
             return redirect('auth')
         if year.isdigit() == False:
             messages.info(request, "Year has to be an number")
-            return redirect('LoanDetail',pk=pk)
-
+            return redirect('LoanDetail',pk=LoanNumber)
         try:
             response = config.CLIENT.service.FnSchoolPassRate(
                 entryNo, applicantNo,kcpeStudents,passRate, int(year), myAction)
-            messages.success(request, "Successfully Added")
             print(response)
-            return redirect('LoanDetail',pk=pk)
+            if response['return_value'] == True:
+                return JsonResponse("Successfully Added.",safe=False)
+            if response['return_value'] == False:
+                return JsonResponse("Not Added.",safe=False)
         except Exception as e:
             print(e)
             messages.info(request, e)
-            return redirect('LoanDetail',pk=pk)
-    return redirect('LoanDetail',pk=pk)
+    return redirect('LoanDetail',pk=LoanNumber)
 
+def GetSchoolLoanPassRate(request):
+    session = requests.Session()
+    session.auth = config.AUTHS
+    Item = config.O_DATA.format("/SchoolPassRate")
+    try:
+        Item_res = session.get(Item, timeout=10).json()
+        return JsonResponse(Item_res)
 
-def FnSchoolLoanProjectDetails(request,pk):
+    except  Exception as e:
+        pass
+    return redirect('loan')
+
+def FnSchoolLoanProjectDetails(request):
     if request.method == 'POST':
         try:
             entryNo = 0
@@ -385,10 +422,8 @@ def FnSchoolLoanProjectDetails(request,pk):
             projectDescription = request.POST.get('projectDescription')
             estimatedCost = float(request.POST.get('estimatedCost'))
             costType = int(request.POST.get('costType'))
-            myAction = request.POST.get('myAction')
-        except ValueError:
-            messages.info(request,"Missing Input!")
-            return redirect('LoanDetail',pk=pk)
+            myAction = 'insert'
+            LoanNumber = request.POST.get('LoanNumber')
         except KeyError:
             messages.info(request, "Session Expired. Please Login")
             return redirect('auth')
@@ -397,13 +432,26 @@ def FnSchoolLoanProjectDetails(request,pk):
             response = config.CLIENT.service.FnSchoolProjectDetails(
                 entryNo, applicantNo,projectDescription,estimatedCost, costType, myAction)
             print(response)
-            messages.success(request, "Successfully Added")
-            return redirect('LoanDetail',pk=pk)
+            if response['return_value'] == True:
+                return JsonResponse("Successfully Added.",safe=False)
+            if response['return_value'] == False:
+                return JsonResponse("Not Added.",safe=False)
         except Exception as e:
             print(e)
             messages.info(request, e)
-            return redirect('LoanDetail',pk=pk)
-    return redirect('LoanDetail',pk=pk)
+    return redirect('LoanDetail',pk=LoanNumber)
+
+def GetSchoolLoanProjectDetails(request):
+    session = requests.Session()
+    session.auth = config.AUTHS
+    Item = config.O_DATA.format("/SchoolProjectDetails")
+    try:
+        Item_res = session.get(Item, timeout=10).json()
+        return JsonResponse(Item_res)
+
+    except  Exception as e:
+        pass
+    return redirect('loan')
 
 def FnSchoolLoanTransportDetails(request,pk):
     if request.method == 'POST':
