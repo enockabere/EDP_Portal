@@ -51,10 +51,6 @@ def Loan_Calculator(request):
                 print("Month Repayment:", response)
                 mp = jsons.dumps(response,use_decimal=True)
                 return JsonResponse(mp,safe=False)
-                # return response
-                # if response:
-                #     messages.success(request,f"Your Monthly Repayment is {response}")
-                #     return redirect("Loan_Calculator")
             except Exception as e:
                 print(e)
                 messages.info(request, e)
@@ -267,7 +263,6 @@ def FnSchoolLoanRevenue(request):
             termThreeFees = float(request.POST.get('termThreeFees'))
             newStudentAdmission = float(request.POST.get('newStudentAdmission'))
             admissionFees = float(request.POST.get('admissionFees'))
-            LoanNumber = request.POST.get('LoanNumber')
             myAction = 'insert'
         except KeyError:
             messages.info(request, "Session Expired. Please Login")
@@ -284,7 +279,7 @@ def FnSchoolLoanRevenue(request):
         except Exception as e:
             print(e)
             messages.info(request, e)
-    return redirect('LoanDetail',pk=LoanNumber)
+    return redirect('dashboard')
 
 def GetSchoolLoanRevenue(request):
     session = requests.Session()
@@ -307,7 +302,6 @@ def FnSchoolLoanExpenses(request):
             monthlyExpense = float(request.POST.get('monthlyExpense'))
             multiplierFactor = float(request.POST.get('multiplierFactor'))
             myAction = 'insert'
-            LoanNumber = request.POST.get('LoanNumber')
         except KeyError:
             messages.info(request, "Session Expired. Please Login")
             return redirect('auth')
@@ -323,7 +317,7 @@ def FnSchoolLoanExpenses(request):
         except Exception as e:
             print(e)
             messages.info(request, e)
-    return redirect('LoanDetail',pk=LoanNumber)
+    return redirect('dashboard')
 
 def GetSchoolLoanExpenses(request):
     session = requests.Session()
@@ -356,7 +350,7 @@ def FnSchoolLoanEnrolment(request):
         except Exception as e:
             print(e)
             messages.info(request, e)
-    return redirect('loan')
+    return redirect('dashboard')
 def GetSchoolEnrollment(request):
     session = requests.Session()
     session.auth = config.AUTHS
@@ -377,18 +371,11 @@ def FnSchoolLoanPassRate(request):
             kcpeStudents = request.POST.get('kcpeStudents')
             passRate = request.POST.get('passRate')
             year = request.POST.get('year')
-            LoanNumber = request.POST.get('LoanNumber')
+            
             myAction = 'insert'
-            print(kcpeStudents)
-            print(passRate)
-            print(year)
-            print(LoanNumber)
         except KeyError:
             messages.info(request, "Session Expired. Please Login")
             return redirect('auth')
-        if year.isdigit() == False:
-            messages.info(request, "Year has to be an number")
-            return redirect('LoanDetail',pk=LoanNumber)
         try:
             response = config.CLIENT.service.FnSchoolPassRate(
                 entryNo, applicantNo,kcpeStudents,passRate, int(year), myAction)
@@ -400,7 +387,7 @@ def FnSchoolLoanPassRate(request):
         except Exception as e:
             print(e)
             messages.info(request, e)
-    return redirect('LoanDetail',pk=LoanNumber)
+    return redirect('dashboard')
 
 def GetSchoolLoanPassRate(request):
     session = requests.Session()
@@ -423,7 +410,6 @@ def FnSchoolLoanProjectDetails(request):
             estimatedCost = float(request.POST.get('estimatedCost'))
             costType = int(request.POST.get('costType'))
             myAction = 'insert'
-            LoanNumber = request.POST.get('LoanNumber')
         except KeyError:
             messages.info(request, "Session Expired. Please Login")
             return redirect('auth')
@@ -439,7 +425,7 @@ def FnSchoolLoanProjectDetails(request):
         except Exception as e:
             print(e)
             messages.info(request, e)
-    return redirect('LoanDetail',pk=LoanNumber)
+    return redirect('dashboard')
 
 def GetSchoolLoanProjectDetails(request):
     session = requests.Session()

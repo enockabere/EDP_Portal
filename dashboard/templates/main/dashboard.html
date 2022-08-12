@@ -4,7 +4,7 @@
 {% block main %}
 
 <section>
-    <div class="content-wrapper">
+    <div class="content-wrapper LoanWrapper">
         <div class="row py-3" id="proBanner">
             <div class="col-md-12">
                 <span class="d-flex align-items-center purchase-popup">
@@ -28,7 +28,7 @@
                 <div class="card h-100 l-bg-green-dark">
                     <div class="card-body text-center">
                         <h5 class="mb-2 text-dark font-weight-normal">Number of Students</h5>
-                        <h2 class="mb-4 text-dark font-weight-bold">93200</h2>
+                        <h2 class="mb-4 text-dark font-weight-bold">{{customer.Student_Count}}</h2>
                         <div class="iconKard mx-auto text-center">
                             <i class="mdi mdi-human-male-female icon-md absolute-center text-dark"></i>
                         </div>
@@ -39,7 +39,7 @@
                 <div class="card h-100 l-bg-orange-dark">
                     <div class="card-body text-center">
                         <h5 class="mb-2 text-dark font-weight-normal">Number of Teachers</h5>
-                        <h2 class="mb-4 text-dark font-weight-bold">75</h2>
+                        <h2 class="mb-4 text-dark font-weight-bold">{{customer.No_of_Teachers}}</h2>
                         <div class="iconKard mx-auto text-center">
                             <i class="mdi mdi-account-circle icon-md absolute-center text-dark"></i>
                         </div>
@@ -49,8 +49,8 @@
             <div class="col-xl-3  col-lg-6 col-sm-6 grid-margin stretch-card">
                 <div class="card h-100 l-bg-blue-dark ">
                     <div class="card-body text-center">
-                        <h5 class="mb-2 text-dark font-weight-normal">Average School Income</h5>
-                        <h2 class="mb-4 text-dark font-weight-bold">Kshs 100380</h2>
+                        <h5 class="mb-2 text-dark font-weight-normal">Min Termly Fee / Student</h5>
+                        <h2 class="mb-4 text-dark font-weight-bold">{{customer.Minimum_Termly_Fee_Per_Student}}</h2>
                         <div class="iconKard mx-auto text-center">
                             <i class="mdi mdi-wallet icon-md absolute-center text-dark"></i>
                         </div>
@@ -60,10 +60,10 @@
             <div class="col-xl-3 col-lg-6 col-sm-6 grid-margin stretch-card">
                 <div class="card h-100 l-bg-orange-dark">
                     <div class="card-body text-center">
-                        <h5 class="mb-2 text-dark font-weight-normal">Number of Students</h5>
-                        <h2 class="mb-4 text-dark font-weight-bold">42 Days</h2>
+                        <h5 class="mb-2 text-dark font-weight-normal">Min Termly Fee / Student</h5>
+                        <h2 class="mb-4 text-dark font-weight-bold">{{customer.Maximum_Termly_Fee_Per_Student}}</h2>
                         <div class="iconKard mx-auto text-center">
-                            <i class="mdi mdi-chart-bar-stacked icon-md absolute-center text-dark"></i>
+                            <i class="mdi mdi-wallet icon-md absolute-center text-dark"></i>
                         </div>
                     </div>
                 </div>
@@ -84,11 +84,13 @@
                                 const labels = [
                                     'Open Loans',
                                     'Loans Pending Approval',
+                                    'Approved Loans',
                                     'Rejected Loans',
                                 ];
-                                var Approved_Leave = '{{leave_app}}'
-                                var App_Train = '{{app_train}}'
-                                var APP_Imprest = '{{imprest_app}}'
+                                var openLoans = "{{openLoans}}"
+                                var pendingLoans = "{{pendCount}}"
+                                var approvedLoans = "{{appCount}}"
+                                var rejectedLoans = "{{rejCount}}"
                                 const data = {
                                     labels: labels,
                                     datasets: [{
@@ -97,8 +99,9 @@
                                             '#04fb14',
                                             '#3c3c3c',
                                             '#048383',
+                                            '#3c3c3c',
                                         ],
-                                        data: [Approved_Leave, App_Train, APP_Imprest, ],
+                                        data: [openLoans, pendingLoans, approvedLoans, rejectedLoans],
                                     }]
                                 };
 

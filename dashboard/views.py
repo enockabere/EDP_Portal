@@ -9,6 +9,7 @@ import datetime
 from django.contrib.sessions.models import Session
 from django.contrib import messages
 import datetime as dt
+from django.http import JsonResponse
 # Create your views here.
 
 
@@ -38,6 +39,30 @@ def dashboard(request):
             if potential['No'] == CustomerNumber and potential['Email_Address']==CustomerEmail:
                 PotentialRes = potential
                 Coordinates = potential['Coordinates'] 
+        CustomerData = config.O_DATA.format("/CustomersList")
+        CustomerResponse = session.get(CustomerData, timeout=10).json()  
+        for customer in CustomerResponse['value']:
+            if customer['No'] == CustomerNumber and customer['Email_Address']==CustomerEmail:
+                CustomerRes = customer
+        Loans = config.O_DATA.format("/Loans")
+        LoanResponse = session.get(Loans, timeout=10).json()
+        openDoc = []
+        ApprovedLoans = []
+        RejectedLoans = []
+        PendingLoans = []
+        for document in LoanResponse['value']:
+                if document['Member_Number'] == MemberNo and document['Approval_Status'] == 'Open':
+                    output_json = json.dumps(document)
+                    openDoc.append(json.loads(output_json))
+                if document['Member_Number'] == MemberNo and document['Approval_Status'] == 'Approved':
+                    output_json = json.dumps(document)
+                    ApprovedLoans.append(json.loads(output_json))
+                if document['Member_Number'] == MemberNo and document['Approval_Status'] == 'Disapproved':
+                    output_json = json.dumps(document)
+                    RejectedLoans.append(json.loads(output_json))
+                if document['Member_Number'] == MemberNo and document['Approval_Status'] == "Pending Approval":
+                    output_json = json.dumps(document)
+                    PendingLoans.append(json.loads(output_json))
     except KeyError as e:
         messages.success(request, "Session Expired. Please Login")
         print(e)
@@ -46,11 +71,15 @@ def dashboard(request):
         print(e)
         messages.info(request, e)
         return redirect('auth')
-
+    openCount= len(openDoc)
+    appCount = len(ApprovedLoans)
+    rejCount = len(RejectedLoans)
+    pendCount = len(PendingLoans)
     ctx = {"today": todays_date,"LeadRes": LeadRes, "full": CustomerName,
             "CustomerNumber": CustomerNumber, "CustomerEmail": CustomerEmail,
             "MemberNo": MemberNo,"stage":stage, "Coordinates":Coordinates,
-            "PotentialRes":PotentialRes,
+            "PotentialRes":PotentialRes, "customer":CustomerRes,"openLoans":openCount,
+            "appCount":appCount,"rejCount":rejCount,"pendCount":pendCount
             }
     return render(request, 'main/dashboard.html', ctx)
 
@@ -92,91 +121,7 @@ def ApplicationDetails(request):
             }
     return render(request,'main/AppDetails.html',ctx)
 
-def FnSchoolEnrolment(request):
-    if request.method == 'POST':
-        try:
-            entryNo = 0
-            applicantNo = request.session['CustomerNo']
-            academicYear = request.POST.get('academicYear')
-            schoolStrength = request.POST.get('schoolStrength')
-            myAction = request.POST.get('myAction')
-        except KeyError:
-            messages.info(request, "Session Expired. Please Login")
-            return redirect('auth')
-        
-        if academicYear.isdigit() == False:
-            messages.info(request, "Academic year has to be an integer")
-            return redirect('ApplicationDetails')
-        try:
-            response = config.CLIENT.service.FnSchoolEnrolment(
-                entryNo, applicantNo, int(academicYear), schoolStrength, myAction)
-            print(response)
-            messages.success(request, "Successfully Added")
-            return redirect('ApplicationDetails')
-        except Exception as e:
-            print(e)
-            messages.info(request, e)
-            return redirect('ApplicationDetails')
-    return redirect('ApplicationDetails')
 
-def FnSchoolPassRate(request):
-    if request.method == 'POST':
-        try:
-            entryNo = 0
-            applicantNo = request.session['CustomerNo']
-            kcpeStudents = request.POST.get('kcpeStudents')
-            passRate = request.POST.get('passRate')
-            year = request.POST.get('year')
-            myAction = request.POST.get('myAction')
-        except ValueError:
-            messages.info(request,"Missing Input!")
-            return redirect('ApplicationDetails')
-        except KeyError:
-            messages.info(request, "Session Expired. Please Login")
-            return redirect('auth')
-        if year.isdigit() == False:
-            messages.info(request, "Year has to be an number")
-            return redirect('ApplicationDetails')
-
-        try:
-            response = config.CLIENT.service.FnSchoolPassRate(
-                entryNo, applicantNo,kcpeStudents,passRate, int(year), myAction)
-            messages.success(request, "Successfully Added")
-            print(response)
-            return redirect('ApplicationDetails')
-        except Exception as e:
-            print(e)
-            messages.info(request, e)
-            return redirect('ApplicationDetails')
-    return redirect('ApplicationDetails')
-
-def FnSchoolProjectDetails(request):
-    if request.method == 'POST':
-        try:
-            entryNo = 0
-            applicantNo = request.session['CustomerNo']
-            projectDescription = request.POST.get('projectDescription')
-            estimatedCost = float(request.POST.get('estimatedCost'))
-            costType = int(request.POST.get('costType'))
-            myAction = request.POST.get('myAction')
-        except ValueError:
-            messages.info(request,"Missing Input!")
-            return redirect('ApplicationDetails')
-        except KeyError:
-            messages.info(request, "Session Expired. Please Login")
-            return redirect('auth')
-
-        try:
-            response = config.CLIENT.service.FnSchoolProjectDetails(
-                entryNo, applicantNo,projectDescription,estimatedCost, costType, myAction)
-            print(response)
-            messages.success(request, "Successfully Added")
-            return redirect('ApplicationDetails')
-        except Exception as e:
-            print(e)
-            messages.info(request, e)
-            return redirect('ApplicationDetails')
-    return redirect('ApplicationDetails')
 
 def FnSchoolRevenue(request):
     if request.method == 'POST':
@@ -190,10 +135,7 @@ def FnSchoolRevenue(request):
             termThreeFees = float(request.POST.get('termThreeFees'))
             newStudentAdmission = float(request.POST.get('newStudentAdmission'))
             admissionFees = float(request.POST.get('admissionFees'))
-            myAction = request.POST.get('myAction')
-        except ValueError:
-            messages.info(request,"Missing Input!")
-            return redirect('ApplicationDetails')
+            myAction = 'insert'
         except KeyError:
             messages.info(request, "Session Expired. Please Login")
             return redirect('auth')
@@ -203,12 +145,13 @@ def FnSchoolRevenue(request):
                 entryNo, applicantNo,edpClass,streams, termOneFees,termTwoFees,termThreeFees,
                 newStudentAdmission,admissionFees, myAction)
             print(response)
-            messages.success(request, "Successfully Added")
-            return redirect('ApplicationDetails')
+            if response['return_value'] == True:
+                return JsonResponse("Successfully Added.",safe=False)
+            if response['return_value'] == False:
+                return JsonResponse("Not Added.",safe=False)
         except Exception as e:
             print(e)
             messages.info(request, e)
-            return redirect('ApplicationDetails')
     return redirect('ApplicationDetails')
 
 def FnSchoolExpenses(request):
@@ -219,10 +162,7 @@ def FnSchoolExpenses(request):
             expenseHead = request.POST.get('expenseHead')
             monthlyExpense = float(request.POST.get('monthlyExpense'))
             multiplierFactor = float(request.POST.get('multiplierFactor'))
-            myAction = request.POST.get('myAction')
-        except ValueError:
-            messages.info(request,"Missing Input!")
-            return redirect('ApplicationDetails')
+            myAction = 'insert'
         except KeyError:
             messages.info(request, "Session Expired. Please Login")
             return redirect('auth')
@@ -231,12 +171,13 @@ def FnSchoolExpenses(request):
             response = config.CLIENT.service.FnSchoolExpenses(
                 entryNo, applicantNo,expenseHead,monthlyExpense,multiplierFactor,myAction)
             print(response)
-            messages.success(request, "Successfully Added")
-            return redirect('ApplicationDetails')
+            if response['return_value'] == True:
+                return JsonResponse("Successfully Added.",safe=False)
+            if response['return_value'] == False:
+                return JsonResponse("Not Added.",safe=False)
         except Exception as e:
             print(e)
             messages.info(request, e)
-            return redirect('ApplicationDetails')
     return redirect('ApplicationDetails')
 
 def FnSchoolTransportDetails(request):

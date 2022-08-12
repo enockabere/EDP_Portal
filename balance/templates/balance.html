@@ -1,0 +1,115 @@
+{% extends 'offcanvas.html' %}
+{% load bootstrap5 %}
+{% load static %}
+{% block main %}
+<style>
+    .contt {
+        display: block;
+        justify-content: center;
+        align-items: center;
+        overflow: hidden;
+        background: whitesmoke;
+    }
+</style>
+<script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk="
+    crossorigin="anonymous"></script>
+<section class="dash2">
+
+    <div class="content-wrapper general-bg" style="padding-bottom: 5rem;" id="results">
+        <!--alert -->
+        {% include 'alerts.html' %}
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card card-body">
+                    <h1 class="heading display-5 pb-3">Balance Enquiry</h1>
+                    <div class="row">
+                        <div class="col-md-9">
+                            <form method="POST" id="BalanceEnquiry">
+                                {% csrf_token %}
+                                <div class="row my-2">
+                                    <div class="col-md-12">
+                                        <label for="" class="form-label">Loan</label>
+                                        <select class="form-select" name="loanNo" id="loanNo" required>
+                                            <option value="0" disabled selected>--Select Loan--</option>
+                                            {% for res in loans %}
+                                            <option value="{{res.Loan_Number}}">{{res.Loan_Number}}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="row my-2">
+                                    <div class="col-md-12">
+                                        <label for="" class="form-label">Outstanding Balance</label>
+                                        <input type="text" class="form-control" name="outstandingBalance"
+                                            id="outstandingBalance" placeholder="0.00" required>
+                                    </div>
+                                </div>
+                                <div class="row my-2">
+                                    <div class="col-md-12">
+                                        <label for="" class="form-label">Outstanding Interest</label>
+                                        <input type="text" class="form-control" id="outstandingInterest"
+                                            name="outstandingInterest" placeholder="0.00" />
+                                    </div>
+                                </div>
+                                <div class="row my-2">
+                                    <div class="col-md-12">
+                                        <input type="submit" class="btn btn-dark btn-block my-2" />
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="col-md-3">
+                            <h6 class="text-primary">
+                                Outstanding Balance (KES)
+                            </h6>
+                            <h1 class="text-primary" id="proOutput" style="font-size: 2.8rem;">
+                                0.00
+                            </h1>
+                            <h6 class="text-primary my-3">
+                                Outstanding Interest (KES)
+                            </h6>
+                            <h1 class="text-primary" id="proOutput2" style="font-size: 2.8rem;">
+                                0.00
+                            </h1>
+                            <div class="money-spinner" id="money-spinner" style="display: none;">
+                                <img src="https://upload.wikimedia.org/wikipedia/commons/b/b1/Loading_icon.gif"
+                                    alt="Loading Gif" style="height: 100px;" class="img-fluid">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<script>
+    $(document).on('submit', '#BalanceEnquiry', function (e) {
+        e.preventDefault();
+        $('#money-spinner').show();
+        $.ajax({
+            type: 'POST',
+            url: '{% url "BalanceEnquiry" %}',
+            data: {
+                loanNo: $("#loanNo").val(),
+                outstandingBalance: $("#outstandingBalance").val(),
+                outstandingInterest: $("#outstandingInterest").val(),
+                csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val()
+            },
+            success: function (response) {
+                $("#loanNo").val("");
+                $("#outstandingBalance").val("");
+                $("#outstandingInterest").val("");
+                console.log(response)
+                // var DecimalSeparator = Number("1.2").toLocaleString().substr(1, 1);
+                // var AmountWithCommas = response.toLocaleString();
+                // var arParts = String(AmountWithCommas).split(DecimalSeparator);
+                // var intPart = arParts[0];
+                // var decPart = (arParts.length > 1 ? arParts[1] : '');
+                // decPart = (decPart + '00').substr(0, 2);
+                // $("#proOutput").empty().append(intPart + DecimalSeparator + decPart);
+                $('#money-spinner').hide();
+            }
+        })
+    });
+</script>
+{% endblock %}

@@ -1,1 +1,1 @@
-web: gunicorn KMPDC.wsgi --log-file -
+web: gunicorn EDP.wsgi --log-file -

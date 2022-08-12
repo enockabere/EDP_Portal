@@ -2,10 +2,10 @@
 {% load bootstrap5 %}
 {% load static %}
 {% block main %}
-<section class="dash2">
-    <div class="content-wrapper" style="padding-bottom: 5rem;">
+<section class="dash2 ">
+    <div class="content-wrapper LoanWrapper" style="padding-bottom: 5rem;">
         <div class="row">
-            <div class="col-md-12 container">
+            <div class=col-md-12 container">
                 <div class="alert bg-success mb-3 py-3" role="alert">
                     <div class="d-flex">
                         <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none"
@@ -21,11 +21,11 @@
                             <p>Please Fill all the required Information.</p>
                             <a href="#" class="btn text-white btn-danger" data-dismiss="alert" aria-label="Close"
                                 data-abc="true">Dismiss</a>
-                            <button type="button" class="btn text-white mx-1 btn-primary" data-bs-toggle="modal"
+                            <!-- <button type="button" class="btn text-white mx-1 btn-primary" data-bs-toggle="modal"
                                 data-bs-target="#staticBackdrop">
                                 View RM
                                 <i class="las la-arrow-right"></i>
-                            </button>
+                            </button> -->
                         </div>
                     </div>
                 </div>
@@ -36,22 +36,7 @@
         <div class="row">
             <div class="col-md-12">
                 <div class="d-grid gap-2 d-md-block">
-                    <button class="btn btn-primary my-2" type="button" data-bs-toggle="modal"
-                        data-bs-target="#staticBackdrop"><i class="las la-plus"></i> Add School Enrollment
-                        History</button>
-                    <button class="btn btn-primary" type="button" data-bs-toggle="modal"
-                        data-bs-target="#staticBackdropPassRate"><i class="las la-plus"></i> Add School Pass
-                        Rate</button>
-                    <button class="btn btn-primary" type="button" data-bs-toggle="modal"
-                        data-bs-target="#ModalFnSchoolProjectDetails"><i class="las la-plus"></i> Add School Project
-                        Details</button>
-                    <button class="btn btn-primary" type="button" data-bs-toggle="modal"
-                        data-bs-target="#ModalFnSchoolRevenue"><i class="las la-plus"></i> Add School
-                        Revenue</button>
-                    <button class="btn btn-primary" type="button" data-bs-toggle="modal"
-                        data-bs-target="#ModalFnSchoolExpenses"><i class="las la-plus"></i> Add School
-                        Expenses</button>
-                    <button class="btn btn-primary my-2" type="button" data-bs-toggle="modal"
+                    <!-- <button class="btn btn-primary my-2" type="button" data-bs-toggle="modal"
                         data-bs-target="#ModalFnSchoolTransportDetails"><i class="las la-plus"></i> Add School Transport
                         Details</button>
                     <button class="btn btn-primary" type="button" data-bs-toggle="modal"
@@ -72,7 +57,7 @@
                     <button class="btn btn-primary" type="button" data-bs-toggle="modal"
                         data-bs-target="#ModalFnSchoolProjectSecurityDetails"><i class="las la-plus"></i> Add Property
                         Security
-                        Details</button>
+                        Details</button> -->
                 </div>
             </div>
         </div>
@@ -130,326 +115,244 @@
                 </form>
             </div>
         </div> -->
-        <div class="row mt-4">
-            <div class="col-md-12">
-                <div class="card" id="d-card">
+
+        <div class="row mt-4 gx-2">
+            <div class="col-md-6">
+                <div class="card h-100" id="d-card">
                     <h4 class="mt-2 mx-2 text-dark">School Enrollment
                         History</h4>
                     <div class="card-body">
-                        <table id="example"
-                            class="display table table-striped table-bordered dt-responsive table-responsive-lg"
-                            style="width:100%">
-                            <thead>
-                                <tr id="tops">
-                                    <th id="long">School Name</th>
-                                    <th>School Detail A</th>
-                                    <th>School Detail B</th>
-                                    <th>School Detail C</th>
-                                    <th>Action</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>Kenya High</td>
-                                    <td>Detail X</td>
-                                    <td>Detail Y</td>
-                                    <td>Detail Z</td>
-                                    <td>
-                                        <form action="" method="post" style="display: inline-block;">
-                                            {% csrf_token %}
-                                            <input type="hidden" name="lineNo" value="{{res.Line_No}}">
-                                            <button type="submit" class="btn btn-danger" data-toggle="tooltip"
-                                                data-placement="top" title="Delete"><i class="fas fa-trash-alt"></i>
-                                            </button>
-                                        </form>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
+                        <form class="myForm" id="FnSchoolLoanEnrolment" method="post" novalidate>
+                            <div class="modal-loaders mx-auto text-center" id="money-spinner1" style="display: none;">
+                                <img src="https://upload.wikimedia.org/wikipedia/commons/b/b1/Loading_icon.gif"
+                                    alt="Loading Gif" style="height: 100px;" class="img-fluid">
+                            </div>
+                            {% csrf_token %}
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <label class="form-label">Academic Year <span class="text-danger">*</span></label>
+                                    <input type="number" class="form-control" name="academicYear" id="academicYear"
+                                        placeholder="2000" required>
+                                </div>
+                            </div>
+                            <div class="row my-3">
+                                <div class="col-md-12">
+                                    <label class="form-label">School Population<span
+                                            class="text-danger">*</span></label>
+                                    <input type="text" id="schoolStrength" class="form-control" name="schoolStrength"
+                                        required>
+                                </div>
+                            </div>
+                            <div class="row my-2">
+                                <div class="col-md-12">
+                                    <h5 class="text-primary" id="historyResult"></h5>
+                                </div>
+                            </div>
+                            <button type="submit" class="btn btn-successs w-100">Submit</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="card h-100" id="d-card">
+                    <h4 class="mt-2 mx-2 text-dark">School Pass
+                        Rate</h4>
+                    <div class="card-body">
+                        <form class="myForm" id="FnSchoolLoanPassRate" method="post" novalidate>
+                            <div class="modal-loaders mx-auto text-center" id="money-spinner2" style="display: none;">
+                                <img src="https://upload.wikimedia.org/wikipedia/commons/b/b1/Loading_icon.gif"
+                                    alt="Loading Gif" style="height: 100px;" class="img-fluid">
+                            </div>
+                            {% csrf_token %}
+                            <div class="row gx-2">
+                                <div class="col-md-6">
+                                    <label class="form-label">KCPE Students<span class="text-danger">*</span></label>
+                                    <input type="number" class="form-control" name="kcpeStudents" id="kcpeStudents"
+                                        required>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label">Pass Rate<span class="text-danger">*</span></label>
+                                    <input type="text" class="form-control" name="passRate" id="passRate" required>
+                                </div>
+                            </div>
+                            <div class="row my-3">
+                                <div class="col-md-12">
+                                    <label class="form-label">Year <span class="text-danger">*</span></label>
+                                    <input type="number" class="form-control" name="year" id="PassYear"
+                                        placeholder="2000" required>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <h5 class="text-info" id="historyPassRate"></h5>
+                                </div>
+                            </div>
+                            <button type="submit" class="btn btn-successs w-100">Submit</button>
+                        </form>
                     </div>
                 </div>
             </div>
         </div>
         <div class="row my-3">
-            <div class="d-grid gap-2 d-md-block">
-                <div style="display: inline-block;">
-                    <form id="myForm" action="" method="post">
-                        {% csrf_token %}
-                        <div class="row">
-                            <div class="col-md-12">
-                                <div class="col-md-12 my-2">
-                                    <input type="hidden" class="form-control" name="entryNo" value="{{res.Entry_No_}}">
-                                </div>
+            <div class="col-md-12">
+                <div class="card h-100" id="d-card">
+                    <h4 class="mt-2 mx-2 text-dark">School Project
+                        Details</h4>
+                    <div class="card-body">
+                        <form class="myForm" method="post" id="FnSchoolLoanProjectDetails" novalidate>
+                            <div class="modal-loaders mx-auto text-center" id="money-spinner3" style="display: none;">
+                                <img src="https://upload.wikimedia.org/wikipedia/commons/b/b1/Loading_icon.gif"
+                                    alt="Loading Gif" style="height: 100px;" class="img-fluid">
                             </div>
-                        </div>
-                        <button class="btn btn-successs" type="submit">Submit
-                            Application <i class="las la-angle-double-right"></i></button>
-                    </form>
-
-                </div>
-            </div>
-        </div>
-    </div>
-    <!-- Modal Enrollment History -->
-    <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
-        aria-labelledby="staticBackdropLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="staticBackdropLabel">School Enrollment History</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <form class="myForm" action="{% url 'FnSchoolEnrolment' %}" method="post" novalidate>
-                        <input type="hidden" name="myAction" value="insert">
-                        {% csrf_token %}
-                        <div class="row">
-                            <div class="col-md-12">
-                                <label class="form-label">Academic Year <span class="text-danger">*</span></label>
-                                <input type="number" class="form-control" name="academicYear" placeholder="2000"
-                                    required>
-                            </div>
-                        </div>
-
-                        <div class="row">
-                            <div class="col-md-12">
-                                <div class="mb-2">
-                                    <label class="form-label">School Strength <span class="text-danger">*</span></label>
-                                    <input type="text" class="form-control" name="schoolStrength" required>
-                                </div>
-                            </div>
-                        </div>
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                        <button type="submit" class="btn btn-primary">Submit</button>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
-    <!-- end -->
-    <!-- Modal Pass Rate -->
-    <div class="modal fade" id="staticBackdropPassRate" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
-        aria-labelledby="staticBackdropLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="staticBackdropLabel">School Pass Rate</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <form class="myForm" action="{% url 'FnSchoolPassRate' %}" method="post" novalidate>
-                        {% csrf_token %}
-                        <input type="hidden" name="myAction" value="insert">
-                        <div class="row">
-                            <div class="col-md-12">
-                                <div class="mb-2">
-                                    <label class="form-label">KCPE Students<span class="text-danger">*</span></label>
-                                    <input type="number" class="form-control" name="kcpeStudents" required>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-12">
-                                <div class="mb-2">
-                                    <label class="form-label">Pass Rate<span class="text-danger">*</span></label>
-                                    <input type="text" class="form-control" name="passRate" required>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row my-3">
-                            <div class="col-md-12">
-                                <label class="form-label">Year <span class="text-danger">*</span></label>
-                                <input type="number" class="form-control" name="year" placeholder="2000" required>
-                            </div>
-                        </div>
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                        <button type="submit" class="btn btn-primary">Submit</button>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
-    <!-- End -->
-    <!-- Modal SchoolProjectDetails -->
-    <div class="modal fade" id="ModalFnSchoolProjectDetails" data-bs-backdrop="static" data-bs-keyboard="false"
-        tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="staticBackdropLabel">School Project Details</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <form class="myForm" action="{% url 'FnSchoolProjectDetails' %}" method="post" novalidate>
-                        {% csrf_token %}
-                        <input type="hidden" name="myAction" value="insert">
-                        <div class="row">
-                            <div class="col-md-12">
-                                <div class="mb-2">
+                            {% csrf_token %}
+                            <div class="row">
+                                <div class="col-md-6">
                                     <label class="form-label">Estimated Cost <span class="text-danger">*</span></label>
-                                    <input type="text" class="form-control" name="estimatedCost" placeholder="000.000"
-                                        required>
+                                    <input type="text" class="form-control" name="estimatedCost" id="estimatedCost"
+                                        placeholder="000.000" required>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label">Cost Type <span class="text-danger">*</span></label>
+                                    <select class="form-select" name="costType" id="costType" required>
+                                        <option value="0" disabled selected>--Select--</option>
+                                        <option value="1">Project Cost</option>
+                                        <option value="2">Owner Contribution</option>
+                                    </select>
                                 </div>
                             </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-12">
-                                <label class="form-label">Cost Type <span class="text-danger">*</span></label>
-                                <select class="form-select" name="costType" required>
-                                    <option value="0" disabled selected>--Select--</option>
-                                    <option value="1">Project Cost</option>
-                                    <option value="2">Owner Contribution</option>
-                                </select>
+                            <div class="row my-2">
+                                <div class="col-md-12">
+                                    <label class="form-label">Project Description <span
+                                            class="text-danger">*</span></label>
+                                    <textarea class="form-control" name="projectDescription" id="projectDescription"
+                                        rows="5"></textarea>
+                                </div>
                             </div>
-                        </div>
-                        <div class="row my-2">
-                            <div class="col-md-12">
-                                <label class="form-label">Project Description <span class="text-danger">*</span></label>
-                                <textarea class="form-control" name="projectDescription" rows="5"></textarea>
+                            <div class="row my-2">
+                                <div class="col-md-12">
+                                    <h5 class="text-info" id="ProjectResult"></h5>
+                                </div>
                             </div>
-                        </div>
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                        <button type="submit" class="btn btn-primary">Submit</button>
-                    </form>
+
+                            <button type="submit" class="btn btn-successs w-100">Submit</button>
+                        </form>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
-    <!-- End -->
-    <!-- Modal FnSchoolRevenue -->
-    <div class="modal fade" id="ModalFnSchoolRevenue" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
-        aria-labelledby="staticBackdropLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-scrollable">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="staticBackdropLabel">School Revenue</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <form class="myForm" action="{% url 'FnSchoolRevenue' %}" method="post" novalidate>
-                        {% csrf_token %}
-                        <input type="hidden" name="myAction" value="insert">
-                        <div class="row">
-                            <div class="col-md-12">
-                                <div class="mb-2">
+        <div class="row my-3">
+            <div class="col-md-12">
+                <div class="card h-100" id="d-card">
+                    <h4 class="mt-2 mx-2 text-dark">School
+                        Revenue</h4>
+                    <div class="card-body">
+                        <form class="myForm" id="FnSchoolRevenue" method="post" novalidate>
+                            <div class="modal-loaders mx-auto text-center" id="money-spinner4" style="display: none;">
+                                <img src="https://upload.wikimedia.org/wikipedia/commons/b/b1/Loading_icon.gif"
+                                    alt="Loading Gif" style="height: 100px;" class="img-fluid">
+                            </div>
+                            {% csrf_token %}
+                            <div class="row">
+                                <div class="col-md-6">
                                     <label class="form-label">Class <span class="text-danger">*</span></label>
-                                    <input type="text" class="form-control" name="edpClass" required>
+                                    <input type="text" class="form-control" name="edpClass" id="edpClass" required>
                                 </div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-12">
-                                <div class="mb-2">
+                                <div class="col-md-6">
                                     <label class="form-label">Streams <span class="text-danger">*</span></label>
-                                    <input type="number" class="form-control" name="streams" required>
+                                    <input type="number" class="form-control" name="streams" id="streams" required>
                                 </div>
                             </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-12">
-                                <div class="mb-2">
+
+                            <div class="row">
+                                <div class="col-md-4">
                                     <label class="form-label">Term One Fees <span class="text-danger">*</span></label>
-                                    <input type="text" class="form-control" name="termOneFees" placeholder="0000.000"
-                                        required>
+                                    <input type="text" class="form-control" name="termOneFees" id="termOneFees"
+                                        placeholder="0000.000" required>
                                 </div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-12">
-                                <div class="mb-2">
+                                <div class="col-md-4">
                                     <label class="form-label">Term Two Fees <span class="text-danger">*</span></label>
-                                    <input type="text" class="form-control" name="termTwoFees" placeholder="0000.000"
-                                        required>
+                                    <input type="text" class="form-control" name="termTwoFees" id="termTwoFees"
+                                        placeholder="0000.000" required>
                                 </div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-12">
-                                <div class="mb-2">
+                                <div class="col-md-4">
                                     <label class="form-label">Term Three Fees <span class="text-danger">*</span></label>
-                                    <input type="text" class="form-control" name="termThreeFees" placeholder="0000.000"
-                                        required>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-12">
-                                <div class="mb-2">
-                                    <label class="form-label">New Student Admission <span
-                                            class="text-danger">*</span></label>
-                                    <input type="text" class="form-control" name="newStudentAdmission"
+                                    <input type="text" class="form-control" name="termThreeFees" id="termThreeFees"
                                         placeholder="0000.000" required>
                                 </div>
                             </div>
-                        </div>
-
-                        <div class="row my-2">
-                            <div class="col-md-12">
-                                <div class="mb-2">
-                                    <label class="form-label">Admission Fees <span class="text-danger">*</span></label>
-                                    <input type="text" class="form-control" name="admissionFees" placeholder="0000.000"
-                                        required>
-                                </div>
-                            </div>
-                        </div>
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                        <button type="submit" class="btn btn-primary">Submit</button>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
-    <!-- End -->
-    <!-- Modal FnSchoolRevenue -->
-    <div class="modal fade" id="ModalFnSchoolExpenses" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
-        aria-labelledby="staticBackdropLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-scrollable">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="staticBackdropLabel">School Expenses</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <form class="myForm" action="{% url 'FnSchoolExpenses' %}" method="post" novalidate>
-                        {% csrf_token %}
-                        <input type="hidden" name="myAction" value="insert">
-                        <div class="row">
-                            <div class="col-md-12">
-                                <label class="form-label">Expense Head <span class="text-danger">*</span></label>
-                                <select class="form-select" name="expenseHead" required>
-                                    <option value="0" disabled selected>--Select--</option>
-                                    {% for res in Expense %}
-                                    <option value="{{res.Code}}">{{res.Description}}</option>
-                                    {% endfor %}
-                                </select>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-12">
-                                <div class="mb-2">
-                                    <label class="form-label">Monthly Expense<span class="text-danger">*</span></label>
-                                    <input type="text" class="form-control" name="monthlyExpense" placeholder="0000.000"
-                                        required>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row my-3">
-                            <div class="col-md-12">
-                                <div>
-                                    <label class="form-label">Multiplier Factor<span
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <label class="form-label">New Student Admission <span
                                             class="text-danger">*</span></label>
-                                    <input type="text" class="form-control" name="multiplierFactor" placeholder="0.0"
-                                        required>
+                                    <input type="text" class="form-control" name="newStudentAdmission"
+                                        placeholder="0000.000" id="newStudentAdmission" required>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label">Admission Fees <span class="text-danger">*</span></label>
+                                    <input type="text" class="form-control" name="admissionFees" id="admissionFees"
+                                        placeholder="0000.000" required>
                                 </div>
                             </div>
-                        </div>
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                        <button type="submit" class="btn btn-primary">Submit</button>
-                    </form>
+                            <div class="row my-2">
+                                <div class="col-md-12">
+                                    <h5 class="text-info" id="LoanRevenueResult"></h5>
+                                </div>
+                            </div>
+                            <button type="submit" class="btn btn-successs w-100">Submit</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row my-3">
+            <div class="col-md-12">
+                <div class="card h-100" id="d-card">
+                    <h4 class="mt-2 mx-2 text-dark">School
+                        Expenses</h4>
+                    <div class="card-body">
+                        <form class="myForm" id="FnSchoolExpenses" method="post" novalidate>
+                            {% csrf_token %}
+                            <div class="modal-loaders mx-auto text-center" id="money-spinner5" style="display: none;">
+                                <img src="https://upload.wikimedia.org/wikipedia/commons/b/b1/Loading_icon.gif"
+                                    alt="Loading Gif" style="height: 100px;" class="img-fluid">
+                            </div>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <label class="form-label">Expense Head <span class="text-danger">*</span></label>
+                                    <select class="form-select" name="expenseHead" id="expenseHead" required>
+                                        <option value="0" disabled selected>--Select--</option>
+                                        {% for res in Expense %}
+                                        <option value="{{res.Code}}">{{res.Description}}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <label class="form-label">Monthly Expense<span class="text-danger">*</span></label>
+                                    <input type="text" class="form-control" name="monthlyExpense" id="monthlyExpense"
+                                        placeholder="0000.000" required>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label">Months<span class="text-danger">*</span></label>
+                                    <input type="text" class="form-control" name="multiplierFactor"
+                                        id="multiplierFactor" placeholder="0.0" required>
+                                </div>
+                            </div>
+                            <div class="row my-2">
+                                <div class="col-md-12">
+                                    <h5 class="text-info" id="LoanExpensesResult"></h5>
+                                </div>
+                            </div>
+                            <button type="submit" class="btn btn-successs w-100">Submit</button>
+                        </form>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
+
+
     <!-- Modal FnSchoolTransportDetails -->
     <div class="modal fade" id="ModalFnSchoolTransportDetails" data-bs-backdrop="static" data-bs-keyboard="false"
         tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
@@ -807,5 +710,117 @@
         </div>
     </div>
 </section>
-
+<script>
+    $(document).on('submit', '#FnSchoolLoanEnrolment', function (e) {
+        e.preventDefault();
+        $('#money-spinner1').show();
+        $.ajax({
+            type: 'POST',
+            url: '{% url "FnSchoolLoanEnrolment" %}',
+            data: {
+                academicYear: $("#academicYear").val(),
+                schoolStrength: $("#schoolStrength").val(),
+                csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val()
+            },
+            success: function (response) {
+                $("#academicYear").val("")
+                $("#schoolStrength").val("")
+                $("#historyResult").empty().append(response);
+                $('#money-spinner1').hide();
+            }
+        })
+    });
+    $(document).on('submit', '#FnSchoolLoanPassRate', function (e) {
+        e.preventDefault();
+        $('#money-spinner2').show();
+        $.ajax({
+            type: 'POST',
+            url: '{% url "FnSchoolLoanPassRate" %}',
+            data: {
+                kcpeStudents: $("#kcpeStudents").val(),
+                passRate: $("#passRate").val(),
+                year: $("#PassYear").val(),
+                csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val()
+            },
+            success: function (response) {
+                $("#kcpeStudents").val("")
+                $("#passRate").val("")
+                $("#PassYear").val("")
+                $("#historyPassRate").empty().append(response);
+                $('#money-spinner2').hide();
+            }
+        })
+    });
+    $(document).on('submit', '#FnSchoolLoanProjectDetails', function (e) {
+        e.preventDefault();
+        $('#money-spinner3').show();
+        $.ajax({
+            type: 'POST',
+            url: '{% url "FnSchoolLoanProjectDetails" %}',
+            data: {
+                estimatedCost: $("#estimatedCost").val(),
+                costType: $("#costType").val(),
+                projectDescription: $("#projectDescription").val(),
+                csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val()
+            },
+            success: function (response) {
+                $("#estimatedCost").val("")
+                $("#costType").val("")
+                $("#projectDescription").val("")
+                $("#ProjectResult").empty().append(response);
+                $('#money-spinner3').hide();
+            }
+        })
+    });
+    $(document).on('submit', '#FnSchoolRevenue', function (e) {
+        e.preventDefault();
+        $('#money-spinner4').show();
+        $.ajax({
+            type: 'POST',
+            url: '{% url "FnSchoolRevenue" %}',
+            data: {
+                edpClass: $("#edpClass").val(),
+                streams: $("#streams").val(),
+                termOneFees: $("#termOneFees").val(),
+                termTwoFees: $("#termTwoFees").val(),
+                termThreeFees: $("#termThreeFees").val(),
+                newStudentAdmission: $("#newStudentAdmission").val(),
+                admissionFees: $("#admissionFees").val(),
+                csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val()
+            },
+            success: function (response) {
+                $("#edpClass").val("");
+                $("#streams").val("");
+                $("#termOneFees").val("");
+                $("#termTwoFees").val("");
+                $("#termThreeFees").val("");
+                $("#newStudentAdmission").val("");
+                $("#admissionFees").val("");
+                $("#LoanRevenueResult").empty().append(response);
+                $('#money-spinner4').hide();
+            }
+        })
+    });
+    $(document).on('submit', '#FnSchoolExpenses', function (e) {
+        e.preventDefault();
+        $('#money-spinner5').show();
+        $.ajax({
+            type: 'POST',
+            url: '{% url "FnSchoolExpenses" %}',
+            data: {
+                expenseHead: $("#expenseHead").val(),
+                monthlyExpense: $("#monthlyExpense").val(),
+                multiplierFactor: $("#multiplierFactor").val(),
+                csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val()
+            },
+            success: function (response) {
+                $("#expenseHead").val("");
+                $("#monthlyExpense").val("");
+                $("#multiplierFactor").val("");
+                $("#LoanExpensesResult").empty().append(response);
+                $('#money-spinner5').hide();
+            }
+        })
+    });
+</script>
 {% endblock %}
