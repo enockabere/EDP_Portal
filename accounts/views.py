@@ -104,7 +104,6 @@ def login_request(request):
                         messages.error(
                             request, "Invalid Credentials. Please reset your password else create a new account")
                         return redirect('auth')
-
             Potential = config.O_DATA.format("/PotentialsList")
             PotentialResponse = session.get(Potential, timeout=10).json()
             for applicant in PotentialResponse['value']:

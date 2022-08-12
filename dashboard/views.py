@@ -17,6 +17,7 @@ def dashboard(request):
     LeadRes = ''
     Coordinates = ''
     PotentialRes = ''
+    CustomerRes =''
     try:
         session = requests.Session()
         session.auth = config.AUTHS
