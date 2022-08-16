@@ -5,6 +5,7 @@ import json
 from django.conf import settings as config
 from django.contrib import messages
 from django.http import JsonResponse
+import datetime as dt
 import simplejson as jsons
 # Create your views here.
 def BalanceEnquiry(request):
@@ -13,6 +14,7 @@ def BalanceEnquiry(request):
         CustomerNumber=request.session['CustomerNo']
         MemberNo=request.session['MemberNo']
         CustomerEmail=request.session['CustomerEmail']
+        todays_date = dt.datetime.now().strftime("%b. %d, %Y %A")
         stage=request.session['stage']
         session = requests.Session()
         session.auth = config.AUTHS
@@ -30,14 +32,14 @@ def BalanceEnquiry(request):
             return redirect('auth')
         if request.method == 'POST':
             loanNo = request.POST.get('loanNo')
-            outstandingBalance =float(request.POST.get('outstandingBalance'))
-            outstandingInterest = float(request.POST.get('outstandingInterest'))
+            outstandingBalance =0
+            outstandingInterest = 0
             try:
                 response = config.CLIENT.service.FnBalanceInquiries(
                     loanNo, outstandingBalance,outstandingInterest)
-                print("Month Repayment:", response)
+                print(response)
                 if response['return_value'] == True:
-                    mp = jsons.dumps(response,use_decimal=True)
+                    mp = jsons.dumps(list(response),use_decimal=True)
                     return JsonResponse(mp,safe=False)
                 if response['return_value'] == False:
                     return JsonResponse("Null",safe=False)
@@ -48,5 +50,5 @@ def BalanceEnquiry(request):
     except KeyError:
         messages.info(request, "Session Expired. Please Login")
         return redirect('auth')
-    ctx = {"loans":Approved}
+    ctx = {"loans":Approved,"today": todays_date,"full": CustomerName,"stage":stage,}
     return render(request,"balance.html",ctx)

@@ -7,17 +7,12 @@ urlpatterns = [
 
 
     path('loan/request', views.Loan_Request, name="loan"),
-    path("GetSchoolEnrollment",views.GetSchoolEnrollment, name='GetSchoolEnrollment'),
     path('loan/detail/<str:pk>', views.LoanDetail, name='LoanDetail'),
     path('FnSchoolLoanRevenue',views.FnSchoolLoanRevenue,name='FnSchoolLoanRevenue'),
-    path('GetSchoolLoanRevenue',views.GetSchoolLoanRevenue,name='GetSchoolLoanRevenue'),
     path('FnSchoolLoanExpenses',views.FnSchoolLoanExpenses,name='FnSchoolLoanExpenses'),
-    path('GetSchoolLoanExpenses',views.GetSchoolLoanExpenses,name='GetSchoolLoanExpenses'),
     path('FnSchoolLoanEnrolment',views.FnSchoolLoanEnrolment,name='FnSchoolLoanEnrolment'),
     path('FnSchoolLoanPassRate',views.FnSchoolLoanPassRate,name='FnSchoolLoanPassRate'),
-    path('GetSchoolLoanPassRate',views.GetSchoolLoanPassRate,name='GetSchoolLoanPassRate'),
     path('FnSchoolLoanProjectDetails',views.FnSchoolLoanProjectDetails,name='FnSchoolLoanProjectDetails'),
-    path('GetSchoolLoanProjectDetails',views.GetSchoolLoanProjectDetails,name='GetSchoolLoanProjectDetails'),
     path('FnSchoolLoanTransportDetails/<str:pk>',views.FnSchoolLoanTransportDetails,name='FnSchoolLoanTransportDetails'),
     path('FnCustomerAssets/<str:pk>',views.FnCustomerAssets,name='FnCustomerAssets'),
     path('FnCustomerLiabilities/<str:pk>',views.FnCustomerLiabilities,name='FnCustomerLiabilities'),

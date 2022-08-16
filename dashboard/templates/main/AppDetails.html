@@ -122,11 +122,7 @@
                     <h4 class="mt-2 mx-2 text-dark">School Enrollment
                         History</h4>
                     <div class="card-body">
-                        <form class="myForm" id="FnSchoolLoanEnrolment" method="post" novalidate>
-                            <div class="modal-loaders mx-auto text-center" id="money-spinner1" style="display: none;">
-                                <img src="https://upload.wikimedia.org/wikipedia/commons/b/b1/Loading_icon.gif"
-                                    alt="Loading Gif" style="height: 100px;" class="img-fluid">
-                            </div>
+                        <form class="myForm" action="{% url 'SchoolEnrolment' %}" method="post" novalidate>
                             {% csrf_token %}
                             <div class="row">
                                 <div class="col-md-12">
@@ -158,11 +154,7 @@
                     <h4 class="mt-2 mx-2 text-dark">School Pass
                         Rate</h4>
                     <div class="card-body">
-                        <form class="myForm" id="FnSchoolLoanPassRate" method="post" novalidate>
-                            <div class="modal-loaders mx-auto text-center" id="money-spinner2" style="display: none;">
-                                <img src="https://upload.wikimedia.org/wikipedia/commons/b/b1/Loading_icon.gif"
-                                    alt="Loading Gif" style="height: 100px;" class="img-fluid">
-                            </div>
+                        <form class="myForm" action="{% url 'SchoolPassRate' %}" method="post" novalidate>
                             {% csrf_token %}
                             <div class="row gx-2">
                                 <div class="col-md-6">
@@ -182,11 +174,6 @@
                                         placeholder="2000" required>
                                 </div>
                             </div>
-                            <div class="row">
-                                <div class="col-md-12">
-                                    <h5 class="text-info" id="historyPassRate"></h5>
-                                </div>
-                            </div>
                             <button type="submit" class="btn btn-successs w-100">Submit</button>
                         </form>
                     </div>
@@ -199,11 +186,7 @@
                     <h4 class="mt-2 mx-2 text-dark">School Project
                         Details</h4>
                     <div class="card-body">
-                        <form class="myForm" method="post" id="FnSchoolLoanProjectDetails" novalidate>
-                            <div class="modal-loaders mx-auto text-center" id="money-spinner3" style="display: none;">
-                                <img src="https://upload.wikimedia.org/wikipedia/commons/b/b1/Loading_icon.gif"
-                                    alt="Loading Gif" style="height: 100px;" class="img-fluid">
-                            </div>
+                        <form class="myForm" method="post" action="{% url 'SchoolProjectDetails' %}" novalidate>
                             {% csrf_token %}
                             <div class="row">
                                 <div class="col-md-6">
@@ -228,12 +211,6 @@
                                         rows="5"></textarea>
                                 </div>
                             </div>
-                            <div class="row my-2">
-                                <div class="col-md-12">
-                                    <h5 class="text-info" id="ProjectResult"></h5>
-                                </div>
-                            </div>
-
                             <button type="submit" class="btn btn-successs w-100">Submit</button>
                         </form>
                     </div>
@@ -246,11 +223,7 @@
                     <h4 class="mt-2 mx-2 text-dark">School
                         Revenue</h4>
                     <div class="card-body">
-                        <form class="myForm" id="FnSchoolRevenue" method="post" novalidate>
-                            <div class="modal-loaders mx-auto text-center" id="money-spinner4" style="display: none;">
-                                <img src="https://upload.wikimedia.org/wikipedia/commons/b/b1/Loading_icon.gif"
-                                    alt="Loading Gif" style="height: 100px;" class="img-fluid">
-                            </div>
+                        <form class="myForm" action="{% url 'FnSchoolRevenue' %}" method="post" novalidate>
                             {% csrf_token %}
                             <div class="row">
                                 <div class="col-md-6">
@@ -293,12 +266,7 @@
                                         placeholder="0000.000" required>
                                 </div>
                             </div>
-                            <div class="row my-2">
-                                <div class="col-md-12">
-                                    <h5 class="text-info" id="LoanRevenueResult"></h5>
-                                </div>
-                            </div>
-                            <button type="submit" class="btn btn-successs w-100">Submit</button>
+                            <button type="submit" class="btn btn-successs w-100 my-3">Submit</button>
                         </form>
                     </div>
                 </div>
@@ -310,12 +278,8 @@
                     <h4 class="mt-2 mx-2 text-dark">School
                         Expenses</h4>
                     <div class="card-body">
-                        <form class="myForm" id="FnSchoolExpenses" method="post" novalidate>
+                        <form class="myForm" action="{% url 'FnSchoolExpenses' %}" method="post" novalidate>
                             {% csrf_token %}
-                            <div class="modal-loaders mx-auto text-center" id="money-spinner5" style="display: none;">
-                                <img src="https://upload.wikimedia.org/wikipedia/commons/b/b1/Loading_icon.gif"
-                                    alt="Loading Gif" style="height: 100px;" class="img-fluid">
-                            </div>
                             <div class="row">
                                 <div class="col-md-12">
                                     <label class="form-label">Expense Head <span class="text-danger">*</span></label>
@@ -339,12 +303,7 @@
                                         id="multiplierFactor" placeholder="0.0" required>
                                 </div>
                             </div>
-                            <div class="row my-2">
-                                <div class="col-md-12">
-                                    <h5 class="text-info" id="LoanExpensesResult"></h5>
-                                </div>
-                            </div>
-                            <button type="submit" class="btn btn-successs w-100">Submit</button>
+                            <button type="submit" class="btn btn-successs w-100 my-3">Submit</button>
                         </form>
                     </div>
                 </div>
@@ -711,116 +670,6 @@
     </div>
 </section>
 <script>
-    $(document).on('submit', '#FnSchoolLoanEnrolment', function (e) {
-        e.preventDefault();
-        $('#money-spinner1').show();
-        $.ajax({
-            type: 'POST',
-            url: '{% url "FnSchoolLoanEnrolment" %}',
-            data: {
-                academicYear: $("#academicYear").val(),
-                schoolStrength: $("#schoolStrength").val(),
-                csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val()
-            },
-            success: function (response) {
-                $("#academicYear").val("")
-                $("#schoolStrength").val("")
-                $("#historyResult").empty().append(response);
-                $('#money-spinner1').hide();
-            }
-        })
-    });
-    $(document).on('submit', '#FnSchoolLoanPassRate', function (e) {
-        e.preventDefault();
-        $('#money-spinner2').show();
-        $.ajax({
-            type: 'POST',
-            url: '{% url "FnSchoolLoanPassRate" %}',
-            data: {
-                kcpeStudents: $("#kcpeStudents").val(),
-                passRate: $("#passRate").val(),
-                year: $("#PassYear").val(),
-                csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val()
-            },
-            success: function (response) {
-                $("#kcpeStudents").val("")
-                $("#passRate").val("")
-                $("#PassYear").val("")
-                $("#historyPassRate").empty().append(response);
-                $('#money-spinner2').hide();
-            }
-        })
-    });
-    $(document).on('submit', '#FnSchoolLoanProjectDetails', function (e) {
-        e.preventDefault();
-        $('#money-spinner3').show();
-        $.ajax({
-            type: 'POST',
-            url: '{% url "FnSchoolLoanProjectDetails" %}',
-            data: {
-                estimatedCost: $("#estimatedCost").val(),
-                costType: $("#costType").val(),
-                projectDescription: $("#projectDescription").val(),
-                csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val()
-            },
-            success: function (response) {
-                $("#estimatedCost").val("")
-                $("#costType").val("")
-                $("#projectDescription").val("")
-                $("#ProjectResult").empty().append(response);
-                $('#money-spinner3').hide();
-            }
-        })
-    });
-    $(document).on('submit', '#FnSchoolRevenue', function (e) {
-        e.preventDefault();
-        $('#money-spinner4').show();
-        $.ajax({
-            type: 'POST',
-            url: '{% url "FnSchoolRevenue" %}',
-            data: {
-                edpClass: $("#edpClass").val(),
-                streams: $("#streams").val(),
-                termOneFees: $("#termOneFees").val(),
-                termTwoFees: $("#termTwoFees").val(),
-                termThreeFees: $("#termThreeFees").val(),
-                newStudentAdmission: $("#newStudentAdmission").val(),
-                admissionFees: $("#admissionFees").val(),
-                csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val()
-            },
-            success: function (response) {
-                $("#edpClass").val("");
-                $("#streams").val("");
-                $("#termOneFees").val("");
-                $("#termTwoFees").val("");
-                $("#termThreeFees").val("");
-                $("#newStudentAdmission").val("");
-                $("#admissionFees").val("");
-                $("#LoanRevenueResult").empty().append(response);
-                $('#money-spinner4').hide();
-            }
-        })
-    });
-    $(document).on('submit', '#FnSchoolExpenses', function (e) {
-        e.preventDefault();
-        $('#money-spinner5').show();
-        $.ajax({
-            type: 'POST',
-            url: '{% url "FnSchoolExpenses" %}',
-            data: {
-                expenseHead: $("#expenseHead").val(),
-                monthlyExpense: $("#monthlyExpense").val(),
-                multiplierFactor: $("#multiplierFactor").val(),
-                csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val()
-            },
-            success: function (response) {
-                $("#expenseHead").val("");
-                $("#monthlyExpense").val("");
-                $("#multiplierFactor").val("");
-                $("#LoanExpensesResult").empty().append(response);
-                $('#money-spinner5').hide();
-            }
-        })
-    });
+
 </script>
 {% endblock %}

@@ -39,20 +39,6 @@
                                 </div>
                                 <div class="row my-2">
                                     <div class="col-md-12">
-                                        <label for="" class="form-label">Outstanding Balance</label>
-                                        <input type="text" class="form-control" name="outstandingBalance"
-                                            id="outstandingBalance" placeholder="0.00" required>
-                                    </div>
-                                </div>
-                                <div class="row my-2">
-                                    <div class="col-md-12">
-                                        <label for="" class="form-label">Outstanding Interest</label>
-                                        <input type="text" class="form-control" id="outstandingInterest"
-                                            name="outstandingInterest" placeholder="0.00" />
-                                    </div>
-                                </div>
-                                <div class="row my-2">
-                                    <div class="col-md-12">
                                         <input type="submit" class="btn btn-dark btn-block my-2" />
                                     </div>
                                 </div>
@@ -91,15 +77,14 @@
             url: '{% url "BalanceEnquiry" %}',
             data: {
                 loanNo: $("#loanNo").val(),
-                outstandingBalance: $("#outstandingBalance").val(),
-                outstandingInterest: $("#outstandingInterest").val(),
                 csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val()
             },
             success: function (response) {
                 $("#loanNo").val("");
-                $("#outstandingBalance").val("");
-                $("#outstandingInterest").val("");
-                console.log(response)
+                myResponse = JSON.parse(response)
+                console.log(myResponse)
+                console.log(myResponse[1])
+                console.log(myResponse['outstandingInterest'])
                 // var DecimalSeparator = Number("1.2").toLocaleString().substr(1, 1);
                 // var AmountWithCommas = response.toLocaleString();
                 // var arParts = String(AmountWithCommas).split(DecimalSeparator);

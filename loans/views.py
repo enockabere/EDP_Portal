@@ -234,6 +234,41 @@ def LoanDetail(request,pk):
             ExpenseHead = config.O_DATA.format("/SchoolExpenses")
             ExpenseHeadResponse = session.get(ExpenseHead, timeout=10).json()
             Expense = ExpenseHeadResponse['value']
+            SchoolEnrollment = config.O_DATA.format("/SchoolEnrollment")
+            SchoolEnrollmentResponse = session.get(SchoolEnrollment, timeout=10).json()
+            Enrollment = []
+            for enroll in SchoolEnrollmentResponse['value']:
+                if enroll['Document_No'] == pk:
+                    output_json = json.dumps(enroll)
+                    Enrollment.append(json.loads(output_json))
+            SchoolPassRate=config.O_DATA.format("/SchoolPassRate")
+            PassRate = []
+            PassRateResponse = session.get(SchoolPassRate, timeout=10).json()
+            for rate in PassRateResponse['value']:
+                if rate['Document_No'] == pk:
+                    output_json = json.dumps(rate)
+                    PassRate.append(json.loads(output_json))
+            SchoolProjectDetails=config.O_DATA.format("/SchoolProjectDetails")
+            Project = []
+            ProjectResponse = session.get(SchoolProjectDetails, timeout=10).json()
+            for project in ProjectResponse['value']:
+                if project['Document_No'] == pk:
+                    output_json = json.dumps(project)
+                    Project.append(json.loads(output_json))
+            LoanSchoolRevenue=config.O_DATA.format("/LoanSchoolRevenue")
+            Revenue = []
+            RevenueResponse = session.get(LoanSchoolRevenue, timeout=10).json()
+            for revenue in RevenueResponse['value']:
+                if revenue['Loan_No'] == pk:
+                    output_json = json.dumps(revenue)
+                    Revenue.append(json.loads(output_json))
+            LoanSchoolExpenses=config.O_DATA.format("/LoanSchoolExpenses")
+            Expenses = []
+            RevenueResponse = session.get(LoanSchoolExpenses, timeout=10).json()
+            for expense in RevenueResponse['value']:
+                if revenue['Loan_No'] == pk:
+                    output_json = json.dumps(expense)
+                    Expenses.append(json.loads(output_json))
         except requests.exceptions.RequestException as e:
             print(e)
             messages.info(request, "Whoops! Something went wrong. Please Login to Continue")
@@ -247,15 +282,15 @@ def LoanDetail(request,pk):
 
     ctx = {"today": todays_date, "loanProducts":loanProducts,
         "stage":stage, "data":res, "res":Loan,"Expense":Expense,
-        "response": Approved
-            }
+        "response": Approved, "Enrollment":Enrollment,"PassRate":PassRate,
+        "Project":Project,"Revenue":Revenue,"Expenses":Expenses}
     return render(request, 'loanDetail.html', ctx)
 
 def FnSchoolLoanRevenue(request):
     if request.method == 'POST':
         try:
             entryNo = 0
-            applicantNo = request.session['CustomerNo']
+            applicantNo = request.POST.get('applicantNo')
             edpClass = request.POST.get('edpClass')
             streams = int(request.POST.get('streams'))
             termOneFees = float(request.POST.get('termOneFees'))
@@ -273,31 +308,21 @@ def FnSchoolLoanRevenue(request):
                 newStudentAdmission,admissionFees, myAction)
             print(response)
             if response['return_value'] == True:
-                return JsonResponse("Successfully Added.",safe=False)
+                messages.success(request,"Successfully Added.")
+                return redirect('LoanDetail',pk=applicantNo)
             if response['return_value'] == False:
-                return JsonResponse("Not Added.",safe=False)
+                messages.error(request,"Not Added.")
+                return redirect('LoanDetail',pk=applicantNo)
         except Exception as e:
             print(e)
             messages.info(request, e)
-    return redirect('dashboard')
-
-def GetSchoolLoanRevenue(request):
-    session = requests.Session()
-    session.auth = config.AUTHS
-    Item = config.O_DATA.format("/LoanSchoolRevenue")
-    try:
-        Item_res = session.get(Item, timeout=10).json()
-        return JsonResponse(Item_res)
-
-    except  Exception as e:
-        pass
-    return redirect('loan')
+    return redirect('LoanDetail',pk=applicantNo)
 
 def FnSchoolLoanExpenses(request):
     if request.method == 'POST':
         try:
             entryNo = 0
-            applicantNo = request.session['CustomerNo']
+            applicantNo = request.POST.get('applicantNo')
             expenseHead = request.POST.get('expenseHead')
             monthlyExpense = float(request.POST.get('monthlyExpense'))
             multiplierFactor = float(request.POST.get('multiplierFactor'))
@@ -311,67 +336,46 @@ def FnSchoolLoanExpenses(request):
                 entryNo, applicantNo,expenseHead,monthlyExpense,multiplierFactor,myAction)
             print(response)
             if response['return_value'] == True:
-                return JsonResponse("Successfully Added.",safe=False)
+                messages.success(request,"Successfully Added.")
+                return redirect('LoanDetail',pk=applicantNo)
             if response['return_value'] == False:
-                return JsonResponse("Not Added.",safe=False)
+                messages.error(request,"Not Added.")
+                return redirect('LoanDetail',pk=applicantNo)
         except Exception as e:
             print(e)
             messages.info(request, e)
-    return redirect('dashboard')
-
-def GetSchoolLoanExpenses(request):
-    session = requests.Session()
-    session.auth = config.AUTHS
-    Item = config.O_DATA.format("/LoanSchoolExpenses")
-    try:
-        Item_res = session.get(Item, timeout=10).json()
-        return JsonResponse(Item_res)
-
-    except  Exception as e:
-        pass
-    return redirect('loan')
-
+    return redirect('LoanDetail',pk=applicantNo)
 
 def FnSchoolLoanEnrolment(request):
     if request.method == 'POST':
         entryNo = 0
-        applicantNo = request.session['CustomerNo']
+        applicantNo = request.POST.get('applicantNo')
         academicYear = request.POST.get('academicYear')
         schoolStrength = request.POST.get('schoolStrength')
         myAction = 'insert'
-
         try:
             response = config.CLIENT.service.FnSchoolEnrolment(
                 entryNo, applicantNo, int(academicYear), schoolStrength, myAction)
+            print(response)
             if response['return_value'] == True:
-                return JsonResponse("Successfully Added.",safe=False)
+                messages.success(request,"Successfully Added.")
+                return redirect('LoanDetail',pk=applicantNo)
             if response['return_value'] == False:
-                return JsonResponse("Not Added.",safe=False)
+                messages.error(request,"Not Added.")
+                return redirect('LoanDetail',pk=applicantNo)
         except Exception as e:
             print(e)
             messages.info(request, e)
-    return redirect('dashboard')
-def GetSchoolEnrollment(request):
-    session = requests.Session()
-    session.auth = config.AUTHS
-    Item = config.O_DATA.format("/SchoolEnrollment")
-    try:
-        Item_res = session.get(Item, timeout=10).json()
-        return JsonResponse(Item_res)
-
-    except  Exception as e:
-        pass
-    return redirect('loan')
+    return redirect('LoanDetail',pk=applicantNo)
 
 def FnSchoolLoanPassRate(request):
     if request.method == 'POST':
         try:
             entryNo = 0
-            applicantNo = request.session['CustomerNo']
+            applicantNo = request.POST.get('applicantNo')
             kcpeStudents = request.POST.get('kcpeStudents')
             passRate = request.POST.get('passRate')
             year = request.POST.get('year')
-            
             myAction = 'insert'
         except KeyError:
             messages.info(request, "Session Expired. Please Login")
@@ -381,63 +385,42 @@ def FnSchoolLoanPassRate(request):
                 entryNo, applicantNo,kcpeStudents,passRate, int(year), myAction)
             print(response)
             if response['return_value'] == True:
-                return JsonResponse("Successfully Added.",safe=False)
+                messages.success(request,"Successfully Added.")
+                return redirect('LoanDetail',pk=applicantNo)
             if response['return_value'] == False:
-                return JsonResponse("Not Added.",safe=False)
+                messages.error(request,"Not Added.")
+                return redirect('LoanDetail',pk=applicantNo)
         except Exception as e:
             print(e)
             messages.info(request, e)
-    return redirect('dashboard')
+    return redirect('LoanDetail',pk=applicantNo)
 
-def GetSchoolLoanPassRate(request):
-    session = requests.Session()
-    session.auth = config.AUTHS
-    Item = config.O_DATA.format("/SchoolPassRate")
-    try:
-        Item_res = session.get(Item, timeout=10).json()
-        return JsonResponse(Item_res)
-
-    except  Exception as e:
-        pass
-    return redirect('loan')
 
 def FnSchoolLoanProjectDetails(request):
     if request.method == 'POST':
         try:
             entryNo = 0
-            applicantNo = request.session['CustomerNo']
+            applicantNo = request.POST.get('applicantNo')
             projectDescription = request.POST.get('projectDescription')
             estimatedCost = float(request.POST.get('estimatedCost'))
             costType = int(request.POST.get('costType'))
             myAction = 'insert'
         except KeyError:
             messages.info(request, "Session Expired. Please Login")
-            return redirect('auth')
-
+            return redirect('login')
         try:
             response = config.CLIENT.service.FnSchoolProjectDetails(
                 entryNo, applicantNo,projectDescription,estimatedCost, costType, myAction)
-            print(response)
             if response['return_value'] == True:
-                return JsonResponse("Successfully Added.",safe=False)
+                messages.success(request,"Successfully Added.")
+                return redirect('LoanDetail',pk=applicantNo)
             if response['return_value'] == False:
-                return JsonResponse("Not Added.",safe=False)
+                messages.error(request,"Not Added.")
+                return redirect('LoanDetail',pk=applicantNo)
         except Exception as e:
             print(e)
             messages.info(request, e)
-    return redirect('dashboard')
-
-def GetSchoolLoanProjectDetails(request):
-    session = requests.Session()
-    session.auth = config.AUTHS
-    Item = config.O_DATA.format("/SchoolProjectDetails")
-    try:
-        Item_res = session.get(Item, timeout=10).json()
-        return JsonResponse(Item_res)
-
-    except  Exception as e:
-        pass
-    return redirect('loan')
+    return redirect('LoanDetail',pk=applicantNo)
 
 def FnSchoolLoanTransportDetails(request,pk):
     if request.method == 'POST':

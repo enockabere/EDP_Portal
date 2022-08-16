@@ -1,0 +1,445 @@
+{% extends 'offcanvas.html' %}
+{% load bootstrap5 %}
+{% load static %}
+{% block main %}
+<style>
+    .service-container {
+        -webkit-transition: all 0.5s ease;
+        transition: all 0.5s ease;
+    }
+
+    .service-container .icon {
+        margin-top: 5%;
+        font-size: 38px;
+        -webkit-transition: all 0.5s ease;
+        transition: all 0.5s ease;
+    }
+
+    .service-container .number-icon .icon-2 {
+        height: 70px;
+        width: 70px;
+        line-height: 80px;
+        border-radius: 64% 36% 55% 45% / 76% 72% 28% 24% !important;
+        border-color: #f89d36 !important;
+        -webkit-transition: all 0.5s ease;
+        transition: all 0.5s ease;
+    }
+
+    .service-container .number-icon .icon-2 i {
+        font-size: 30px;
+    }
+
+    .service-container .number-icon .number {
+        position: absolute;
+        top: 0;
+        right: 70px;
+        left: 0;
+        height: 35px;
+        width: 35px;
+        margin: 0 auto;
+        -webkit-transition: all 0.5s ease;
+        transition: all 0.5s ease;
+    }
+
+    .service-container .number-icon .number span {
+        line-height: 30px;
+    }
+
+    .service-container .content .number {
+        font-size: 40px;
+        color: #dee2e6;
+    }
+
+    .service-container .content .title {
+        -webkit-transition: all 0.5s ease;
+        transition: all 0.5s ease;
+    }
+
+    .service-container.hover-bg {
+        -webkit-transition: all 0.5s ease;
+        transition: all 0.5s ease;
+    }
+
+    .service-container.hover-bg .smooth-icon {
+        position: absolute;
+        bottom: -40px;
+        right: -20px;
+        font-size: 60px;
+        color: #f8f9fa;
+        -webkit-transition: all 0.8s ease;
+        transition: all 0.8s ease;
+    }
+
+    .service-container.hover-bg:hover {
+        background-color: #f89d36;
+    }
+
+    .service-container.hover-bg:hover .content .title {
+        color: #ffffff !important;
+    }
+
+    .service-container.hover-bg:hover .content .serv-pera {
+        color: #fafafb !important;
+    }
+
+    .service-container.hover-bg:hover .smooth-icon {
+        font-size: 100px;
+        opacity: 0.2;
+        bottom: -20px;
+        right: 10px;
+    }
+
+    .service-container:hover {
+        background-color: #ffffff;
+        -webkit-box-shadow: 0 10px 25px rgba(47, 60, 78, 0.15) !important;
+        box-shadow: 0 10px 25px rgba(47, 60, 78, 0.15) !important;
+    }
+
+    .service-container:hover .icon {
+        color: #f89d36;
+        -webkit-animation: mover 1s infinite alternate;
+        animation: mover 1s infinite alternate;
+    }
+
+    .service-container:hover .number-icon .icon-2 {
+        background-color: #f89d36;
+        border-radius: 50% !important;
+    }
+
+    .service-container:hover .number-icon .icon-2 i {
+        color: #ffffff !important;
+    }
+
+    .service-container:hover .number-icon .number {
+        color: #ffffff;
+        background: #f89d36 !important;
+        border-color: #ffffff !important;
+    }
+
+    .service-container:hover .content .title {
+        color: #f89d36;
+    }
+
+    .service-container a:hover,
+    .service-container a .title:hover {
+        color: #f89d36 !important;
+    }
+
+    @-webkit-keyframes mover {
+        0% {
+            -webkit-transform: translateY(0);
+            transform: translateY(0);
+        }
+
+        100% {
+            -webkit-transform: translateY(-15px);
+            transform: translateY(-15px);
+        }
+    }
+
+    @keyframes mover {
+        0% {
+            -webkit-transform: translateY(0);
+            transform: translateY(0);
+        }
+
+        100% {
+            -webkit-transform: translateY(-15px);
+            transform: translateY(-15px);
+        }
+    }
+
+    .service-wrapper {
+        -webkit-transition: all 0.5s ease;
+        transition: all 0.5s ease;
+    }
+
+    .service-wrapper .icon {
+        width: 60px;
+        height: 60px;
+        line-height: 45px;
+        -webkit-transition: all 0.5s ease;
+        transition: all 0.5s ease;
+    }
+
+    .service-wrapper .content .title {
+        -webkit-transition: all 0.5s ease;
+        transition: all 0.5s ease;
+        font-weight: 500;
+    }
+
+    .service-wrapper .big-icon {
+        color: #04fb14;
+        margin-top: 10px;
+        -webkit-transition: all 0.5s ease;
+        transition: all 0.5s ease;
+    }
+
+    .service-wrapper:hover {
+        -webkit-box-shadow: 0 10px 25px rgba(47, 60, 78, 0.15) !important;
+        box-shadow: 0 10px 25px rgba(47, 60, 78, 0.15) !important;
+        background: #ffffff;
+        -webkit-transform: translateY(-8px);
+        transform: translateY(-8px);
+        border-color: transparent !important;
+    }
+
+    .service-wrapper:hover .icon {
+        background: #008080 !important;
+        color: #ffffff !important;
+    }
+
+    .service-wrapper:hover .big-icon {
+        z-index: -1;
+        opacity: 0.5;
+        color: white;
+    }
+
+    .text-custom {
+        color: white !important;
+    }
+
+    .uim-svg {
+        display: inline-block;
+        height: 1em;
+        vertical-align: -0.125em;
+        font-size: inherit;
+        fill: var(--uim-color, currentColor);
+    }
+</style>
+<script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk="
+    crossorigin="anonymous"></script>
+<section class="dash2">
+
+    <div class="content-wrapper general-bg" style="padding-bottom: 5rem;" id="results">
+        <!--alert -->
+        {% include 'alerts.html' %}
+        <div class="row">
+            <div class="col-md-4 mt-4 pt-2">
+                <div class="card h-100 service-wrapper rounded border-0 shadow p-4">
+                    <div class="icon text-center text-custom h1 shadow rounded bg-white">
+                        <i class="las la-file-alt big-icon"></i>
+                    </div>
+                    <div class="content mt-4">
+                        <h5 class="title">Client Detailed Statement</h5>
+                        <p class="text-muted mt-3 mb-0">It is a long established fact that a reader will be distracted
+                            by the when looking at its layout.</p>
+                        <div class="mt-3">
+                            <form action="{% url 'FnDetailedCustomerReport' %}" method="post">
+                                {% csrf_token %}
+                                <button href="" class="text-custom btn-primary">Preview Report <i
+                                        class="mdi mdi-chevron-right"></i></button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 mt-4 pt-2">
+                <div class="card h-100 service-wrapper rounded border-0 shadow p-4">
+                    <div class="icon text-center text-custom h1 shadow rounded bg-white">
+                        <i class="las la-file-alt big-icon"></i>
+                    </div>
+                    <div class="content mt-4">
+                        <h5 class="title">Loan Statement</h5>
+                        <p class="text-muted mt-3 mb-0">It is a long established fact that a reader will be distracted
+                            by the when looking at its layout.</p>
+                        <div class="mt-3">
+                            <button class="text-custom btn-primary" data-bs-toggle="modal"
+                                data-bs-target="#LoanStatement">Select <i class="las la-hand-pointer"></i></button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 mt-4 pt-2">
+                <div class="card h-100 service-wrapper rounded border-0 shadow p-4">
+                    <div class="icon text-center text-custom h1 shadow rounded bg-white">
+                        <i class="las la-file-alt big-icon"></i>
+                    </div>
+                    <div class="content mt-4">
+                        <h5 class="title">Loan Repayment Schedule</h5>
+                        <p class="text-muted mt-3 mb-0">It is a long established fact that a reader will be distracted
+                            by the when looking at its layout.</p>
+                        <div class="mt-3">
+                            <button class="text-custom btn-primary" data-bs-toggle="modal"
+                                data-bs-target="#LoanRepaymentSchedule">Select <i
+                                    class="las la-hand-pointer"></i></button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <!-- Modal -->
+        <div class="modal fade" id="LoanStatement" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+            aria-labelledby="staticBackdropLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="staticBackdropLabel">Loan Statement</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form action="{% url 'FnLoanStatementReport' %}" method="POST">
+                            {% csrf_token %}
+                            <div class="row my-2">
+                                <div class="col-md-12">
+                                    <label for="" class="form-label">Loan</label>
+                                    <select class="form-select" name="loanNo" id="loanNo" required>
+                                        <option value="0" disabled selected>--Select Loan--</option>
+                                        {% for res in loans %}
+                                        <option value="{{res.Loan_Number}}">{{res.Loan_Number}}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="row my-2">
+                                <div class="col-md-12">
+                                    <button type="submit" class="btn btn-dark btn-block my-2">Preview Report</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal fade" id="LoanRepaymentSchedule" data-bs-backdrop="static" data-bs-keyboard="false"
+            tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="staticBackdropLabel">Loan Repayment Schedule</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form action="{% url 'FnLoanRepaymentScheduleReport' %}" method="POST">
+                            {% csrf_token %}
+                            <div class="row my-2">
+                                <div class="col-md-12">
+                                    <label for="" class="form-label">Loan</label>
+                                    <select class="form-select" name="loanNo" id="loanNo" required>
+                                        <option value="0" disabled selected>--Select Loan--</option>
+                                        {% for res in loans %}
+                                        <option value="{{res.Loan_Number}}">{{res.Loan_Number}}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="row my-2">
+                                <div class="col-md-12">
+                                    <button type="submit" class="btn btn-dark btn-block my-2">Preview Report</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- <div class="row">
+            <div class="col-md-12">
+                <div class="card card-body">
+                    <h1 class="heading display-5 pb-3">Loan Calculator</h1>
+                    <div class="row">
+                        <div class="col-md-9">
+                            <form method="POST" id="Loan_Calculator">
+                                {% csrf_token %}
+                                <div class="row my-2">
+                                    <div class="col-md-6">
+                                        <label for="" class="form-label">Calculator Type</label>
+                                        <select class="form-select" name="calculatorType" id="calculatorType" required>
+                                            <option value="0" disabled selected>--Select Calculator Type--</option>
+                                            <option value="1">Instalment From Requested Amount</option>
+                                            <option value="2">Qualifying Amount From Proposed Instalment</option>
+                                            <option value="3">Eligibility Calculator</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="" class="form-label">Loan Product</label>
+                                        <select class="form-select" name="loanType" id="loanType" required>
+                                            <option value="0" disabled selected>--Select Loan Product--</option>
+                                            {% for res in loanProducts %}
+                                            <option value="{{res.Code}}">{{res.Description}}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="row my-2">
+                                    <div class="col-md-12">
+                                        <label for="" class="form-label">Loan Amount</label>
+                                        <input type="number" class="form-control" id="requestedAmount"
+                                            name="requestedAmount" placeholder="Loan Amount" />
+                                    </div>
+                                </div>
+                                <div class="row my-2">
+                                    <div class="col-md-6">
+                                        <label class=" form-label">Disbursement Date<span
+                                                class="text-danger">*</span></label>
+                                        <input type="date" class="form-control" name="disbursementDate"
+                                            id="disbursementDate" required>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="form-label">Repayment Start Date<span
+                                                class="text-danger">*</span></label>
+                                        <input type="date" class="form-control" name="repaymentStartDate"
+                                            id="repaymentStartDate" required>
+                                    </div>
+                                </div>
+                                <div class="row my-2">
+                                    <div class="col-md-12">
+                                        <input type="submit" class="btn btn-dark btn-block my-2" />
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="col-md-3">
+                            <h6 class="text-primary">
+                                Monthly Repayment (KES)
+                            </h6>
+                            <h1 class="text-primary" id="proOutput" style="font-size: 2.8rem;">
+                                0.00
+                            </h1>
+                            <div class="money-spinner" id="money-spinner" style="display: none;">
+                                <img src="https://upload.wikimedia.org/wikipedia/commons/b/b1/Loading_icon.gif"
+                                    alt="Loading Gif" style="height: 100px;" class="img-fluid">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div> -->
+    </div>
+</section>
+<script>
+    $(document).on('submit', '#Loan_Calculator', function (e) {
+        e.preventDefault();
+        $('#money-spinner').show();
+        $.ajax({
+            type: 'POST',
+            url: '{% url "Loan_Calculator" %}',
+            data: {
+                calculatorType: $("#calculatorType").val(),
+                loanType: $("#loanType").val(),
+                requestedAmount: $("#requestedAmount").val(),
+                disbursementDate: $("#disbursementDate").val(),
+                repaymentStartDate: $("#repaymentStartDate").val(),
+                csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val()
+            },
+            success: function (response) {
+                $("#calculatorType").val("")
+                $("#loanType").val("")
+                $("#requestedAmount").val("")
+                $("#disbursementDate").val("")
+                $("#repaymentStartDate").val("")
+                var DecimalSeparator = Number("1.2").toLocaleString().substr(1, 1);
+                var AmountWithCommas = response.toLocaleString();
+                var arParts = String(AmountWithCommas).split(DecimalSeparator);
+                var intPart = arParts[0];
+                var decPart = (arParts.length > 1 ? arParts[1] : '');
+                decPart = (decPart + '00').substr(0, 2);
+                $("#proOutput").empty().append(intPart + DecimalSeparator + decPart);
+                $('#money-spinner').hide();
+            }
+        })
+    });
+</script>
+{% endblock %}

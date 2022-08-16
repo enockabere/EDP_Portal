@@ -10,6 +10,73 @@
         overflow: hidden;
         background: whitesmoke;
     }
+
+    .file-man-box {
+        padding: 20px;
+        border: 1px solid #e3eaef;
+        border-radius: 5px;
+        position: relative;
+        margin-bottom: 20px;
+        display: none;
+    }
+
+    .file-man-box .file-close {
+        color: #f1556c;
+        position: absolute;
+        line-height: 24px;
+        font-size: 24px;
+        right: 10px;
+        top: 10px;
+        visibility: hidden
+    }
+
+    .file-man-box .file-img-box {
+        line-height: 120px;
+        text-align: center
+    }
+
+    .file-man-box .file-img-box img {
+        height: 64px
+    }
+
+    .file-man-box .file-download {
+        font-size: 30px;
+        color: #98a6ad;
+        position: absolute;
+        bottom: 5px;
+        right: 1px;
+        background: none;
+        border: none;
+    }
+
+    .file-man-box .file-download:hover {
+        color: #313a46
+    }
+
+    .file-man-box .file-man-title {
+        padding-right: 15px
+    }
+
+    .file-man-box:hover {
+        -webkit-box-shadow: 0 0 24px 0 rgba(0, 0, 0, .06), 0 1px 0 0 rgba(0, 0, 0, .02);
+        box-shadow: 0 0 24px 0 rgba(0, 0, 0, .06), 0 1px 0 0 rgba(0, 0, 0, .02)
+    }
+
+    .file-man-box:hover .file-close {
+        visibility: visible
+    }
+
+    .text-overflow {
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        display: block;
+        width: 100%;
+        overflow: hidden;
+    }
+
+    h5 {
+        font-size: 14px;
+    }
 </style>
 <script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk="
     crossorigin="anonymous"></script>
@@ -85,6 +152,29 @@
                                 <img src="https://upload.wikimedia.org/wikipedia/commons/b/b1/Loading_icon.gif"
                                     alt="Loading Gif" style="height: 100px;" class="img-fluid">
                             </div>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <h6 class="text-primary my-3">
+                                        Calculator Schedule Report
+                                    </h6>
+                                    <div class="file-man-box" id="fileMan">
+                                        <span class="file-close" id="file-close"><i
+                                                class="fa fa-times-circle"></i></span>
+                                        <div class="file-img-box"><img
+                                                src="https://coderthemes.com/highdmin/layouts/assets/images/file_icons/pdf.svg"
+                                                alt="icon"></div>
+                                        <form action="{% url 'FnCalculatorScheduleReport' %}" method="POST">
+                                            {% csrf_token %}
+                                            <button type="submit" class="file-download"><i
+                                                    class="fa fa-download"></i></button>
+                                        </form>
+
+                                        <div class="file-man-title">
+                                            <h5 class="mb-0 text-overflow">ScheduleReport.pdf</h5>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -121,8 +211,15 @@
                 decPart = (decPart + '00').substr(0, 2);
                 $("#proOutput").empty().append(intPart + DecimalSeparator + decPart);
                 $('#money-spinner').hide();
+                $("#fileMan").show(500);
             }
         })
+
     });
+    $(document).ready(function () {
+        $('#file-close').click(function () {
+            $("#fileMan").toggle(500);
+        })
+    })
 </script>
 {% endblock %}

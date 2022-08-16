@@ -17,6 +17,9 @@ urlpatterns = [
     path('FnSchoolSecurityProvided',views.FnSchoolSecurityProvided,name='FnSchoolSecurityProvided'),
     path('FnSchoolVehicleSecurity',views.FnSchoolVehicleSecurity,name='FnSchoolVehicleSecurity'),
     path('FnSchoolProjectSecurityDetails',views.FnSchoolProjectSecurityDetails,name='FnSchoolProjectSecurityDetails'),
+    path('SchoolEnrolment', views.SchoolEnrolment, name="SchoolEnrolment"),
+    path('SchoolPassRate', views.SchoolPassRate, name="SchoolPassRate"),
+    path('SchoolProjectDetails', views.SchoolProjectDetails, name="SchoolProjectDetails"),
 ]
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL,

@@ -69,22 +69,20 @@
                 <li class="nav-item dropdown">
                     <a class="nav-link count-indicator dropdown-toggle" id="messageDropdown" href="#"
                         data-toggle="dropdown" aria-expanded="false">
-                        Reports <i class="las la-angle-down mx-1" style="font-size:13px"></i>
+                        More.. <i class="las la-angle-down mx-1" style="font-size:13px"></i>
                     </a>
                     <div class="dropdown-menu dropdown-menu-right navbar-dropdown preview-list"
                         aria-labelledby="messageDropdown">
-                        <h6 class="p-3 mb-0 bg-primary text-white py-4">Statement</h6>
+                        <h6 class="p-3 mb-0 bg-primary text-white py-4">More Options</h6>
+                        <div class="dropdown-divider"></div>
+
                         <div class="dropdown-divider"></div>
                         <a class="dropdown-item preview-item">
-                            <i class="las la-arrow-right mr-2"></i> Client Detailed Statement
+                            <i class="las la-arrow-right mr-2"></i> Survey
                         </a>
                         <div class="dropdown-divider"></div>
                         <a class="dropdown-item preview-item">
-                            <i class="las la-arrow-right mr-2"></i> Loan Statement
-                        </a>
-                        <div class="dropdown-divider"></div>
-                        <a class="dropdown-item preview-item">
-                            <i class="las la-arrow-right mr-2"></i> Loan Repayment Schedule
+                            <i class="las la-arrow-right mr-2"></i> System Manual
                         </a>
 
                         <div class="dropdown-divider"></div>
@@ -164,12 +162,7 @@
                         <span class="menu-title">Appointments</span>
                     </a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#">
-                        <span class="icon-bg"><i class="las la-poll"></i></span>
-                        <span class="menu-title">Survey</span>
-                    </a>
-                </li>
+
                 <li class="nav-item sidebar-user-actions" style="margin-top:.1rem;">
                     <div class="sidebar-user-menu">
                         <a href="{% url 'logout' %}" class="nav-link"><i class="las la-sign-out-alt"></i>
@@ -196,12 +189,6 @@
                     <a class="nav-link" href="{% url 'appointments' %}">
                         <span class="icon-bg"><i class="las la-calendar-plus"></i></span>
                         <span class="menu-title">Appointments</span>
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#">
-                        <span class="icon-bg"><i class="las la-poll"></i></span>
-                        <span class="menu-title">Survey</span>
                     </a>
                 </li>
                 <li class="nav-item sidebar-user-actions" style="margin-top:.1rem;">
@@ -267,23 +254,15 @@
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#">
-                        <span class="icon-bg"><i class="las la-poll"></i></span>
-                        <span class="menu-title">Survey</span>
+                    <a class="nav-link" href="{% url 'Reports' %}">
+                        <span class="icon-bg"><i class="las la-file-pdf"></i></span>
+                        <span class="menu-title">Reports</span>
                     </a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="#">
                         <span class="icon-bg"><i class="las la-user"></i></span>
                         <span class="menu-title">Profile</span>
-                    </a>
-                </li>
-                <li class="nav-item" style="margin-top:.1rem;">
-                    <a class="nav-link" href="../../static/img/2.jpg" download>
-                        <span class="icon-bg"><i class="las la-file-pdf"></i></span>
-
-                        <span class="menu-title text-danger">User Manual</span> <i
-                            class="las la-download text-danger"></i>
                     </a>
                 </li>
                 <li class="nav-item sidebar-user-actions" style="margin-top:.1rem;">

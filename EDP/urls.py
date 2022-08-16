@@ -24,4 +24,5 @@ urlpatterns = [
     path('', include('appointment.urls')),
     path('', include('accounts.urls')),
     path('', include('topUp.urls')),
+    path('', include('reports.urls')),
 ]

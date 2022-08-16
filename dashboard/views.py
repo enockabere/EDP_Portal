@@ -147,9 +147,11 @@ def FnSchoolRevenue(request):
                 newStudentAdmission,admissionFees, myAction)
             print(response)
             if response['return_value'] == True:
-                return JsonResponse("Successfully Added.",safe=False)
+                messages.success(request,"Successfully Added.")
+                return redirect('ApplicationDetails')
             if response['return_value'] == False:
-                return JsonResponse("Not Added.",safe=False)
+                messages.error(request,"Not Added.")
+                return redirect('ApplicationDetails')
         except Exception as e:
             print(e)
             messages.info(request, e)
@@ -173,9 +175,11 @@ def FnSchoolExpenses(request):
                 entryNo, applicantNo,expenseHead,monthlyExpense,multiplierFactor,myAction)
             print(response)
             if response['return_value'] == True:
-                return JsonResponse("Successfully Added.",safe=False)
+                messages.success(request,"Successfully Added.")
+                return redirect('ApplicationDetails')
             if response['return_value'] == False:
-                return JsonResponse("Not Added.",safe=False)
+                messages.error(request,"Not Added.")
+                return redirect('ApplicationDetails')
         except Exception as e:
             print(e)
             messages.info(request, e)
@@ -392,3 +396,78 @@ def Canvas(request):
     fullname =  request.session['User_ID']
     ctx = {"fullname": fullname}
     return render(request, "offcanvas.html", ctx)
+
+def SchoolEnrolment(request):
+    if request.method == 'POST':
+        entryNo = 0
+        applicantNo =  request.session['CustomerNo']
+        academicYear = request.POST.get('academicYear')
+        schoolStrength = request.POST.get('schoolStrength')
+        myAction = 'insert'
+        try:
+            response = config.CLIENT.service.FnSchoolEnrolment(
+                entryNo, applicantNo, int(academicYear), schoolStrength, myAction)
+            print(response)
+            if response['return_value'] == True:
+                messages.success(request,"Successfully Added.")
+                return redirect('ApplicationDetails')
+            if response['return_value'] == False:
+                messages.error(request,"Not Added.")
+                return redirect('ApplicationDetails')
+        except Exception as e:
+            print(e)
+            messages.info(request, e)
+    return redirect('ApplicationDetails')
+
+def SchoolPassRate(request):
+    if request.method == 'POST':
+        try:
+            entryNo = 0
+            applicantNo = request.session['CustomerNo']
+            kcpeStudents = request.POST.get('kcpeStudents')
+            passRate = request.POST.get('passRate')
+            year = request.POST.get('year')
+            myAction = 'insert'
+        except KeyError:
+            messages.info(request, "Session Expired. Please Login")
+            return redirect('auth')
+        try:
+            response = config.CLIENT.service.FnSchoolPassRate(
+                entryNo, applicantNo,kcpeStudents,passRate, int(year), myAction)
+            print(response)
+            if response['return_value'] == True:
+                messages.success(request,"Successfully Added.")
+                return redirect('ApplicationDetails')
+            if response['return_value'] == False:
+                messages.error(request,"Not Added.")
+                return redirect('ApplicationDetails')
+        except Exception as e:
+            print(e)
+            messages.info(request, e)
+    return redirect('ApplicationDetails')
+
+def SchoolProjectDetails(request):
+    if request.method == 'POST':
+        try:
+            entryNo = 0
+            applicantNo = request.session['CustomerNo']
+            projectDescription = request.POST.get('projectDescription')
+            estimatedCost = float(request.POST.get('estimatedCost'))
+            costType = int(request.POST.get('costType'))
+            myAction = 'insert'
+        except KeyError:
+            messages.info(request, "Session Expired. Please Login")
+            return redirect('login')
+        try:
+            response = config.CLIENT.service.FnSchoolProjectDetails(
+                entryNo, applicantNo,projectDescription,estimatedCost, costType, myAction)
+            if response['return_value'] == True:
+                messages.success(request,"Successfully Added.")
+                return redirect('ApplicationDetails')
+            if response['return_value'] == False:
+                messages.error(request,"Not Added.")
+                return redirect('ApplicationDetails')
+        except Exception as e:
+            print(e)
+            messages.info(request, e)
+    return redirect('ApplicationDetails')

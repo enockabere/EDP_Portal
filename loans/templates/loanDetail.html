@@ -178,8 +178,26 @@
                                 <tr id="tops">
                                     <th id="long">Academic Year</th>
                                     <th>School Population</th>
+                                    <th>Action</th>
                                 </tr>
                             </thead>
+                            <tbody>
+                                {% for data in Enrollment %}
+                                <tr>
+                                    <td>{{data.Academic_Year}}</td>
+                                    <td>{{data.School_Strength}}</td>
+                                    <td>
+                                        <form action="" method="post" style="display: inline-block;">
+                                            {% csrf_token %}
+                                            <input type="hidden" name="lineNo" value="{{res.Line_No_}}">
+                                            <button type="submit" class="btn btn-danger" data-toggle="tooltip"
+                                                data-placement="top" title="Delete"><i class="fas fa-trash-alt"></i>
+                                            </button>
+                                        </form>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
                         </table>
                     </div>
                 </div>
@@ -205,8 +223,27 @@
                                     <th id="long">Class 8 KCPE Students</th>
                                     <th>Pass Rate</th>
                                     <th>Year</th>
+                                    <th>Action</th>
                                 </tr>
                             </thead>
+                            <tbody>
+                                {% for data in PassRate %}
+                                <tr>
+                                    <td>{{data.Class_8_KCPE_Students}}</td>
+                                    <td>{{data.Pass_Rate}}</td>
+                                    <td>{{data.Year}}</td>
+                                    <td>
+                                        <form action="" method="post" style="display: inline-block;">
+                                            {% csrf_token %}
+                                            <input type="hidden" name="lineNo" value="{{res.Line_No_}}">
+                                            <button type="submit" class="btn btn-danger" data-toggle="tooltip"
+                                                data-placement="top" title="Delete"><i class="fas fa-trash-alt"></i>
+                                            </button>
+                                        </form>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
                         </table>
                     </div>
                 </div>
@@ -232,8 +269,27 @@
                                     <th id="long">Cost Type</th>
                                     <th>Estimated Cost</th>
                                     <th>Brief Project Description</th>
+                                    <th>Action</th>
                                 </tr>
                             </thead>
+                            <tbody>
+                                {% for data in Project %}
+                                <tr>
+                                    <td>{{data.Cost_Type}}</td>
+                                    <td>{{data.Estimated_Cost}}</td>
+                                    <td>{{data.Brief_Project_Description}}</td>
+                                    <td>
+                                        <form action="" method="post" style="display: inline-block;">
+                                            {% csrf_token %}
+                                            <input type="hidden" name="lineNo" value="{{res.Line_No_}}">
+                                            <button type="submit" class="btn btn-danger" data-toggle="tooltip"
+                                                data-placement="top" title="Delete"><i class="fas fa-trash-alt"></i>
+                                            </button>
+                                        </form>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
                         </table>
                     </div>
                 </div>
@@ -268,8 +324,43 @@
                                     <th>Term One Fees</th>
                                     <th>Term Two Fees</th>
                                     <th>Term Three Fees</th>
+                                    <th>
+                                        <form action="" method="post" style="display: inline-block;">
+                                            {% csrf_token %}
+                                            <input type="hidden" name="lineNo" value="{{res.Line_No_}}">
+                                            <button type="submit" class="btn btn-danger" data-toggle="tooltip"
+                                                data-placement="top" title="Delete"><i class="fas fa-trash-alt"></i>
+                                            </button>
+                                        </form>
+                                    </th>
                                 </tr>
                             </thead>
+                            <tbody>
+                                {% for data in Revenue %}
+                                <tr>
+                                    <td>{{data.Class}}</td>
+                                    <td>{{data.Streams}}</td>
+                                    <td>{{data.Total_Student}}</td>
+                                    <td>{{data.Termly_Fee}}</td>
+                                    <td>{{data.Annual_Fee}}</td>
+                                    <td>{{data.Admission_Fees}}</td>
+                                    <td>{{data.Total_Income}}</td>
+                                    <td>{{data.New_Student_Admissions}}</td>
+                                    <td>{{data.Term_One_Fees}}</td>
+                                    <td>{{data.Term_Two_Fees}}</td>
+                                    <td>{{data.Term_Three_Fees}}</td>
+                                    <td>
+                                        <form action="" method="post" style="display: inline-block;">
+                                            {% csrf_token %}
+                                            <input type="hidden" name="lineNo" value="{{res.Line_No_}}">
+                                            <button type="submit" class="btn btn-danger" data-toggle="tooltip"
+                                                data-placement="top" title="Delete"><i class="fas fa-trash-alt"></i>
+                                            </button>
+                                        </form>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
                         </table>
                     </div>
                 </div>
@@ -296,9 +387,30 @@
                                     <th>Monthly Expense</th>
                                     <th>Annual Expense</th>
                                     <th>Expense Type</th>
-                                    <th>Multiplier Factor</th>
+                                    <th>Months</th>
+                                    <th>Action</th>
                                 </tr>
                             </thead>
+                            <tbody>
+                                {% for data in Expenses %}
+                                <tr>
+                                    <td>{{data.Expense_Head}}</td>
+                                    <td>{{data.Monthly_Expense}}</td>
+                                    <td>{{data.Annual_Expense}}</td>
+                                    <td>{{data.Expense_Type}}</td>
+                                    <td>{{data.Multiplier_Factor}}</td>
+                                    <td>
+                                        <form action="" method="post" style="display: inline-block;">
+                                            {% csrf_token %}
+                                            <input type="hidden" name="lineNo" value="{{res.Line_No_}}">
+                                            <button type="submit" class="btn btn-danger" data-toggle="tooltip"
+                                                data-placement="top" title="Delete"><i class="fas fa-trash-alt"></i>
+                                            </button>
+                                        </form>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
                         </table>
                     </div>
                 </div>
@@ -307,7 +419,7 @@
         <div class="row my-2">
             <div class="col-md-12">
                 <div class="card">
-                    <button type="button" class="btn btn-primary btn-sm my-3 mx-3" id="LoanData"> Add
+                    <button type="button" class="btn btn-primary btn-sm my-3 mx-3" id="LoanData">
                         View Loan Details <i class="las la-angle-double-down"></i></button>
                     <div class="card-body" style="display: none;" id="LoanBody">
                         <form class="row g-3">
@@ -426,12 +538,13 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <form class="myForm" method="post" id="FnSchoolLoanEnrolment" novalidate>
+                    <form class="myForm" method="post" action="{% url 'FnSchoolLoanEnrolment' %}" novalidate>
                         <div class="modal-loaders mx-auto text-center" id="money-spinner1" style="display: none;">
                             <img src="https://upload.wikimedia.org/wikipedia/commons/b/b1/Loading_icon.gif"
                                 alt="Loading Gif" style="height: 100px;" class="img-fluid">
                         </div>
                         {% csrf_token %}
+                        <input type="hidden" id="applicantNo" name="applicantNo" value="{{res.Loan_Number}}">
                         <div class="row">
                             <div class="col-md-12">
                                 <label class="form-label">Academic Year <span class="text-danger">*</span></label>
@@ -472,12 +585,9 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <form class="myForm" method="post" id="FnSchoolLoanPassRate" novalidate>
-                        <div class="modal-loaders mx-auto text-center" id="money-spinner2" style="display: none;">
-                            <img src="https://upload.wikimedia.org/wikipedia/commons/b/b1/Loading_icon.gif"
-                                alt="Loading Gif" style="height: 100px;" class="img-fluid">
-                        </div>
+                    <form class="myForm" method="post" action="{% url 'FnSchoolLoanPassRate' %}" novalidate>
                         {% csrf_token %}
+                        <input type="hidden" id="applicantNo" name="applicantNo" value="{{res.Loan_Number}}">
                         <div class="row">
                             <div class="col-md-12">
                                 <div class="mb-2">
@@ -507,7 +617,7 @@
                                 <h5 class="text-info" id="historyPassRate"></h5>
                             </div>
                         </div>
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <a href="" class="btn btn-secondary" data-bs-dismiss="modal">Close</a>
                         <button type="submit" class="btn btn-primary">Submit</button>
                     </form>
                 </div>
@@ -525,12 +635,9 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <form class="myForm" method="post" id="FnSchoolLoanProjectDetails" novalidate>
-                        <div class="modal-loaders mx-auto text-center" id="money-spinner3" style="display: none;">
-                            <img src="https://upload.wikimedia.org/wikipedia/commons/b/b1/Loading_icon.gif"
-                                alt="Loading Gif" style="height: 100px;" class="img-fluid">
-                        </div>
+                    <form class="myForm" method="post" action="{% url 'FnSchoolLoanProjectDetails' %}" novalidate>
                         {% csrf_token %}
+                        <input type="hidden" id="applicantNo" name="applicantNo" value="{{res.Loan_Number}}">
                         <div class="row">
                             <div class="col-md-12">
                                 <div class="mb-2">
@@ -605,12 +712,9 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <form class="myForm" id="FnSchoolLoanRevenue" method="post" novalidate>
-                        <div class="modal-loaders mx-auto text-center" id="money-spinner4" style="display: none;">
-                            <img src="https://upload.wikimedia.org/wikipedia/commons/b/b1/Loading_icon.gif"
-                                alt="Loading Gif" style="height: 100px;" class="img-fluid">
-                        </div>
+                    <form class="myForm" action="{% url 'FnSchoolLoanRevenue' %}" method="post" novalidate>
                         {% csrf_token %}
+                        <input type="hidden" id="applicantNo" name="applicantNo" value="{{res.Loan_Number}}">
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="mb-2">
@@ -666,11 +770,6 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="row my-2">
-                            <div class="col-md-12">
-                                <h5 class="text-info" id="LoanRevenueResult"></h5>
-                            </div>
-                        </div>
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                         <button type="submit" class="btn btn-primary">Submit</button>
                     </form>
@@ -689,12 +788,9 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <form class="myForm" id="FnSchoolLoanExpenses" method="post" novalidate>
-                        <div class="modal-loaders mx-auto text-center" id="money-spinner5" style="display: none;">
-                            <img src="https://upload.wikimedia.org/wikipedia/commons/b/b1/Loading_icon.gif"
-                                alt="Loading Gif" style="height: 100px;" class="img-fluid">
-                        </div>
+                    <form class="myForm" action="{% url 'FnSchoolLoanExpenses' %}" method="post" novalidate>
                         {% csrf_token %}
+                        <input type="hidden" id="applicantNo" name="applicantNo" value="{{res.Loan_Number}}">
                         <div class="row">
                             <div class="col-md-12">
                                 <div class="mb-2">
@@ -721,8 +817,7 @@
                         <div class="row my-3">
                             <div class="col-md-12">
                                 <div>
-                                    <label class="form-label">Multiplier Factor<span
-                                            class="text-danger">*</span></label>
+                                    <label class="form-label">Months<span class="text-danger">*</span></label>
                                     <input type="text" class="form-control" name="multiplierFactor"
                                         id="multiplierFactor" placeholder="0.0" required>
                                 </div>
@@ -1199,248 +1294,251 @@
             $('#LoanBody').toggle(2000)
         })
     })
-    $(document).on('submit', '#FnSchoolLoanEnrolment', function (e) {
-        e.preventDefault();
-        $('#money-spinner1').show();
-        $.ajax({
-            type: 'POST',
-            url: '{% url "FnSchoolLoanEnrolment" %}',
-            data: {
-                academicYear: $("#academicYear").val(),
-                schoolStrength: $("#schoolStrength").val(),
-                csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val()
-            },
-            success: function (response) {
-                $("#academicYear").val("")
-                $("#schoolStrength").val("")
-                $("#historyResult").empty().append(response);
-                $('#money-spinner1').hide();
-            }
-        })
-    });
-    $.ajax({
-        type: 'get',
-        url: '{% url "GetSchoolEnrollment" %}',
-        dataType: 'json',
-        data: {
-            ItemCode: 1
-        },
-        success: function (response) {
-            $("#exampleEnrollment").DataTable().clear();
-            var length = Object.keys(response.value).length;
-            let options = '';
-            for (var i = 0; i < response.value.length; i++) {
-                if (response.value[i].Document_No == '{{res.Loan_Number}}') {
-                    $('#exampleEnrollment').dataTable().fnAddData([
-                        response.value[i].Academic_Year,
-                        response.value[i].School_Strength,
-                    ]);
+    // $(document).on('submit', '#FnSchoolLoanEnrolment', function (e) {
+    //     e.preventDefault();
+    //     $('#money-spinner1').show();
+    //     $.ajax({
+    //         type: 'POST',
+    //         url: '{% url "FnSchoolLoanEnrolment" %}',
+    //         data: {
+    //             academicYear: $("#academicYear").val(),
+    //             applicantNo: $("#applicantNo").val(),
+    //             schoolStrength: $("#schoolStrength").val(),
+    //             csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val()
+    //         },
+    //         success: function (response) {
+    //             $("#academicYear").val("");
+    //             $("#schoolStrength").val("");
+    //             $("#applicantNo").val("");
+    //             $("#historyResult").empty().append(response);
+    //             $('#money-spinner1').hide();
+    //         }
+    //     })
+    // });
+    // $.ajax({
+    //     type: 'get',
+    //     url: '#',
+    //     dataType: 'json',
+    //     data: {
+    //         ItemCode: 1
+    //     },
+    //     success: function (response) {
+    //         $("#exampleEnrollment").DataTable().clear();
+    //         var length = Object.keys(response.value).length;
+    //         let options = '';
+    //         for (var i = 0; i < response.value.length; i++) {
+    //             if (response.value[i].Document_No == '{{res.Loan_Number}}') {
+    //                 $('#exampleEnrollment').dataTable().fnAddData([
+    //                     response.value[i].Academic_Year,
+    //                     response.value[i].School_Strength,
+    //                 ]);
 
-                }
-            }
-        },
-        error: function (response) {
-            console.log('Something went wrong');
-        }
-    });
+    //             }
+    //         }
+    //     },
+    //     error: function (response) {
+    //         console.log('Something went wrong');
+    //     }
+    // });
 
-    $(document).on('submit', '#FnSchoolLoanPassRate', function (e) {
-        e.preventDefault();
-        $('#money-spinner2').show();
-        let LoanNumber = '{{res.Loan_Number}}'
-        console.log("LoanNumber:", LoanNumber)
-        $.ajax({
-            type: 'POST',
-            url: '{% url "FnSchoolLoanPassRate" %}',
-            data: {
-                kcpeStudents: $("#kcpeStudents").val(),
-                passRate: $("#passRate").val(),
-                year: $("#PassYear").val(),
-                LoanNumber: LoanNumber,
-                csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val()
-            },
-            success: function (response) {
-                $("#kcpeStudents").val("")
-                $("#passRate").val("")
-                $("#PassYear").val("")
-                $("#historyPassRate").empty().append(response);
-                $('#money-spinner2').hide();
-            }
-        })
-    });
-    $.ajax({
-        type: 'get',
-        url: '{% url "GetSchoolLoanPassRate" %}',
-        dataType: 'json',
-        success: function (response) {
-            $("#examplePassRate").DataTable().clear();
-            for (var i = 0; i < response.value.length; i++) {
-                if (response.value[i].Document_No == '{{res.Loan_Number}}') {
-                    $('#examplePassRate').dataTable().fnAddData([
-                        response.value[i].Class_8_KCPE_Students,
-                        response.value[i].Pass_Rate,
-                        response.value[i].Year,
-                    ]);
+    // $(document).on('submit', '#FnSchoolLoanPassRate', function (e) {
+    //     e.preventDefault();
+    //     $('#money-spinner2').show();
+    //     $.ajax({
+    //         type: 'POST',
+    //         url: '{% url "FnSchoolLoanPassRate" %}',
+    //         data: {
+    //             kcpeStudents: $("#kcpeStudents").val(),
+    //             passRate: $("#passRate").val(),
+    //             year: $("#PassYear").val(),
+    //             applicantNo: $("#applicantNo").val(),
+    //             csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val()
+    //         },
+    //         success: function (response) {
+    //             $("#kcpeStudents").val("");
+    //             $("#passRate").val("");
+    //             $("#PassYear").val("");
+    //             $("#applicantNo").val("");
+    //             $("#historyPassRate").empty().append(response);
+    //             $('#money-spinner2').hide();
+    //         }
+    //     })
+    // });
+    // $(document).ready(function () {
+    //     $.ajax({
+    //         type: 'get',
+    //         url: '#',
+    //         dataType: 'json',
+    //         success: function (response) {
+    //             $("#examplePassRate").DataTable().clear();
+    //             for (var i = 0; i < response.value.length; i++) {
+    //                 if (response.value[i].Document_No == '{{res.Loan_Number}}') {
+    //                     $('#examplePassRate').dataTable().fnAddData([
+    //                         response.value[i].Class_8_KCPE_Students,
+    //                         response.value[i].Pass_Rate,
+    //                         response.value[i].Year,
+    //                     ]);
 
-                }
-            }
-        },
-        error: function (response) {
-            console.log('Something went wrong');
-        }
-    });
-    $(document).on('submit', '#FnSchoolLoanProjectDetails', function (e) {
-        e.preventDefault();
-        $('#money-spinner3').show();
-        let LoanNumber = '{{res.Loan_Number}}'
-        $.ajax({
-            type: 'POST',
-            url: '{% url "FnSchoolLoanProjectDetails" %}',
-            data: {
-                estimatedCost: $("#estimatedCost").val(),
-                costType: $("#costType").val(),
-                projectDescription: $("#projectDescription").val(),
-                LoanNumber: LoanNumber,
-                csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val()
-            },
-            success: function (response) {
-                $("#estimatedCost").val("")
-                $("#costType").val("")
-                $("#projectDescription").val("")
-                $("#ProjectResult").empty().append(response);
-                $('#money-spinner3').hide();
-            }
-        })
-    });
-    $.ajax({
-        type: 'get',
-        url: '{% url "GetSchoolLoanProjectDetails" %}',
-        dataType: 'json',
-        success: function (response) {
-            $("#exampleProjectDetails").DataTable().clear();
-            for (var i = 0; i < response.value.length; i++) {
-                if (response.value[i].Document_No == '{{res.Loan_Number}}') {
-                    $('#exampleProjectDetails').dataTable().fnAddData([
-                        response.value[i].Cost_Type,
-                        response.value[i].Estimated_Cost,
-                        response.value[i].Brief_Project_Description,
-                    ]);
+    //                 }
+    //             }
+    //         },
+    //         error: function (response) {
+    //             console.log('Something went wrong');
+    //         }
+    //     });
+    // })
+    // $(document).on('submit', '#FnSchoolLoanProjectDetails', function (e) {
+    //     e.preventDefault();
+    //     $('#money-spinner3').show();
+    //     let LoanNumber = '{{res.Loan_Number}}'
+    //     $.ajax({
+    //         type: 'POST',
+    //         url: '{% url "FnSchoolLoanProjectDetails" %}',
+    //         data: {
+    //             estimatedCost: $("#estimatedCost").val(),
+    //             costType: $("#costType").val(),
+    //             projectDescription: $("#projectDescription").val(),
+    //             LoanNumber: LoanNumber,
+    //             csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val()
+    //         },
+    //         success: function (response) {
+    //             $("#estimatedCost").val("")
+    //             $("#costType").val("")
+    //             $("#projectDescription").val("")
+    //             $("#ProjectResult").empty().append(response);
+    //             $('#money-spinner3').hide();
+    //         }
+    //     })
+    // });
+    // $.ajax({
+    //     type: 'get',
+    //     url: '#',
+    //     dataType: 'json',
+    //     success: function (response) {
+    //         $("#exampleProjectDetails").DataTable().clear();
+    //         for (var i = 0; i < response.value.length; i++) {
+    //             if (response.value[i].Document_No == '{{res.Loan_Number}}') {
+    //                 $('#exampleProjectDetails').dataTable().fnAddData([
+    //                     response.value[i].Cost_Type,
+    //                     response.value[i].Estimated_Cost,
+    //                     response.value[i].Brief_Project_Description,
+    //                 ]);
 
-                }
-            }
-        },
-        error: function (response) {
-            console.log('Something went wrong');
-        }
-    });
-    $(document).on('submit', '#FnSchoolLoanRevenue', function (e) {
-        e.preventDefault();
-        $('#money-spinner4').show();
-        let LoanNumber = '{{res.Loan_Number}}'
-        $.ajax({
-            type: 'POST',
-            url: '{% url "FnSchoolLoanRevenue" %}',
-            data: {
-                edpClass: $("#edpClass").val(),
-                streams: $("#streams").val(),
-                termOneFees: $("#termOneFees").val(),
-                termTwoFees: $("#termTwoFees").val(),
-                termThreeFees: $("#termThreeFees").val(),
-                newStudentAdmission: $("#newStudentAdmission").val(),
-                admissionFees: $("#admissionFees").val(),
-                LoanNumber: LoanNumber,
-                csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val()
-            },
-            success: function (response) {
-                $("#edpClass").val("");
-                $("#streams").val("");
-                $("#termOneFees").val("");
-                $("#termTwoFees").val("");
-                $("#termThreeFees").val("");
-                $("#newStudentAdmission").val("");
-                $("#admissionFees").val("");
-                $("#LoanRevenueResult").empty().append(response);
-                $('#money-spinner4').hide();
-            }
-        })
-    });
-    $.ajax({
-        type: 'get',
-        url: '{% url "GetSchoolLoanRevenue" %}',
-        dataType: 'json',
-        success: function (response) {
-            console.log("response", response)
-            $("#exampleSchoolLoanRevenue").DataTable().clear();
-            for (var i = 0; i < response.value.length; i++) {
-                if (response.value[i].Loan_No == '{{res.Loan_Number}}') {
+    //             }
+    //         }
+    //     },
+    //     error: function (response) {
+    //         console.log('Something went wrong');
+    //     }
+    // });
+    // $(document).on('submit', '#FnSchoolLoanRevenue', function (e) {
+    //     e.preventDefault();
+    //     $('#money-spinner4').show();
+    //     let LoanNumber = '{{res.Loan_Number}}'
+    //     $.ajax({
+    //         type: 'POST',
+    //         url: '{% url "FnSchoolLoanRevenue" %}',
+    //         data: {
+    //             edpClass: $("#edpClass").val(),
+    //             streams: $("#streams").val(),
+    //             termOneFees: $("#termOneFees").val(),
+    //             termTwoFees: $("#termTwoFees").val(),
+    //             termThreeFees: $("#termThreeFees").val(),
+    //             newStudentAdmission: $("#newStudentAdmission").val(),
+    //             admissionFees: $("#admissionFees").val(),
+    //             LoanNumber: LoanNumber,
+    //             csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val()
+    //         },
+    //         success: function (response) {
+    //             $("#edpClass").val("");
+    //             $("#streams").val("");
+    //             $("#termOneFees").val("");
+    //             $("#termTwoFees").val("");
+    //             $("#termThreeFees").val("");
+    //             $("#newStudentAdmission").val("");
+    //             $("#admissionFees").val("");
+    //             $("#LoanRevenueResult").empty().append(response);
+    //             $('#money-spinner4').hide();
+    //         }
+    //     })
+    // });
+    // $.ajax({
+    //     type: 'get',
+    //     url: '#',
+    //     dataType: 'json',
+    //     success: function (response) {
+    //         console.log("response", response)
+    //         $("#exampleSchoolLoanRevenue").DataTable().clear();
+    //         for (var i = 0; i < response.value.length; i++) {
+    //             if (response.value[i].Loan_No == '{{res.Loan_Number}}') {
 
-                    $('#exampleSchoolLoanRevenue').dataTable().fnAddData([
-                        response.value[i].Class,
-                        response.value[i].Streams,
-                        response.value[i].Total_Student,
-                        response.value[i].Termly_Fee,
-                        response.value[i].Annual_Fee,
-                        response.value[i].Admission_Fees,
-                        response.value[i].Total_Income,
-                        response.value[i].New_Student_Admissions,
-                        response.value[i].Term_One_Fees,
-                        response.value[i].Term_Two_Fees,
-                        response.value[i].Term_Three_Fees,
-                    ]);
+    //                 $('#exampleSchoolLoanRevenue').dataTable().fnAddData([
+    //                     response.value[i].Class,
+    //                     response.value[i].Streams,
+    //                     response.value[i].Total_Student,
+    //                     response.value[i].Termly_Fee,
+    //                     response.value[i].Annual_Fee,
+    //                     response.value[i].Admission_Fees,
+    //                     response.value[i].Total_Income,
+    //                     response.value[i].New_Student_Admissions,
+    //                     response.value[i].Term_One_Fees,
+    //                     response.value[i].Term_Two_Fees,
+    //                     response.value[i].Term_Three_Fees,
+    //                 ]);
 
-                }
-            }
-        },
-        error: function (response) {
-            console.log('Something went wrong');
-        }
-    });
-    $(document).on('submit', '#FnSchoolLoanExpenses', function (e) {
-        e.preventDefault();
-        $('#money-spinner5').show();
-        let LoanNumber = '{{res.Loan_Number}}'
-        $.ajax({
-            type: 'POST',
-            url: '{% url "FnSchoolLoanExpenses" %}',
-            data: {
-                expenseHead: $("#expenseHead").val(),
-                monthlyExpense: $("#monthlyExpense").val(),
-                multiplierFactor: $("#multiplierFactor").val(),
-                LoanNumber: LoanNumber,
-                csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val()
-            },
-            success: function (response) {
-                $("#expenseHead").val("");
-                $("#monthlyExpense").val("");
-                $("#multiplierFactor").val("");
-                $("#LoanExpensesResult").empty().append(response);
-                $('#money-spinner5').hide();
-            }
-        })
-    });
-    $.ajax({
-        type: 'get',
-        url: '{% url "GetSchoolLoanExpenses" %}',
-        dataType: 'json',
-        success: function (response) {
-            $("#exampleSchoolLoanExpenses").DataTable().clear();
-            for (var i = 0; i < response.value.length; i++) {
-                if (response.value[i].Loan_No == '{{res.Loan_Number}}') {
+    //             }
+    //         }
+    //     },
+    //     error: function (response) {
+    //         console.log('Something went wrong');
+    //     }
+    // });
+    // $(document).on('submit', '#FnSchoolLoanExpenses', function (e) {
+    //     e.preventDefault();
+    //     $('#money-spinner5').show();
+    //     let LoanNumber = '{{res.Loan_Number}}'
+    //     $.ajax({
+    //         type: 'POST',
+    //         url: '{% url "FnSchoolLoanExpenses" %}',
+    //         data: {
+    //             expenseHead: $("#expenseHead").val(),
+    //             monthlyExpense: $("#monthlyExpense").val(),
+    //             multiplierFactor: $("#multiplierFactor").val(),
+    //             LoanNumber: LoanNumber,
+    //             csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val()
+    //         },
+    //         success: function (response) {
+    //             $("#expenseHead").val("");
+    //             $("#monthlyExpense").val("");
+    //             $("#multiplierFactor").val("");
+    //             $("#LoanExpensesResult").empty().append(response);
+    //             $('#money-spinner5').hide();
+    //         }
+    //     })
+    // });
+    // $.ajax({
+    //     type: 'get',
+    //     url: '#',
+    //     dataType: 'json',
+    //     success: function (response) {
+    //         $("#exampleSchoolLoanExpenses").DataTable().clear();
+    //         for (var i = 0; i < response.value.length; i++) {
+    //             if (response.value[i].Loan_No == '{{res.Loan_Number}}') {
 
-                    $('#exampleSchoolLoanExpenses').dataTable().fnAddData([
-                        response.value[i].Expense_Head,
-                        response.value[i].Monthly_Expense,
-                        response.value[i].Annual_Expense,
-                        response.value[i].Expense_Type,
-                        response.value[i].Multiplier_Factor,
-                    ]);
+    //                 $('#exampleSchoolLoanExpenses').dataTable().fnAddData([
+    //                     response.value[i].Expense_Head,
+    //                     response.value[i].Monthly_Expense,
+    //                     response.value[i].Annual_Expense,
+    //                     response.value[i].Expense_Type,
+    //                     response.value[i].Multiplier_Factor,
+    //                 ]);
 
-                }
-            }
-        },
-        error: function (response) {
-            console.log('Something went wrong');
-        }
-    });
+    //             }
+    //         }
+    //     },
+    //     error: function (response) {
+    //         console.log('Something went wrong');
+    //     }
+    // });
 </script>
 {% endblock %}
