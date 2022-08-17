@@ -81,17 +81,19 @@
             },
             success: function (response) {
                 $("#loanNo").val("");
-                myResponse = JSON.parse(response)
-                console.log(myResponse)
-                console.log(myResponse[1])
-                console.log(myResponse['outstandingInterest'])
-                // var DecimalSeparator = Number("1.2").toLocaleString().substr(1, 1);
-                // var AmountWithCommas = response.toLocaleString();
-                // var arParts = String(AmountWithCommas).split(DecimalSeparator);
-                // var intPart = arParts[0];
-                // var decPart = (arParts.length > 1 ? arParts[1] : '');
-                // decPart = (decPart + '00').substr(0, 2);
-                // $("#proOutput").empty().append(intPart + DecimalSeparator + decPart);
+                var DecimalSeparator = Number("1.2").toLocaleString().substr(1, 1);
+                var AmountWithCommas = response['outstandingBalance'].toLocaleString();
+                var arParts = String(AmountWithCommas).split(DecimalSeparator);
+                var intPart = arParts[0];
+                var decPart = (arParts.length > 1 ? arParts[1] : '');
+                decPart = (decPart + '00').substr(0, 2);
+                $("#proOutput").empty().append(intPart + DecimalSeparator + decPart);
+                var Amount = response['outstandingInterest'].toLocaleString();
+                var Parts = String(Amount).split(DecimalSeparator);
+                var intParts = Parts[0];
+                var dec = (Parts.length > 1 ? Parts[1] : '');
+                dec = (dec + '00').substr(0, 2);
+                $("#proOutput2").empty().append(intParts + DecimalSeparator + dec);
                 $('#money-spinner').hide();
             }
         })

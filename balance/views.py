@@ -39,8 +39,10 @@ def BalanceEnquiry(request):
                     loanNo, outstandingBalance,outstandingInterest)
                 print(response)
                 if response['return_value'] == True:
-                    mp = jsons.dumps(list(response),use_decimal=True)
-                    return JsonResponse(mp,safe=False)
+                    outstanding = jsons.dumps(response['outstandingBalance'],use_decimal=True)
+                    interest = jsons.dumps(response['outstandingInterest'],use_decimal=True)
+                    Dict = {"return_value":response['return_value'],"outstandingBalance":outstanding,"outstandingInterest":interest}
+                    return JsonResponse(Dict,safe=False)
                 if response['return_value'] == False:
                     return JsonResponse("Null",safe=False)
             except Exception as e:

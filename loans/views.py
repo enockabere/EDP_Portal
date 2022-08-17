@@ -50,6 +50,7 @@ def Loan_Calculator(request):
 
                 print("Month Repayment:", response)
                 mp = jsons.dumps(response,use_decimal=True)
+                print(type(mp))
                 return JsonResponse(mp,safe=False)
             except Exception as e:
                 print(e)
