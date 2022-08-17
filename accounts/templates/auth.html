@@ -24,6 +24,44 @@
     <link rel="stylesheet" href="../../static/css/auth.css">
     <link rel="stylesheet" href="../../static/css/base.css">
     <link rel="shortcut icon" type="image/png" href="../../static/img/logo/fav.png" />
+    <style>
+        .modal-header {
+            display: -webkit-box;
+            display: -ms-flexbox;
+            display: flex;
+            -webkit-box-align: start;
+            -ms-flex-align: start;
+            align-items: flex-start;
+            -webkit-box-pack: justify;
+            -ms-flex-pack: justify;
+            justify-content: space-between;
+            padding: 1rem 1rem;
+            background-color: #04fb14;
+        }
+
+        .btn-successs {
+            color: #fff;
+            font-weight: bolder !important;
+            font-size: 15px !important;
+            background-color: #0cb317 !important;
+            border-color: #0cb317 !important;
+        }
+
+        .btn-successs:hover {
+            color: #fff;
+            background-color: #008080 !important;
+            border-color: #008080 !important;
+        }
+
+        .modal-body {
+            background: #F2F3F4;
+            position: relative;
+            -webkit-box-flex: 1;
+            -ms-flex: 1 1 auto;
+            flex: 1 1 auto;
+            padding: 0.9375rem;
+        }
+    </style>
 </head>
 
 <body>
@@ -137,7 +175,7 @@
                                             <button type="submit" class="btn btn-primary"
                                                 style="text-decoration:none;color:white;text-shadow: 0 1px 0 #008080;">Login</button>
                                             <p class="small my-2"> <a href="#" data-bs-toggle="modal"
-                                                    data-bs-target="#resetpass">Reset Password?</a>
+                                                    data-bs-target="#ResestPassword">Reset Password?</a>
                                             </p>
                                         </div>
                                     </form>
@@ -147,7 +185,31 @@
                     </div>
                 </div>
             </div>
+            <!-- Modal FnSchoolTransportDetails -->
+            <div class="modal fade" id="ResestPassword" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+                aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-scrollable">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="staticBackdropLabel">Reset Password</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <form class="myForm" action="{% url 'resetPassword' %}" method="post" novalidate>
+                                {% csrf_token %}
+                                <div class="row my-3">
+                                    <div class="col-md-12">
+                                        <label class="form-label">Email<span class="text-danger">*</span></label>
+                                        <input type="email" class="form-control" name="email" required>
+                                    </div>
+                                </div>
+                                <button type="submit" class="btn btn-successs w-100">Submit</button>
+                            </form>
+                        </div>
 
+                    </div>
+                </div>
+            </div>
     </section>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js"
         integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut" crossorigin="anonymous">

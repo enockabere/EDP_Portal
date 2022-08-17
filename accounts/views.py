@@ -1,5 +1,3 @@
-from logging import exception
-from django.http import response
 from django.shortcuts import render, HttpResponse, redirect
 from django.conf import settings as config
 import json
@@ -20,6 +18,7 @@ from django.contrib.sites.shortcuts import get_current_site
 from  django.template.loader import render_to_string
 from django.core.mail import EmailMessage
 import threading
+import datetime as dt
 # Create your views here.
 
 class EmailThread(threading.Thread):
@@ -75,6 +74,11 @@ def login_request(request):
                         request.session['CustomerNo'] = applicant['No']
                         request.session['MemberNo'] = applicant['Member_Number']
                         request.session['CustomerEmail'] = applicant['Email_Address']
+                        request.session['KRA_Pin'] = applicant['KRA_Pin']
+                        request.session['Branch_Code'] = applicant['Branch_Code']
+                        request.session['Membership_Status'] = applicant['Membership_Status']
+                        request.session['MOEST_Registration_No'] = applicant['MOEST_Registration_No']
+                        request.session['Mobile_Number'] = applicant['Mobile_Number']
                         request.session['stage'] = 'Customer'
                         return redirect('dashboard')
                     else:
@@ -295,10 +299,82 @@ def logout(request):
         del request.session['MemberNo']
         del request.session['CustomerEmail']
         del request.session['stage']
+        del request.session['KRA_Pin']
+        del request.session['Branch_Code']
+        del request.session['Membership_Status']
+        del request.session['MOEST_Registration_No']
+        del request.session['Mobile_Number']
         messages.success(request,"Logged out successfully")
     except KeyError:
         print(False)
     return redirect('auth')
 
 def profile(request):
-    return render(request,"profile.html")
+    try:
+        CustomerName=request.session['CustomerName']
+        MOEST_Registration_No=request.session['MOEST_Registration_No']
+        MemberNo=request.session['MemberNo']
+        CustomerEmail=request.session['CustomerEmail']
+        todays_date = dt.datetime.now().strftime("%b. %d, %Y %A")
+        stage=request.session['stage']
+        KRA_Pin = request.session['KRA_Pin']
+        Branch_Code = request.session['Branch_Code']
+        Membership_Status = request.session['Membership_Status']
+        Mobile_Number = request.session['Mobile_Number']
+    except KeyError:
+        messages.info(request, "Session Expired. Please Login")
+        return redirect('auth')
+    ctx = {"today": todays_date,"full": CustomerName,"stage":stage,"MemberNo":MemberNo,
+    "KRA_Pin":KRA_Pin,"Branch_Code":Branch_Code,"Membership_Status":Membership_Status,
+    "CustomerEmail":CustomerEmail,"MOEST_Registration_No":MOEST_Registration_No,
+    "Mobile_Number":Mobile_Number}
+    return render(request,"profile.html",ctx)
+
+def resetPassword(request):
+    if request.method == 'POST':
+        try:
+            email = request.POST.get('email')
+        except  ValueError:
+            messages.error(request,'Missing Input')
+            return redirect('login')
+        session = requests.Session()
+        session.auth = config.AUTHS   
+    return redirect("login")
+
+def reset_request(request):
+    if request.method == 'POST':
+        try:
+            email = request.session['resetMail']
+            password = request.POST.get('password')
+            password2 = request.POST.get('password2')
+            verified = True
+        except KeyError:
+            messages.info(request,"Session Expired, Raise new password reset request")
+            return redirect('login')
+        except  ValueError:
+            messages.error(request,'Invalid Input')
+            return redirect('reset')
+        if len(password) < 6:
+            messages.error(request, "Password should be at least 6 characters")
+            return redirect('reset')
+        if password != password2:
+            messages.error(request, "Password mismatch")
+            return redirect('reset')   
+        cipher_suite = Fernet(config.ENCRYPT_KEY)
+        encrypted_text = cipher_suite.encrypt(password.encode('ascii'))
+        myPassword = base64.urlsafe_b64encode(encrypted_text).decode("ascii") 
+        try:
+            response = config.CLIENT.service.FnResetPassword(email, myPassword,verified)
+            print(response)
+            if response == True:
+                messages.success(request,"Reset successful")
+                del request.session['resetMail']
+                return redirect('login')
+            else:
+                messages.error(request,"Error Try Again")
+                return redirect('reset')
+        except Exception as e:
+            messages.error(request, e)
+            print(e)
+            return redirect('reset')
+    return render(request,'reset.html')

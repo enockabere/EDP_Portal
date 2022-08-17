@@ -122,12 +122,6 @@
                             </a>
                             <div role="separator" class="dropdown-divider"></div>
                             <a class="dropdown-item py-1 d-flex align-items-center justify-content-between"
-                                href="{% url 'profile' %}">
-                                <span>FAQs</span>
-                                <i class="las la-file-invoice"></i>
-                            </a>
-                            <div role="separator" class="dropdown-divider"></div>
-                            <a class="dropdown-item py-1 d-flex align-items-center justify-content-between"
                                 href="{% url 'logout' %}">
                                 <span>Sign Out</span>
                                 <i class="mdi mdi-logout ml-1"></i>
@@ -260,7 +254,7 @@
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#">
+                    <a class="nav-link" href="{% url 'profile' %}">
                         <span class="icon-bg"><i class="las la-user"></i></span>
                         <span class="menu-title">Profile</span>
                     </a>
