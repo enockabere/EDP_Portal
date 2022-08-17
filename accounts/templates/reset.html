@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block base %}
+<section class="activate bg-white min-vh-100">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="introduce my-5">
+                    <h2 class="text-center">Reset Your Password</h2>
+                    <p class="text-center">Enter password to create a new password </p>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                {% include 'alerts.html' %}
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="activateForm">
+                    <form action="{% url 'reset' %}" method="POST">
+                        {% csrf_token %}
+                        <div class="mb-2">
+                            <label class="form-label">Password</label>
+                            <input type="password" class="form-control" name="password" required>
+                        </div>
+                        <div class="mb-2">
+                            <label class="form-label">Confirm Password</label>
+                            <input type="password" class="form-control" name="password2" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Reset Password</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+    </div>
+</section>
+
+{% endblock %}

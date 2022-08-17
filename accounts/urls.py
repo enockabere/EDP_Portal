@@ -10,4 +10,5 @@ urlpatterns = [
     path('profile', views.profile, name='profile'),
     path("verify", views.verifyRequest,name='verify'),
     path("resetPassword", views.resetPassword,name='resetPassword'),
+    path("reset", views.reset_request,name='reset'),
 ]

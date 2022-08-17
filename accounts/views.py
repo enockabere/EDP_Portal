@@ -43,6 +43,16 @@ def send_mail(emailAddress,verificationToken,request):
 
     EmailThread(email).start()
 
+def send_reset_mail(email,request):
+    current_site = get_current_site(request)
+    email_subject = 'Password Reset'
+    email_body = render_to_string('resetMail.html',{
+        'domain': current_site
+    })
+    reset_email = EmailMessage(subject=email_subject,body=email_body,from_email=config.EMAIL_HOST_USER,to=[email])
+
+    EmailThread(reset_email).start()
+
 def login_request(request):
     session = requests.Session()
     session.auth = config.AUTHS
@@ -55,7 +65,7 @@ def login_request(request):
             print("Missing Input!")
             return redirect('auth')
         print(email,password)
-        Leads = config.O_DATA.format("/LeadsList")
+        
         try:
             Customer = config.O_DATA.format("/CustomersList")
             CustomerResponse = session.get(Customer, timeout=10).json()
@@ -131,6 +141,7 @@ def login_request(request):
                         messages.error(
                             request, "Invalid Credentials. Please reset your password else create a new account")
                         return redirect('auth')
+            Leads = config.O_DATA.format("/LeadsList")
             LeadResponse = session.get(Leads, timeout=10).json()
             for lead in LeadResponse['value']:
                 if lead['Email_Address'] == email and lead['Verified']==True:
@@ -338,7 +349,46 @@ def resetPassword(request):
             messages.error(request,'Missing Input')
             return redirect('login')
         session = requests.Session()
-        session.auth = config.AUTHS   
+        session.auth = config.AUTHS
+        try:
+            Customer = config.O_DATA.format("/CustomersList")
+            CustomerResponse = session.get(Customer, timeout=10).json()
+            for applicant in CustomerResponse['value']:
+                if applicant['Email_Address'] == email and applicant['Verified']==True:
+                    request.session['resetMail'] = email
+                    send_reset_mail(email,request)
+                    messages.success(request, 'We sent you an email to reset your password')
+                    return redirect('auth')
+            Applicant = config.O_DATA.format("/ApplicantsList")
+            ApplicantResponse = session.get(Applicant, timeout=10).json()
+            for applicant in ApplicantResponse['value']:
+                if applicant['Email_Address'] == email and applicant['Verified']==True:
+                    request.session['resetMail'] = email
+                    send_reset_mail(email,request)
+                    messages.success(request, 'We sent you an email to reset your password')
+                    return redirect('auth')
+            Potential = config.O_DATA.format("/PotentialsList")
+            PotentialResponse = session.get(Potential, timeout=10).json()
+            for applicant in PotentialResponse['value']:
+                if applicant['Email_Address'] == email and applicant['Verified']==True:
+                    request.session['resetMail'] = email
+                    send_reset_mail(email,request)
+                    messages.success(request, 'We sent you an email to reset your password')
+                    return redirect('auth')
+            Leads = config.O_DATA.format("/LeadsList")
+            LeadResponse = session.get(Leads, timeout=10).json()
+            for lead in LeadResponse['value']:
+                if lead['Email_Address'] == email and lead['Verified']==True:
+                    request.session['resetMail'] = email
+                    send_reset_mail(email,request)
+                    messages.success(request, 'We sent you an email to reset your password')
+                    return redirect('auth')
+            messages.error(request,"Invalid Email")
+            return redirect('auth')
+        except Exception as e:
+            messages.error(request, e)
+            print(e)
+            return redirect('login')       
     return redirect("login")
 
 def reset_request(request):
@@ -347,10 +397,9 @@ def reset_request(request):
             email = request.session['resetMail']
             password = request.POST.get('password')
             password2 = request.POST.get('password2')
-            verified = True
         except KeyError:
             messages.info(request,"Session Expired, Raise new password reset request")
-            return redirect('login')
+            return redirect('auth')
         except  ValueError:
             messages.error(request,'Invalid Input')
             return redirect('reset')
@@ -363,18 +412,20 @@ def reset_request(request):
         cipher_suite = Fernet(config.ENCRYPT_KEY)
         encrypted_text = cipher_suite.encrypt(password.encode('ascii'))
         myPassword = base64.urlsafe_b64encode(encrypted_text).decode("ascii") 
+        nameChars = ''.join(secrets.choice(string.ascii_uppercase + string.digits)
+                        for i in range(5))
+        verificationToken = str(nameChars)
         try:
-            response = config.CLIENT.service.FnResetPassword(email, myPassword,verified)
+            response = config.CLIENT.service.FnResetPassword(email, myPassword,verificationToken)
             print(response)
             if response == True:
                 messages.success(request,"Reset successful")
                 del request.session['resetMail']
-                return redirect('login')
+                return redirect('auth')
             else:
                 messages.error(request,"Error Try Again")
                 return redirect('reset')
         except Exception as e:
             messages.error(request, e)
             print(e)
-            return redirect('reset')
     return render(request,'reset.html')
