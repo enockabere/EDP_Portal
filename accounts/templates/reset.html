@@ -19,7 +19,7 @@
         <div class="row">
             <div class="col-md-12">
                 <div class="activateForm">
-                    <form action="{% url 'reset' %}" method="POST">
+                    <form action="{% url 'reset_request' %}" method="POST">
                         {% csrf_token %}
                         <div class="mb-2">
                             <label class="form-label">Password</label>

@@ -402,19 +402,21 @@ def reset_request(request):
             return redirect('auth')
         except  ValueError:
             messages.error(request,'Invalid Input')
-            return redirect('reset')
+            return redirect('reset_request')
         if len(password) < 6:
             messages.error(request, "Password should be at least 6 characters")
-            return redirect('reset')
+            return redirect('reset_request')
         if password != password2:
             messages.error(request, "Password mismatch")
-            return redirect('reset')   
+            return redirect('reset_request')   
         cipher_suite = Fernet(config.ENCRYPT_KEY)
         encrypted_text = cipher_suite.encrypt(password.encode('ascii'))
         myPassword = base64.urlsafe_b64encode(encrypted_text).decode("ascii") 
         nameChars = ''.join(secrets.choice(string.ascii_uppercase + string.digits)
                         for i in range(5))
+
         verificationToken = str(nameChars)
+
         try:
             response = config.CLIENT.service.FnResetPassword(email, myPassword,verificationToken)
             print(response)
@@ -424,8 +426,9 @@ def reset_request(request):
                 return redirect('auth')
             else:
                 messages.error(request,"Error Try Again")
-                return redirect('reset')
+                return redirect('reset_request')
         except Exception as e:
-            messages.error(request, e)
+            messages.info(request, e)
             print(e)
+            return redirect('reset_request')
     return render(request,'reset.html')

@@ -209,67 +209,59 @@ def LoanDetail(request,pk):
         CustomerName=request.session['CustomerName']
         CustomerNumber=request.session['CustomerNo']
         MemberNo=request.session['MemberNo']
-        CustomerEmail=request.session['CustomerEmail']
         stage=request.session['stage']
         session = requests.Session()
         session.auth = config.AUTHS
 
         LoanProduct = config.O_DATA.format("/LoanProducts")
-        Applicant = config.O_DATA.format("/ApplicantsList")
+        Applicant = config.O_DATA.format("/ApplicantsList?$filter=No%20eq%20%27{No}%27").format(No=CustomerNumber)
         Approved =[]
         try:
             LoanProductResponse = session.get(LoanProduct, timeout=10).json()
             loanProducts = LoanProductResponse['value']
             ApplicantResponse = session.get(Applicant, timeout=10).json()
             for applicant in ApplicantResponse['value']:
-                if applicant['No'] == CustomerNumber:
                     res = applicant
-            Loans = config.O_DATA.format("/Loans")
+            Loans = config.O_DATA.format("/Loans?$filter=Loan_Number%20eq%20%27{pk}%27").format(pk=pk)
             response = session.get(Loans, timeout=10).json()
             for loan in response['value']:
-                if loan['Loan_Number'] == pk:
-                    Loan = loan
+                loanRes=loan
                 if loan['Approval_Status'] == 'Approved' and loan['Member_Number'] == MemberNo:
                     output_json = json.dumps(loan)
                     Approved.append(json.loads(output_json))
             ExpenseHead = config.O_DATA.format("/SchoolExpenses")
             ExpenseHeadResponse = session.get(ExpenseHead, timeout=10).json()
             Expense = ExpenseHeadResponse['value']
-            SchoolEnrollment = config.O_DATA.format("/SchoolEnrollment")
+            SchoolEnrollment = config.O_DATA.format("/SchoolEnrollment?$filter=Document_No%20eq%20%27{pk}%27").format(pk=pk)
             SchoolEnrollmentResponse = session.get(SchoolEnrollment, timeout=10).json()
             Enrollment = []
             for enroll in SchoolEnrollmentResponse['value']:
-                if enroll['Document_No'] == pk:
-                    output_json = json.dumps(enroll)
-                    Enrollment.append(json.loads(output_json))
-            SchoolPassRate=config.O_DATA.format("/SchoolPassRate")
+                output_json = json.dumps(enroll)
+                Enrollment.append(json.loads(output_json))
+            SchoolPassRate=config.O_DATA.format("/SchoolPassRate?$filter=Document_No%20eq%20%27{pk}%27").format(pk=pk)
             PassRate = []
             PassRateResponse = session.get(SchoolPassRate, timeout=10).json()
             for rate in PassRateResponse['value']:
-                if rate['Document_No'] == pk:
-                    output_json = json.dumps(rate)
-                    PassRate.append(json.loads(output_json))
-            SchoolProjectDetails=config.O_DATA.format("/SchoolProjectDetails")
+                output_json = json.dumps(rate)
+                PassRate.append(json.loads(output_json))
+            SchoolProjectDetails=config.O_DATA.format("/SchoolProjectDetails?$filter=Document_No%20eq%20%27{pk}%27").format(pk=pk)
             Project = []
             ProjectResponse = session.get(SchoolProjectDetails, timeout=10).json()
             for project in ProjectResponse['value']:
-                if project['Document_No'] == pk:
-                    output_json = json.dumps(project)
-                    Project.append(json.loads(output_json))
-            LoanSchoolRevenue=config.O_DATA.format("/LoanSchoolRevenue")
+                output_json = json.dumps(project)
+                Project.append(json.loads(output_json))
+            LoanSchoolRevenue=config.O_DATA.format("/LoanSchoolRevenue?$filter=Loan_No%20eq%20%27{pk}%27").format(pk=pk)
             Revenue = []
-            RevenueResponse = session.get(LoanSchoolRevenue, timeout=10).json()
+            RevenueResponse = session.get(LoanSchoolRevenue,timeout=10).json()
             for revenue in RevenueResponse['value']:
-                if revenue['Loan_No'] == pk:
-                    output_json = json.dumps(revenue)
-                    Revenue.append(json.loads(output_json))
-            LoanSchoolExpenses=config.O_DATA.format("/LoanSchoolExpenses")
+                output_json = json.dumps(revenue)
+                Revenue.append(json.loads(output_json))
+            LoanSchoolExpenses=config.O_DATA.format("/LoanSchoolExpenses?$filter=Loan_No%20eq%20%27{pk}%27").format(pk=pk)
             Expenses = []
             RevenueResponse = session.get(LoanSchoolExpenses, timeout=10).json()
             for expense in RevenueResponse['value']:
-                if revenue['Loan_No'] == pk:
-                    output_json = json.dumps(expense)
-                    Expenses.append(json.loads(output_json))
+                output_json = json.dumps(expense)
+                Expenses.append(json.loads(output_json))
         except requests.exceptions.RequestException as e:
             print(e)
             messages.info(request, "Whoops! Something went wrong. Please Login to Continue")
@@ -277,14 +269,15 @@ def LoanDetail(request,pk):
 
         todays_date = dt.datetime.now().strftime("%b. %d, %Y %A")
         
-    except KeyError:
+    except KeyError as e:
+        print(e)
         messages.info(request, "Session Expired. Please Login")
         return redirect('auth')
 
     ctx = {"today": todays_date, "loanProducts":loanProducts,
-        "stage":stage, "data":res, "res":Loan,"Expense":Expense,
+        "stage":stage, "data":res, "res":loanRes,"Expense":Expense,
         "response": Approved, "Enrollment":Enrollment,"PassRate":PassRate,
-        "Project":Project,"Revenue":Revenue,"Expenses":Expenses}
+        "Project":Project,"Revenue":Revenue,"Expenses":Expenses, "full":CustomerName}
     return render(request, 'loanDetail.html', ctx)
 
 def FnSchoolLoanRevenue(request):
