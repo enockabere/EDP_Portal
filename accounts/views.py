@@ -19,7 +19,6 @@ from  django.template.loader import render_to_string
 from django.core.mail import EmailMessage
 import threading
 import datetime as dt
-# Create your views here.
 
 class EmailThread(threading.Thread):
 
