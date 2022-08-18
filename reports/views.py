@@ -15,17 +15,16 @@ def Reports(request):
         CustomerName=request.session['CustomerName']
         CustomerNumber=request.session['CustomerNo']
         MemberNo=request.session['MemberNo']
-        CustomerEmail=request.session['CustomerEmail']
         stage=request.session['stage']
         todays_date = dt.datetime.now().strftime("%b. %d, %Y %A")
         session = requests.Session()
         session.auth = config.AUTHS
-        Loans = config.O_DATA.format("/Loans")
+        Loans = config.O_DATA.format("/Loans?$filter=Member_Number%20eq%20%27{MemberNo}%27").format(MemberNo=MemberNo)
         try:
             response = session.get(Loans, timeout=10).json()
             Approved = []
             for document in response['value']:
-                if document['Approval_Status'] == 'Approved' and document['Member_Number'] == MemberNo:
+                if document['Approval_Status'] == 'Approved':
                     output_json = json.dumps(document)
                     Approved.append(json.loads(output_json))
         except requests.exceptions.RequestException as e:
@@ -46,7 +45,6 @@ def FnDetailedCustomerReport(request):
             try:
                 response = config.CLIENT.service.FnDetailedCustomerReport(
                     clientCode, filenameFromApp)
-                print(response)
                 try:
                     buffer = BytesIO.BytesIO()
                     content = base64.b64decode(response)

@@ -187,9 +187,14 @@
                                     <td>{{data.Academic_Year}}</td>
                                     <td>{{data.School_Strength}}</td>
                                     <td>
-                                        <form action="" method="post" style="display: inline-block;">
+                                        <form action="{% url 'FnSchoolLoanEnrolment' %}" method="post"
+                                            style="display: inline-block;">
                                             {% csrf_token %}
-                                            <input type="hidden" name="lineNo" value="{{res.Line_No_}}">
+                                            <input type="hidden" name="applicantNo" value="{{res.Loan_Number}}">
+                                            <input type="hidden" name="entryNo" value="{{data.Entry_No}}">
+                                            <input type="hidden" name="myAction" value="delete">
+                                            <input type="hidden" name="academicYear" value="1000">
+                                            <input type="hidden" name="schoolStrength" value="None">
                                             <button type="submit" class="btn btn-danger" data-toggle="tooltip"
                                                 data-placement="top" title="Delete"><i class="fas fa-trash-alt"></i>
                                             </button>
@@ -233,9 +238,15 @@
                                     <td>{{data.Pass_Rate}}</td>
                                     <td>{{data.Year}}</td>
                                     <td>
-                                        <form action="" method="post" style="display: inline-block;">
+                                        <form action="{% url 'FnSchoolLoanPassRate' %}" method="post"
+                                            style="display: inline-block;">
                                             {% csrf_token %}
-                                            <input type="hidden" name="lineNo" value="{{res.Line_No_}}">
+                                            <input type="hidden" name="entryNo" value="{{data.Entry_No}}">
+                                            <input type="hidden" name="applicantNo" value="{{res.Loan_Number}}">
+                                            <input type="hidden" name="kcpeStudents" value="0">
+                                            <input type="hidden" name="passRate" value="0">
+                                            <input type="hidden" name="year" value="0">
+                                            <input type="hidden" name="myAction" value="delete">
                                             <button type="submit" class="btn btn-danger" data-toggle="tooltip"
                                                 data-placement="top" title="Delete"><i class="fas fa-trash-alt"></i>
                                             </button>
@@ -279,9 +290,15 @@
                                     <td>{{data.Estimated_Cost}}</td>
                                     <td>{{data.Brief_Project_Description}}</td>
                                     <td>
-                                        <form action="" method="post" style="display: inline-block;">
+                                        <form action="{% url 'FnSchoolLoanProjectDetails' %}" method="post"
+                                            style="display: inline-block;">
                                             {% csrf_token %}
-                                            <input type="hidden" name="lineNo" value="{{res.Line_No_}}">
+                                            <input type="hidden" name="applicantNo" value="{{res.Loan_Number}}">
+                                            <input type="hidden" name="entryNo" value="{{data.Entry_No}}">
+                                            <input type="hidden" name="estimatedCost" value="0">
+                                            <input type="hidden" name="costType" value="0">
+                                            <input type="hidden" name="projectDescription" value="None">
+                                            <input type="hidden" name="myAction" value="delete">
                                             <button type="submit" class="btn btn-danger" data-toggle="tooltip"
                                                 data-placement="top" title="Delete"><i class="fas fa-trash-alt"></i>
                                             </button>
@@ -324,15 +341,7 @@
                                     <th>Term One Fees</th>
                                     <th>Term Two Fees</th>
                                     <th>Term Three Fees</th>
-                                    <th>
-                                        <form action="" method="post" style="display: inline-block;">
-                                            {% csrf_token %}
-                                            <input type="hidden" name="lineNo" value="{{res.Line_No_}}">
-                                            <button type="submit" class="btn btn-danger" data-toggle="tooltip"
-                                                data-placement="top" title="Delete"><i class="fas fa-trash-alt"></i>
-                                            </button>
-                                        </form>
-                                    </th>
+                                    <th> Action </th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -350,9 +359,19 @@
                                     <td>{{data.Term_Two_Fees}}</td>
                                     <td>{{data.Term_Three_Fees}}</td>
                                     <td>
-                                        <form action="" method="post" style="display: inline-block;">
+                                        <form action="{% url 'FnSchoolLoanRevenue' %}" method="post"
+                                            style="display: inline-block;">
                                             {% csrf_token %}
-                                            <input type="hidden" name="lineNo" value="{{res.Line_No_}}">
+                                            <input type="hidden" name="applicantNo" value="{{res.Loan_Number}}">
+                                            <input type="hidden" name="entryNo" value="{{data.Entry_No}}">
+                                            <input type="hidden" name="edpClass" value="None">
+                                            <input type="hidden" name="streams" value="0">
+                                            <input type="hidden" name="termOneFees" value="0">
+                                            <input type="hidden" name="termTwoFees" value="0">
+                                            <input type="hidden" name="termThreeFees" value="0">
+                                            <input type="hidden" name="newStudentAdmission" value="0">
+                                            <input type="hidden" name="myAction" value="delete">
+                                            <input type="hidden" name="admissionFees" value="0">
                                             <button type="submit" class="btn btn-danger" data-toggle="tooltip"
                                                 data-placement="top" title="Delete"><i class="fas fa-trash-alt"></i>
                                             </button>
@@ -400,9 +419,15 @@
                                     <td>{{data.Expense_Type}}</td>
                                     <td>{{data.Multiplier_Factor}}</td>
                                     <td>
-                                        <form action="" method="post" style="display: inline-block;">
+                                        <form action="{% url 'FnSchoolLoanExpenses' %}" method="post"
+                                            style="display: inline-block;">
                                             {% csrf_token %}
-                                            <input type="hidden" name="lineNo" value="{{res.Line_No_}}">
+                                            <input type="hidden" name="applicantNo" value="{{res.Loan_Number}}">
+                                            <input type="hidden" name="entryNo" value="{{data.Entry_No}}">
+                                            <input type="hidden" name="expenseHead" value="None">
+                                            <input type="hidden" name="monthlyExpense" value="0">
+                                            <input type="hidden" name="multiplierFactor" value="0">
+                                            <input type="hidden" name="myAction" value="delete">
                                             <button type="submit" class="btn btn-danger" data-toggle="tooltip"
                                                 data-placement="top" title="Delete"><i class="fas fa-trash-alt"></i>
                                             </button>
@@ -416,7 +441,7 @@
                 </div>
             </div>
         </div>
-        <div class="row my-2">
+        <div class="row my-2 py-3">
             <div class="col-md-12">
                 <div class="card">
                     <button type="button" class="btn btn-primary btn-sm my-3 mx-3" id="LoanData">
@@ -545,6 +570,8 @@
                         </div>
                         {% csrf_token %}
                         <input type="hidden" id="applicantNo" name="applicantNo" value="{{res.Loan_Number}}">
+                        <input type="hidden" name="myAction" value="insert">
+                        <input type="hidden" name="entryNo" value="0">
                         <div class="row">
                             <div class="col-md-12">
                                 <label class="form-label">Academic Year <span class="text-danger">*</span></label>
@@ -587,11 +614,13 @@
                 <div class="modal-body">
                     <form class="myForm" method="post" action="{% url 'FnSchoolLoanPassRate' %}" novalidate>
                         {% csrf_token %}
+                        <input type="hidden" name="entryNo" value="0">
                         <input type="hidden" id="applicantNo" name="applicantNo" value="{{res.Loan_Number}}">
+                        <input type="hidden" name="myAction" value="insert">
                         <div class="row">
                             <div class="col-md-12">
                                 <div class="mb-2">
-                                    <label class="form-label">KCPE Students<span class="text-danger">*</span></label>
+                                    <label class="form-label">KCPE Students</label>
                                     <input type="number" class="form-control" name="kcpeStudents" id="kcpeStudents"
                                         required>
                                 </div>
@@ -638,6 +667,8 @@
                     <form class="myForm" method="post" action="{% url 'FnSchoolLoanProjectDetails' %}" novalidate>
                         {% csrf_token %}
                         <input type="hidden" id="applicantNo" name="applicantNo" value="{{res.Loan_Number}}">
+                        <input type="hidden" name="entryNo" value="0">
+                        <input type="hidden" name="myAction" value="insert">
                         <div class="row">
                             <div class="col-md-12">
                                 <div class="mb-2">
@@ -685,8 +716,10 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <form action="" method="post" class="myForm" enctype="multipart/form-data">
+                    <form action="{% url 'FnUploadAttachedDocument' %}" method="post" class="myForm"
+                        enctype="multipart/form-data">
                         {% csrf_token %}
+                        <input type="hidden" name="docNo" value="{{res.Loan_Number}}">
                         <div class=" mb-3">
                             <label class="form-label">Attachments</label>
                             <input class="form-control" name="attachment" type="file" multiple>
@@ -715,6 +748,8 @@
                     <form class="myForm" action="{% url 'FnSchoolLoanRevenue' %}" method="post" novalidate>
                         {% csrf_token %}
                         <input type="hidden" id="applicantNo" name="applicantNo" value="{{res.Loan_Number}}">
+                        <input type="hidden" name="entryNo" value="0">
+                        <input type="hidden" name="myAction" value="insert">
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="mb-2">
@@ -791,6 +826,8 @@
                     <form class="myForm" action="{% url 'FnSchoolLoanExpenses' %}" method="post" novalidate>
                         {% csrf_token %}
                         <input type="hidden" id="applicantNo" name="applicantNo" value="{{res.Loan_Number}}">
+                        <input type="hidden" name="entryNo" value="0">
+                        <input type="hidden" name="myAction" value="insert">
                         <div class="row">
                             <div class="col-md-12">
                                 <div class="mb-2">

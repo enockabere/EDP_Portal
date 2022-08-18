@@ -77,17 +77,41 @@
     h5 {
         font-size: 14px;
     }
+
+    .data-card {
+        border-radius: 0.5em;
+        background: rgb(248, 248, 248);
+        padding: 2.75em 2.5em;
+        box-shadow: 0 1.5em 2.5em -0.5em rgba(0, 0, 0, 0.1);
+        transition: transform 0.45s ease, background 0.45s ease;
+        border: none;
+    }
+
+    .display-5 {
+        color: #627084;
+        text-transform: uppercase;
+        font-size: 1.125em;
+        font-weight: 700;
+        line-height: 1;
+        letter-spacing: 0.1em;
+        margin: 0 0 1.777777778em;
+        transition: color 0.45s ease;
+    }
+
+    .data-card:hover h1 {
+        color: #008080;
+    }
 </style>
 <script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk="
     crossorigin="anonymous"></script>
 <section class="dash2">
 
-    <div class="content-wrapper general-bg" style="padding-bottom: 5rem;" id="results">
+    <div class="content-wrapper general-bg" style="padding-bottom: 22rem;" id="results">
         <!--alert -->
         {% include 'alerts.html' %}
         <div class="row">
             <div class="col-md-12">
-                <div class="card card-body">
+                <div class="card card-body data-card">
                     <h1 class="heading display-5 pb-3">Loan Calculator</h1>
                     <div class="row">
                         <div class="col-md-9">

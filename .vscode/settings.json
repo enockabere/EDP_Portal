@@ -3,6 +3,9 @@
         "Fernet",
         "jsons",
         "Kard",
+        "maxtfs",
+        "mintfs",
+        "mtfs",
         "simplejson"
     ]
 }

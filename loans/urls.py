@@ -23,4 +23,5 @@ urlpatterns = [
     path('ApplyLoan',views.ApplyLoan,name='ApplyLoan'),
     path('SubBranch',views.SubBranch,name='SubBranch'),
     path('subProductCode',views.subProductCode,name='subProductCode'),
+    path('FnUploadAttachedDocument',views.FnUploadAttachedDocument,name='FnUploadAttachedDocument'),
 ]

@@ -28,42 +28,39 @@ def dashboard(request):
         CustomerEmail=request.session['CustomerEmail']
         stage=request.session['stage']
 
-        LeadsData = config.O_DATA.format("/LeadsList")
+        LeadsData = config.O_DATA.format("/LeadsList?$filter=No%20eq%20%27{CustomerNumber}%27%20and%20Email_Address%20eq%20%27{CustomerEmail}%27").format(CustomerNumber=CustomerNumber,CustomerEmail=CustomerEmail)
         LeadsResponse = session.get(LeadsData, timeout=10).json()  
         for lead in LeadsResponse['value']:
-            if lead['No'] == CustomerNumber and lead['Email_Address']==CustomerEmail:
-                LeadRes = lead 
-                Coordinates = lead['Coordinates'] 
-        PotentialData = config.O_DATA.format("/PotentialsList")
+            LeadRes = lead 
+            Coordinates = lead['Coordinates'] 
+        PotentialData = config.O_DATA.format("/PotentialsList?$filter=No%20eq%20%27{CustomerNumber}%27%20and%20Email_Address%20eq%20%27{CustomerEmail}%27").format(CustomerNumber=CustomerNumber,CustomerEmail=CustomerEmail)
         PotentialResponse = session.get(PotentialData, timeout=10).json()  
         for potential in PotentialResponse['value']:
-            if potential['No'] == CustomerNumber and potential['Email_Address']==CustomerEmail:
-                PotentialRes = potential
-                Coordinates = potential['Coordinates'] 
-        CustomerData = config.O_DATA.format("/CustomersList")
+            PotentialRes = potential
+            Coordinates = potential['Coordinates'] 
+        CustomerData = config.O_DATA.format("/CustomersList?$filter=No%20eq%20%27{CustomerNumber}%27%20and%20Email_Address%20eq%20%27{CustomerEmail}%27").format(CustomerNumber=CustomerNumber,CustomerEmail=CustomerEmail)
         CustomerResponse = session.get(CustomerData, timeout=10).json()  
         for customer in CustomerResponse['value']:
-            if customer['No'] == CustomerNumber and customer['Email_Address']==CustomerEmail:
-                CustomerRes = customer
-        Loans = config.O_DATA.format("/Loans")
+            CustomerRes = customer
+        Loans = config.O_DATA.format("/Loans?$filter=Member_Number%20eq%20%27{MemberNo}%27").format(MemberNo=MemberNo)
         LoanResponse = session.get(Loans, timeout=10).json()
         openDoc = []
         ApprovedLoans = []
         RejectedLoans = []
         PendingLoans = []
         for document in LoanResponse['value']:
-                if document['Member_Number'] == MemberNo and document['Approval_Status'] == 'Open':
-                    output_json = json.dumps(document)
-                    openDoc.append(json.loads(output_json))
-                if document['Member_Number'] == MemberNo and document['Approval_Status'] == 'Approved':
-                    output_json = json.dumps(document)
-                    ApprovedLoans.append(json.loads(output_json))
-                if document['Member_Number'] == MemberNo and document['Approval_Status'] == 'Disapproved':
-                    output_json = json.dumps(document)
-                    RejectedLoans.append(json.loads(output_json))
-                if document['Member_Number'] == MemberNo and document['Approval_Status'] == "Pending Approval":
-                    output_json = json.dumps(document)
-                    PendingLoans.append(json.loads(output_json))
+            if  document['Approval_Status'] == 'Open':
+                output_json = json.dumps(document)
+                openDoc.append(json.loads(output_json))
+            if  document['Approval_Status'] == 'Approved':
+                output_json = json.dumps(document)
+                ApprovedLoans.append(json.loads(output_json))
+            if  document['Approval_Status'] == 'Disapproved':
+                output_json = json.dumps(document)
+                RejectedLoans.append(json.loads(output_json))
+            if document['Approval_Status'] == "Pending Approval":
+                output_json = json.dumps(document)
+                PendingLoans.append(json.loads(output_json))
     except KeyError as e:
         messages.success(request, "Session Expired. Please Login")
         print(e)

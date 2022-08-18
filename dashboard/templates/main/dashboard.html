@@ -2,12 +2,63 @@
 {% load bootstrap5 %}
 {% load static %}
 {% block main %}
+<style>
+    .data-card {
+        border-radius: 0.5em;
+        background: rgb(248, 248, 248);
+        padding: 2.75em 2.5em;
+        box-shadow: 0 1.5em 2.5em -0.5em rgba(0, 0, 0, 0.1);
+        transition: transform 0.45s ease, background 0.45s ease;
+        border: none;
+    }
 
+    .data-card h6 {
+        color: #627084;
+        text-transform: uppercase;
+        font-size: 1.125em;
+        font-weight: 700;
+        line-height: 1;
+        letter-spacing: 0.1em;
+        margin: 0 0 1.777777778em;
+        transition: color 0.45s ease;
+    }
+
+    .data-card:hover h6 {
+        color: #008080;
+    }
+
+    @-webkit-keyframes point {
+        0% {
+            transform: translateX(0);
+        }
+
+        100% {
+            transform: translateX(0.125em);
+        }
+    }
+
+    @keyframes point {
+        0% {
+            transform: translateX(0);
+        }
+
+        100% {
+            transform: translateX(0.125em);
+        }
+    }
+
+    /* --first: #008080;
+    --green: #04fb14; */
+
+    .data-card:hover {
+        transform: scale(1.01);
+    }
+</style>
 <section>
-    <div class="content-wrapper LoanWrapper">
-        <div class="row py-3" id="proBanner">
+    <div class="content-wrapper" style="background-color: #ebf6f5;">
+        <div class="row" id="proBanner">
             <div class="col-md-12">
-                <span class="d-flex align-items-center purchase-popup">
+                <span class="d-flex align-items-center purchase-popup bg-white">
                     <img src="../../../static/img/logo/fav.png" width="180px" class="img-fluid" alt="" srcset="">
                     <h2 class="text-dark font-weight-bold" style="margin-left: auto;margin-right:0;"> Overview dashboard
                     </h2>
@@ -23,8 +74,8 @@
         {% include 'main/documentation.html' %}
 
         {% else %}
-        <div class="row py-3 gx-2">
-            <div class="col-xl-3 col-lg-6 col-sm-6 grid-margin stretch-card">
+        <div class="row py-2 gx-2">
+            <div class="col-xl-3 col-lg-6 col-sm-6 py-2 grid-margin stretch-card">
                 <div class="card h-100 l-bg-green-dark">
                     <div class="card-body text-center">
                         <h5 class="mb-2 text-dark font-weight-normal">Number of Students</h5>
@@ -35,7 +86,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-xl-3 col-lg-6 col-sm-6 grid-margin stretch-card ">
+            <div class="col-xl-3 col-lg-6 py-2 col-sm-6 grid-margin stretch-card ">
                 <div class="card h-100 l-bg-orange-dark">
                     <div class="card-body text-center">
                         <h5 class="mb-2 text-dark font-weight-normal">Number of Teachers</h5>
@@ -46,22 +97,22 @@
                     </div>
                 </div>
             </div>
-            <div class="col-xl-3  col-lg-6 col-sm-6 grid-margin stretch-card">
+            <div class="col-xl-3 py-2  col-lg-6 col-sm-6 grid-margin stretch-card">
                 <div class="card h-100 l-bg-blue-dark ">
                     <div class="card-body text-center">
                         <h5 class="mb-2 text-dark font-weight-normal">Min Termly Fee / Student</h5>
-                        <h2 class="mb-4 text-dark font-weight-bold">{{customer.Minimum_Termly_Fee_Per_Student}}</h2>
+                        <h2 class="mb-4 text-dark font-weight-bold" id="mintfs"></h2>
                         <div class="iconKard mx-auto text-center">
                             <i class="mdi mdi-wallet icon-md absolute-center text-dark"></i>
                         </div>
                     </div>
                 </div>
             </div>
-            <div class="col-xl-3 col-lg-6 col-sm-6 grid-margin stretch-card">
+            <div class="col-xl-3 py-2 col-lg-6 col-sm-6 grid-margin stretch-card">
                 <div class="card h-100 l-bg-orange-dark">
                     <div class="card-body text-center">
                         <h5 class="mb-2 text-dark font-weight-normal">Max Termly Fee / Student</h5>
-                        <h2 class="mb-4 text-dark font-weight-bold">{{customer.Maximum_Termly_Fee_Per_Student}}</h2>
+                        <h2 class="mb-4 text-dark font-weight-bold" id="maxtfs"></h2>
                         <div class="iconKard mx-auto text-center">
                             <i class="mdi mdi-wallet icon-md absolute-center text-dark"></i>
                         </div>
@@ -69,12 +120,12 @@
                 </div>
             </div>
         </div>
-        <div class="row py-2">
+        <div class="row">
             <div class="col-md-12 mb-2">
-                <div class="card card-danger-gradient">
-                    <div class="card-body mb-4">
-                        <div class="card p-3" style="background: #eaebeb;">
-                            <div class="card-title text-dark">
+                <div class="card card-danger-gradient" style="border: none;">
+                    <div class="card-body mb-4 data-card">
+                        <div class="card p-2" style="background: #eaebeb;border: none;">
+                            <div class="card-title ">
                                 <h6>Loan Management</h6>
                             </div>
                             <div class="card-body">
@@ -119,7 +170,7 @@
                             </script>
                         </div>
                     </div>
-                    <div class="card-body bg-white pt-2">
+                    <div class="card-body pt-2" style="border-radius: 0.5em;background:#F3F3F3;">
                         <div class="row pt-2">
                             <div class="col-sm-3">
                                 <div class="border-right border-md-0">
@@ -205,31 +256,16 @@
 </section>
 
 <script>
-    let url = `ws://${window.location.host}/ws/socket-server/`
-    const chatSocket = new WebSocket(url)
+    $(document).ready(function () {
+        var mtfs = '{{customer.Minimum_Termly_Fee_Per_Student}}'
+        var n = mtfs.toString().split(".");
+        n[0] = n[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+        $("#mintfs").empty().append(n.join("."));
 
-    chatSocket.onmessage = function (e) {
-        let data = JSON.parse(e.data)
-        console.log('Data:', data)
-
-        if (data.type === 'chat') {
-            let message = document.getElementById('messages')
-
-            message.insertAdjacentHTML('beforeend', `<div>
-                <p>${data.message}</p></div>`)
-        }
-    }
-
-    let form = document.getElementById('form')
-
-    form.addEventListener('submit', (e) => {
-        e.preventDefault()
-        let message = e.target.message.value;
-
-        chatSocket.send(JSON.stringify({
-            'message': message
-        }))
-        form.reset()
+        var maxtfs = '{{customer.Maximum_Termly_Fee_Per_Student}}'
+        var x = maxtfs.toString().split(".");
+        x[0] = x[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+        $("#maxtfs").empty().append(x.join("."));
     })
 </script>
 

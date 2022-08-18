@@ -75,14 +75,12 @@ def Loan_Request(request):
         CustomerName=request.session['CustomerName']
         CustomerNumber=request.session['CustomerNo']
         MemberNo=request.session['MemberNo']
-        CustomerEmail=request.session['CustomerEmail']
         stage=request.session['stage']
         session = requests.Session()
         session.auth = config.AUTHS
 
         LoanProduct = config.O_DATA.format("/LoanProducts")
-        EDPBranch = config.O_DATA.format("/DimensionValues")
-        Loans = config.O_DATA.format("/Loans")
+        Loans = config.O_DATA.format("/Loans?$filter=Member_Number%20eq%20%27{MemberNo}%27").format(MemberNo=MemberNo)
         try:
             response = session.get(Loans, timeout=10).json()
             openDoc = []
@@ -90,16 +88,16 @@ def Loan_Request(request):
             Rejected = []
             Pending = []
             for document in response['value']:
-                if document['Approval_Status'] == 'Open' and document['Member_Number'] == MemberNo:
+                if document['Approval_Status'] == 'Open':
                     output_json = json.dumps(document)
                     openDoc.append(json.loads(output_json))
-                if document['Approval_Status'] == 'Approved' and document['Member_Number'] == MemberNo:
+                if document['Approval_Status'] == 'Approved':
                     output_json = json.dumps(document)
                     Approved.append(json.loads(output_json))
-                if document['Approval_Status'] == 'Disapproved' and document['Member_Number'] == MemberNo:
+                if document['Approval_Status'] == 'Disapproved':
                     output_json = json.dumps(document)
                     Rejected.append(json.loads(output_json))
-                if document['Approval_Status'] == "Pending Approval" and document['Member_Number'] == MemberNo:
+                if document['Approval_Status'] == "Pending Approval":
                     output_json = json.dumps(document)
                     Pending.append(json.loads(output_json))
             LoanProductResponse = session.get(LoanProduct, timeout=10).json()
@@ -108,13 +106,12 @@ def Loan_Request(request):
             LoanPurposes = config.O_DATA.format("/LoanPurposes")
             LoanPurposesResponse = session.get(LoanPurposes, timeout=10).json()
             Purpose = LoanPurposesResponse['value']
-
+            EDPBranch = config.O_DATA.format("/DimensionValues?$filter=Dimension_Code%20eq%20%27BRANCH%27")
             BranchResponse = session.get(EDPBranch, timeout=10).json()
             Branch = []
             for branch in BranchResponse['value']:
-                if branch['Dimension_Code'] == 'BRANCH':
-                    output_json = json.dumps(branch)
-                    Branch.append(json.loads(output_json))
+                output_json = json.dumps(branch)
+                Branch.append(json.loads(output_json))
         except requests.exceptions.RequestException as e:
             print(e)
             messages.info(request, "Whoops! Something went wrong. Please Login to Continue")
@@ -134,7 +131,7 @@ def Loan_Request(request):
             "count": counts, "response": Approved,
             "counter": counter, "rej": Rejected,
             'reject': reject, "pend": pend,
-            "pending": Pending, "Purpose":Purpose
+            "pending": Pending, "Purpose":Purpose,"full":CustomerName
             }
     return render(request, 'loan.html', ctx)
 
@@ -283,7 +280,7 @@ def LoanDetail(request,pk):
 def FnSchoolLoanRevenue(request):
     if request.method == 'POST':
         try:
-            entryNo = 0
+            entryNo = int(request.POST.get('entryNo'))
             applicantNo = request.POST.get('applicantNo')
             edpClass = request.POST.get('edpClass')
             streams = int(request.POST.get('streams'))
@@ -292,7 +289,7 @@ def FnSchoolLoanRevenue(request):
             termThreeFees = float(request.POST.get('termThreeFees'))
             newStudentAdmission = float(request.POST.get('newStudentAdmission'))
             admissionFees = float(request.POST.get('admissionFees'))
-            myAction = 'insert'
+            myAction = request.POST.get('myAction')
         except KeyError:
             messages.info(request, "Session Expired. Please Login")
             return redirect('auth')
@@ -304,9 +301,6 @@ def FnSchoolLoanRevenue(request):
             if response['return_value'] == True:
                 messages.success(request,"Successfully Added.")
                 return redirect('LoanDetail',pk=applicantNo)
-            if response['return_value'] == False:
-                messages.error(request,"Not Added.")
-                return redirect('LoanDetail',pk=applicantNo)
         except Exception as e:
             print(e)
             messages.info(request, e)
@@ -315,12 +309,12 @@ def FnSchoolLoanRevenue(request):
 def FnSchoolLoanExpenses(request):
     if request.method == 'POST':
         try:
-            entryNo = 0
+            entryNo = int(request.POST.get('entryNo'))
             applicantNo = request.POST.get('applicantNo')
             expenseHead = request.POST.get('expenseHead')
             monthlyExpense = float(request.POST.get('monthlyExpense'))
             multiplierFactor = float(request.POST.get('multiplierFactor'))
-            myAction = 'insert'
+            myAction = request.POST.get('myAction')
         except KeyError:
             messages.info(request, "Session Expired. Please Login")
             return redirect('auth')
@@ -328,12 +322,9 @@ def FnSchoolLoanExpenses(request):
         try:
             response = config.CLIENT.service.FnSchoolLoanExpenses(
                 entryNo, applicantNo,expenseHead,monthlyExpense,multiplierFactor,myAction)
-            print(response)
+            print("Response:",response)
             if response['return_value'] == True:
                 messages.success(request,"Successfully Added.")
-                return redirect('LoanDetail',pk=applicantNo)
-            if response['return_value'] == False:
-                messages.error(request,"Not Added.")
                 return redirect('LoanDetail',pk=applicantNo)
         except Exception as e:
             print(e)
@@ -342,20 +333,22 @@ def FnSchoolLoanExpenses(request):
 
 def FnSchoolLoanEnrolment(request):
     if request.method == 'POST':
-        entryNo = 0
+        entryNo = int(request.POST.get('entryNo'))
         applicantNo = request.POST.get('applicantNo')
         academicYear = request.POST.get('academicYear')
         schoolStrength = request.POST.get('schoolStrength')
-        myAction = 'insert'
+        myAction = request.POST.get('myAction')
+        print("entryNo:",entryNo)
+        print("applicantNo:",applicantNo)
+        print("academicYear:",academicYear)
+        print("schoolStrength:",schoolStrength)
+        print("myAction:",myAction)
         try:
             response = config.CLIENT.service.FnSchoolEnrolment(
                 entryNo, applicantNo, int(academicYear), schoolStrength, myAction)
             print(response)
             if response['return_value'] == True:
                 messages.success(request,"Successfully Added.")
-                return redirect('LoanDetail',pk=applicantNo)
-            if response['return_value'] == False:
-                messages.error(request,"Not Added.")
                 return redirect('LoanDetail',pk=applicantNo)
         except Exception as e:
             print(e)
@@ -365,12 +358,12 @@ def FnSchoolLoanEnrolment(request):
 def FnSchoolLoanPassRate(request):
     if request.method == 'POST':
         try:
-            entryNo = 0
+            entryNo = int(request.POST.get('entryNo'))
             applicantNo = request.POST.get('applicantNo')
             kcpeStudents = request.POST.get('kcpeStudents')
             passRate = request.POST.get('passRate')
             year = request.POST.get('year')
-            myAction = 'insert'
+            myAction = request.POST.get('myAction')
         except KeyError:
             messages.info(request, "Session Expired. Please Login")
             return redirect('auth')
@@ -381,9 +374,6 @@ def FnSchoolLoanPassRate(request):
             if response['return_value'] == True:
                 messages.success(request,"Successfully Added.")
                 return redirect('LoanDetail',pk=applicantNo)
-            if response['return_value'] == False:
-                messages.error(request,"Not Added.")
-                return redirect('LoanDetail',pk=applicantNo)
         except Exception as e:
             print(e)
             messages.info(request, e)
@@ -393,23 +383,21 @@ def FnSchoolLoanPassRate(request):
 def FnSchoolLoanProjectDetails(request):
     if request.method == 'POST':
         try:
-            entryNo = 0
+            entryNo = int(request.POST.get('entryNo'))
             applicantNo = request.POST.get('applicantNo')
             projectDescription = request.POST.get('projectDescription')
             estimatedCost = float(request.POST.get('estimatedCost'))
             costType = int(request.POST.get('costType'))
-            myAction = 'insert'
+            myAction = request.POST.get('myAction')
         except KeyError:
             messages.info(request, "Session Expired. Please Login")
             return redirect('login')
         try:
             response = config.CLIENT.service.FnSchoolProjectDetails(
                 entryNo, applicantNo,projectDescription,estimatedCost, costType, myAction)
+            print("Response:", response)
             if response['return_value'] == True:
                 messages.success(request,"Successfully Added.")
-                return redirect('LoanDetail',pk=applicantNo)
-            if response['return_value'] == False:
-                messages.error(request,"Not Added.")
                 return redirect('LoanDetail',pk=applicantNo)
         except Exception as e:
             print(e)
@@ -621,4 +609,25 @@ def FnCustomerProjectSecurityDetails(request,pk):
             return redirect('LoanDetail',pk=pk)
     return redirect('LoanDetail',pk=pk)
 
-
+def FnUploadAttachedDocument(request):
+    if request.method == "POST":
+        try:
+            docNo = request.POST.get('docNo')
+            fileName = request.FILES['attachment'].name
+            attach = request.FILES.get('attachment')
+            tableID = 50004
+            attachment = base64.b64encode(attach.read())
+            try:
+                response = config.CLIENT.service.FnUploadAttachedDocument(
+                    docNo, fileName, attachment, tableID)
+                print("Response:",response)
+                if response == True:
+                    messages.success(request, "Upload Successful")
+                    return redirect('LoanDetail',pk=docNo)
+            except Exception as e:
+                messages.error(request, e)
+                print(e)
+                return redirect('LoanDetail',pk=docNo)
+        except Exception as e:
+            print(e)
+    return redirect('LoanDetail',pk=docNo)

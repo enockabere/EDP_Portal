@@ -5,7 +5,7 @@
 <script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk="
     crossorigin="anonymous"></script>
 <section class="dash2">
-    <div class="content-wrapper general-bg" style="padding-bottom: 5rem;">
+    <div class="content-wrapper general-bg" style="padding-bottom: 22rem;">
         <div class="row" id="proBanner">
             <div class="col-12">
                 <span class="d-flex align-items-center purchase-popup">
@@ -248,7 +248,7 @@
                             </div>
                         </div>
                         <div class="row my-2">
-                            <div class="col-md-4">
+                            <div class="col-md-6">
                                 <label class="form-label">Loan Product <span class="text-danger">*</span></label>
                                 <select class="form-select" name="loanProduct" id="loanProduct">
                                     <option value="" disabled selected>--Select--</option>
@@ -257,13 +257,7 @@
                                     {% endfor %}
                                 </select>
                             </div>
-                            <div class="col-md-4">
-                                <label class="form-label">Sub Product <span class="text-danger">*</span></label>
-                                <select class="form-select" name="subProductCode" id="subProductCode">
-                                    <option class="after" selected value="" disabled selected>--Select--</option>
-                                </select>
-                            </div>
-                            <div class="col-md-4">
+                            <div class="col-md-6">
                                 <label class="form-label">Applied Amount <span class="text-danger">*</span></label>
                                 <input type="text" class="form-control" name="appliedAmount" placeholder="000.000"
                                     required>
@@ -280,8 +274,7 @@
                                 </select>
                             </div>
                         </div>
-                        <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Discard</button>
-                        <button type="submit" class="btn btn-primary">Submit</button>
+                        <button type="submit" class="btn btn-successs w-100 my-3">Submit</button>
                     </form>
                 </div>
             </div>

@@ -19,20 +19,18 @@ def appointment(request):
         CustomerName=request.session['CustomerName']
         CustomerNumber=request.session['CustomerNo']
         MemberNo=request.session['MemberNo']
-        CustomerEmail=request.session['CustomerEmail']
         stage=request.session['stage']
         session = requests.Session()
         session.auth = config.AUTHS
         todays_date = dt.datetime.now().strftime("%b. %d, %Y %A")
         
-        Appointment = config.O_DATA.format("/Appointment")
+        Appointment = config.O_DATA.format("/Appointment?$filter=Client_Code%20eq%20%27{CustomerNumber}%27").format(CustomerNumber=CustomerNumber)
         try:
             Response = session.get(Appointment, timeout=10).json()
             MyAppointment = [] 
             for appointment in Response['value']:
-                if appointment['Client_Code'] == request.session['CustomerNo']:
-                    output_json = json.dumps(appointment)
-                    MyAppointment.append(json.loads(output_json))
+                output_json = json.dumps(appointment)
+                MyAppointment.append(json.loads(output_json))
         except requests.exceptions.RequestException as e:
             print(e)
             messages.info(request, "Whoops! Something went wrong. Please Login to Continue")
