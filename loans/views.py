@@ -615,7 +615,7 @@ def FnUploadAttachedDocument(request):
             docNo = request.POST.get('docNo')
             fileName = request.FILES['attachment'].name
             attach = request.FILES.get('attachment')
-            tableID = 50004
+            tableID = 50140
             attachment = base64.b64encode(attach.read())
             try:
                 response = config.CLIENT.service.FnUploadAttachedDocument(

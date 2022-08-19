@@ -125,29 +125,32 @@
                                         style="width:100%">
                                         <thead>
                                             <tr id="tops">
-                                                <th id="long">Document No</th>
-                                                <th>School Name</th>
-                                                <th>Date Created</th>
-                                                <th>Bank Name</th>
+                                                <th id="long">Loan No</th>
                                                 <th>Loan Product</th>
+                                                <th>Applied Amount</th>
+                                                <th>Interest Rate</th>
+                                                <th>Installments</th>
                                                 <th>Action</th>
                                             </tr>
                                         </thead>
                                         <tbody>
-
+                                            {% for res in rej %}
                                             <tr>
-                                                <td>LAP00001</td>
-                                                <td id="rap">Kenya High</td>
-                                                <td>22-22-2022</td>
-                                                <td>Equity Bank</td>
-                                                <td>Product X</td>
+                                                <td>{{res.Loan_Number}}</td>
+                                                <td id="rap">{{res.Loan_Product}}</td>
+                                                <td>{{res.Applied_Amount}}</td>
+                                                <td>{{res.Interest_rate}}</td>
+                                                <td>{{res.Installments}}</td>
                                                 <td>
-                                                    <a href="" class="btn btn-success btn-icon-text" type="button"
-                                                        data-toggle="tooltip" data-placement="top" title="View"
-                                                        style="background: #25CC88;"><i class="las la-eye"></i> View
+                                                    <a href="{% url 'LoanDetail' res.Loan_Number %}"
+                                                        class="btn btn-success btn-icon-text" type="button"
+                                                        data-toggle="tooltip" data-placement="top" title="Continue"
+                                                        style="background: #25CC88;"> View <i
+                                                            class="las la-angle-double-right"></i>
                                                     </a>
                                                 </td>
                                             </tr>
+                                            {% endfor %}
                                         </tbody>
                                     </table>
                                 </div>
@@ -159,29 +162,32 @@
                                         style="width:100%">
                                         <thead>
                                             <tr id="tops">
-                                                <th id="long">Document No</th>
-                                                <th>School Name</th>
-                                                <th>Date Created</th>
-                                                <th>Bank Name</th>
+                                                <th id="long">Loan No</th>
                                                 <th>Loan Product</th>
+                                                <th>Applied Amount</th>
+                                                <th>Interest Rate</th>
+                                                <th>Installments</th>
                                                 <th>Action</th>
                                             </tr>
                                         </thead>
                                         <tbody>
-
+                                            {% for res in pending %}
                                             <tr>
-                                                <td>LAP00001</td>
-                                                <td id="rap">Kenya High</td>
-                                                <td>22-22-2022</td>
-                                                <td>Equity Bank</td>
-                                                <td>Product X</td>
+                                                <td>{{res.Loan_Number}}</td>
+                                                <td id="rap">{{res.Loan_Product}}</td>
+                                                <td>{{res.Applied_Amount}}</td>
+                                                <td>{{res.Interest_rate}}</td>
+                                                <td>{{res.Installments}}</td>
                                                 <td>
-                                                    <a href="" class="btn btn-success btn-icon-text" type="button"
-                                                        data-toggle="tooltip" data-placement="top" title="View"
-                                                        style="background: #25CC88;"><i class="las la-eye"></i> View
+                                                    <a href="{% url 'LoanDetail' res.Loan_Number %}"
+                                                        class="btn btn-success btn-icon-text" type="button"
+                                                        data-toggle="tooltip" data-placement="top" title="Continue"
+                                                        style="background: #25CC88;"> View <i
+                                                            class="las la-angle-double-right"></i>
                                                     </a>
                                                 </td>
                                             </tr>
+                                            {% endfor %}
                                         </tbody>
                                     </table>
                                 </div>
