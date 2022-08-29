@@ -5,9 +5,9 @@ from . import views
 from django.conf import settings
 from django.conf.urls.static import static
 urlpatterns = [
-    path('dashboard', views.dashboard, name="dashboard"),
+    path('dashboard', views.Dashboard.as_view(), name="dashboard"),
     path('canvas', views.Canvas, name="canvas"),
-    path('application/details', views.ApplicationDetails, name="ApplicationDetails"),
+    path('application/details', views.ApplicationDetails.as_view(), name="ApplicationDetails"),
     path('FnSchoolRevenue',views.FnSchoolRevenue,name='FnSchoolRevenue'),
     path('FnSchoolExpenses',views.FnSchoolExpenses,name='FnSchoolExpenses'),
     path('FnSchoolTransportDetails',views.FnSchoolTransportDetails,name='FnSchoolTransportDetails'),

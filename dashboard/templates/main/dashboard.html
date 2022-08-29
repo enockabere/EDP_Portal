@@ -175,25 +175,25 @@
                             <div class="col-sm-3">
                                 <div class="border-right border-md-0">
                                     <h4>Loan Balance</h4>
-                                    <h1 class="text-dark font-weight-bold mb-md-3">Kshs 306</h1>
+                                    <h2 class="text-dark font-weight-bold mb-md-3" id="proOutput"></h2>
                                 </div>
                             </div>
                             <div class="col-sm-3">
                                 <div class="border-right border-md-0">
-                                    <h4>Amount due</h4>
-                                    <h1 class="text-dark font-weight-bold mb-md-3">Kshs 306</h1>
+                                    <h4>Total Amount Due</h4>
+                                    <h2 class="text-dark font-weight-bold mb-md-3" id="proOutput1"></h2>
                                 </div>
                             </div>
                             <div class="col-sm-3">
                                 <div class="border-right border-md-0">
                                     <h4>Next Due Date</h4>
-                                    <h1 class="text-dark font-weight-bold mb-md-3">22-01-2023</h1>
+                                    <h2 class="text-dark font-weight-bold mb-md-3">{{nextDueDate}}</h2>
                                 </div>
                             </div>
                             <div class="col-sm-3">
                                 <div class="">
                                     <h4>No. of Days in Arrears</h4>
-                                    <h1 class="text-dark font-weight-bold">20</h1>
+                                    <h2 class="text-dark font-weight-bold">{{DaysInArrears}}</h2>
                                 </div>
                             </div>
                         </div>
@@ -266,6 +266,22 @@
         var x = maxtfs.toString().split(".");
         x[0] = x[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
         $("#maxtfs").empty().append(x.join("."));
+
+        var DecimalSeparator = Number("1.2").toLocaleString().substr(1, 1);
+        var AmountWithCommas = '{{loanBalance}}'.toLocaleString();
+        var amountDue = '{{amountDue}}'.toLocaleString();
+
+        var arParts = String(AmountWithCommas).split(DecimalSeparator);
+        var intPart = arParts[0];
+        var decPart = (arParts.length > 1 ? arParts[1] : '');
+        decPart = (decPart + '00').substr(0, 2);
+        $("#proOutput").empty().append("KES" + " " + intPart + DecimalSeparator + decPart + "/=");
+
+        var arParts1 = String(amountDue).split(DecimalSeparator);
+        var intPart1 = arParts1[0];
+        var decPart1 = (arParts1.length > 1 ? arParts1[1] : '');
+        decPart1 = (decPart1 + '00').substr(0, 2);
+        $("#proOutput1").empty().append("KES" + " " + intPart1 + DecimalSeparator + decPart1 + "/=");
     })
 </script>
 

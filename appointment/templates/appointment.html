@@ -156,7 +156,7 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <form class="myForm" action="{% url 'FnBookAppointment' %}" method="post" novalidate>
+                <form class="myForm" action="{% url 'appointments' %}" method="post" novalidate>
                     {% csrf_token %}
                     <div class="row">
                         <div class="col-md-12">
@@ -186,8 +186,7 @@
 
                         </div>
                     </div>
-                    <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Discard</button>
-                    <button type="submit" class="btn btn-primary">Submit</button>
+                    <button type="submit" class="btn btn-successs w-100 my-3">Submit</button>
                 </form>
             </div>
         </div>

@@ -1,14 +1,8 @@
 from django.shortcuts import render, HttpResponse, redirect
 from django.conf import settings as config
-import json
 import requests
-from requests import Session
-from requests_ntlm import HttpNtlmAuth
-from datetime import date,datetime
-from zeep import Client
-from zeep.transports import Transport
+from datetime import datetime
 from django.contrib import messages
-from requests.auth import HTTPBasicAuth
 from django.http import JsonResponse
 import secrets
 import string
@@ -19,6 +13,20 @@ from  django.template.loader import render_to_string
 from django.core.mail import EmailMessage
 import threading
 import datetime as dt
+
+
+def get_object(endpoint):
+    session = requests.Session()
+    session.auth = config.AUTHS
+    response = session.get(endpoint, timeout=10).json()
+    return response
+
+def passwordCipher(password):
+    Portal_Password = base64.urlsafe_b64decode(password)
+    cipher_suite = Fernet(config.ENCRYPT_KEY)
+    decoded_text = cipher_suite.decrypt(Portal_Password).decode("ascii")
+    return decoded_text
+
 
 class EmailThread(threading.Thread):
 
@@ -53,31 +61,17 @@ def send_reset_mail(email,request):
     EmailThread(reset_email).start()
 
 def login_request(request):
-    session = requests.Session()
-    session.auth = config.AUTHS
     if request.method == 'POST':
         try:
             email = request.POST.get('email')
             password = request.POST.get('password')
-        except ValueError:
-            messages.error(request,"Missing Input!")
-            print("Missing Input!")
-            return redirect('auth')
-        print(email,password)
         
-        try:
-            Customer = config.O_DATA.format("/CustomersList")
-            CustomerResponse = session.get(Customer, timeout=10).json()
+            print(email,password)
+            Customer = config.O_DATA.format(f"/CustomersList?$filter=Email_Address%20eq%20%27{email}%27")
+            CustomerResponse = get_object(Customer)
             for applicant in CustomerResponse['value']:
-                if applicant['Email_Address'] == email and applicant['Verified']==True:
-                    Portal_Password = base64.urlsafe_b64decode(
-                        applicant['Password'])
-                    cipher_suite = Fernet(config.ENCRYPT_KEY)
-                    try:
-                        decoded_text = cipher_suite.decrypt(
-                            Portal_Password).decode("ascii")
-                    except Exception as e:
-                        print(e)
+                if applicant['Verified']==True:
+                    decoded_text = passwordCipher(applicant['Password'])
                     if decoded_text == password:
                         request.session['CustomerName'] = applicant['Full_Name']
                         request.session['CustomerNo'] = applicant['No']
@@ -90,22 +84,12 @@ def login_request(request):
                         request.session['Mobile_Number'] = applicant['Mobile_Number']
                         request.session['stage'] = 'Customer'
                         return redirect('dashboard')
-                    else:
-                        messages.error(
-                            request, "Invalid Credentials. Please reset your password else create a new account")
-                        return redirect('auth')
-            Applicant = config.O_DATA.format("/ApplicantsList")
-            ApplicantResponse = session.get(Applicant, timeout=10).json()
+
+            Applicant = config.O_DATA.format(f"/ApplicantsList?$filter=Email_Address%20eq%20%27{email}%27")
+            ApplicantResponse = get_object(Applicant)
             for applicant in ApplicantResponse['value']:
-                if applicant['Email_Address'] == email and applicant['Verified']==True:
-                    Portal_Password = base64.urlsafe_b64decode(
-                        applicant['Password'])
-                    cipher_suite = Fernet(config.ENCRYPT_KEY)
-                    try:
-                        decoded_text = cipher_suite.decrypt(
-                            Portal_Password).decode("ascii")
-                    except Exception as e:
-                        print(e)
+                if applicant['Verified']==True:
+                    decoded_text = passwordCipher(applicant['Password'])
                     if decoded_text == password:
                         request.session['CustomerName'] = applicant['Full_Name']
                         request.session['CustomerNo'] = applicant['No']
@@ -113,22 +97,13 @@ def login_request(request):
                         request.session['CustomerEmail'] = applicant['Email_Address']
                         request.session['stage'] = 'Applicant'
                         return redirect('ApplicationDetails')
-                    else:
-                        messages.error(
-                            request, "Invalid Credentials. Please reset your password else create a new account")
-                        return redirect('auth')
-            Potential = config.O_DATA.format("/PotentialsList")
-            PotentialResponse = session.get(Potential, timeout=10).json()
+
+
+            Potential = config.O_DATA.format(f"/PotentialsList?$filter=Email_Address%20eq%20%27{email}%27")
+            PotentialResponse = get_object(Potential)
             for applicant in PotentialResponse['value']:
-                if applicant['Email_Address'] == email and applicant['Verified']==True:
-                    Portal_Password = base64.urlsafe_b64decode(
-                        applicant['Password'])
-                    cipher_suite = Fernet(config.ENCRYPT_KEY)
-                    try:
-                        decoded_text = cipher_suite.decrypt(
-                            Portal_Password).decode("ascii")
-                    except Exception as e:
-                        print(e)
+                if applicant['Verified']==True:
+                    decoded_text = passwordCipher(applicant['Password'])
                     if decoded_text == password:
                         request.session['CustomerName'] = applicant['Name']
                         request.session['CustomerNo'] = applicant['No']
@@ -136,22 +111,12 @@ def login_request(request):
                         request.session['CustomerEmail'] = applicant['Email_Address']
                         request.session['stage'] = 'Potential'
                         return redirect('dashboard')
-                    else:
-                        messages.error(
-                            request, "Invalid Credentials. Please reset your password else create a new account")
-                        return redirect('auth')
-            Leads = config.O_DATA.format("/LeadsList")
-            LeadResponse = session.get(Leads, timeout=10).json()
+                    
+            Leads = config.O_DATA.format(f"/LeadsList?$filter=Email_Address%20eq%20%27{email}%27")
+            LeadResponse = get_object(Leads)
             for lead in LeadResponse['value']:
-                if lead['Email_Address'] == email and lead['Verified']==True:
-                    Portal_Password = base64.urlsafe_b64decode(
-                        lead['Password'])
-                    cipher_suite = Fernet(config.ENCRYPT_KEY)
-                    try:
-                        decoded_text = cipher_suite.decrypt(
-                            Portal_Password).decode("ascii")
-                    except Exception as e:
-                        print(e)
+                if lead['Verified']==True:
+                    decoded_text = passwordCipher(lead['Password'])
                     if decoded_text == password:
                         request.session['CustomerName'] = lead['Name_of_the_School']
                         request.session['CustomerNo'] = lead['No']
@@ -159,31 +124,28 @@ def login_request(request):
                         request.session['CustomerEmail'] = lead['Email_Address']
                         request.session['stage'] = 'Lead'
                         return redirect('dashboard')
-                    else:
-                        messages.error(
-                            request, "Invalid Credentials. Please reset your password else create a new account")
-                        return redirect('auth')
+            
+            messages.error(
+                request, "Invalid Credentials. Please reset your password else create a new account")
+            return redirect('auth') 
+        except ValueError:
+            messages.error(request,"Missing Input!")
+            print("Missing Input!")
+            return redirect('auth')
         except requests.exceptions.ConnectionError as e:
             messages.error(request,e)
             print(e)
     return render(request, 'auth.html')
 
 def register_request(request):
-    session = requests.Session()
-    session.auth = config.AUTHS
-    Access_Point = config.O_DATA.format("/LeadSources")
-    EDPBranch = config.O_DATA.format("/DimensionValues")
     try:
-        response = session.get(Access_Point, timeout=10).json()
+        Access_Point = config.O_DATA.format("/LeadSources")
+        response = get_object(Access_Point)
         lead_source = response['value']
-        BranchResponse = session.get(EDPBranch, timeout=10).json()
-        
-        Branch = []
-        for branch in BranchResponse['value']:
-            if branch['Dimension_Code'] == 'BRANCH':
-                output_json = json.dumps(branch)
-                Branch.append(json.loads(output_json))
 
+        EDPBranch = config.O_DATA.format("/DimensionValues?$filter=Dimension_Code%20eq%20%27BRANCH%27")
+        BranchResponse = get_object(EDPBranch)
+        Branch = BranchResponse['value']
     except requests.exceptions.ConnectionError as e:
         print(e)
         return redirect('register')
@@ -264,25 +226,14 @@ def verifyRequest(request):
             email = request.POST.get('email')
             secret = request.POST.get('secret')
             verified = True
-        except ValueError:
-            messages.error(request,'Wrong Input')
-            return redirect('verify')
-        session = requests.Session()
-        session.auth = config.AUTHS
-        Access_Point = config.O_DATA.format("/LeadsList")
-        try:
-            response = session.get(Access_Point, timeout=10).json()
+            Access_Point = config.O_DATA.format(f"/LeadsList?$filter=Email_Address%20eq%20%27{email}%27")
+            response = get_object(Access_Point)
             for res in response['value']:
-                if res['Email_Address'] == email and res['Verification_Token'] == secret:
-                    try:
-                        response = config.CLIENT.service.FnVerifyEmailAddress(email,verified)
-                        print("response:",response)
-                        messages.success(request,"Verification Successful")
-                        return redirect('auth')
-                    except requests.exceptions.RequestException as e:
-                        messages.error(request,e)
-                        print(e)
-                        return redirect('verify')
+                if res['Verification_Token'] == secret:
+                    response = config.CLIENT.service.FnVerifyEmailAddress(email,verified)
+                    print("response:",response)
+                    messages.success(request,"Verification Successful")
+                    return redirect('auth')
         except requests.exceptions.RequestException as e:
             print(e)
             messages.error(request,e)
@@ -344,46 +295,44 @@ def resetPassword(request):
     if request.method == 'POST':
         try:
             email = request.POST.get('email')
-        except  ValueError:
-            messages.error(request,'Missing Input')
-            return redirect('login')
-        session = requests.Session()
-        session.auth = config.AUTHS
-        try:
-            Customer = config.O_DATA.format("/CustomersList")
-            CustomerResponse = session.get(Customer, timeout=10).json()
+
+            Customer =config.O_DATA.format(f"/CustomersList?$filter=Email_Address%20eq%20%27{email}%27")
+            CustomerResponse = get_object(Customer)
             for applicant in CustomerResponse['value']:
-                if applicant['Email_Address'] == email and applicant['Verified']==True:
+                if applicant['Verified']==True:
                     request.session['resetMail'] = email
                     send_reset_mail(email,request)
                     messages.success(request, 'We sent you an email to reset your password')
                     return redirect('auth')
-            Applicant = config.O_DATA.format("/ApplicantsList")
-            ApplicantResponse = session.get(Applicant, timeout=10).json()
+            Applicant = config.O_DATA.format(f"/ApplicantsList?$filter=Email_Address%20eq%20%27{email}%27")
+            ApplicantResponse = get_object(Applicant)
             for applicant in ApplicantResponse['value']:
-                if applicant['Email_Address'] == email and applicant['Verified']==True:
+                if applicant['Verified']==True:
                     request.session['resetMail'] = email
                     send_reset_mail(email,request)
                     messages.success(request, 'We sent you an email to reset your password')
                     return redirect('auth')
-            Potential = config.O_DATA.format("/PotentialsList")
-            PotentialResponse = session.get(Potential, timeout=10).json()
+            Potential = config.O_DATA.format(f"/PotentialsList?$filter=Email_Address%20eq%20%27{email}%27")
+            PotentialResponse = get_object(Potential)
             for applicant in PotentialResponse['value']:
-                if applicant['Email_Address'] == email and applicant['Verified']==True:
+                if applicant['Verified']==True:
                     request.session['resetMail'] = email
                     send_reset_mail(email,request)
                     messages.success(request, 'We sent you an email to reset your password')
                     return redirect('auth')
-            Leads = config.O_DATA.format("/LeadsList")
-            LeadResponse = session.get(Leads, timeout=10).json()
+            Leads = config.O_DATA.format(f"/LeadsList?$filter=Email_Address%20eq%20%27{email}%27")
+            LeadResponse = get_object(Leads)
             for lead in LeadResponse['value']:
-                if lead['Email_Address'] == email and lead['Verified']==True:
+                if lead['Verified']==True:
                     request.session['resetMail'] = email
                     send_reset_mail(email,request)
                     messages.success(request, 'We sent you an email to reset your password')
                     return redirect('auth')
             messages.error(request,"Invalid Email")
             return redirect('auth')
+        except  ValueError:
+            messages.error(request,'Missing Input')
+            return redirect('login')
         except Exception as e:
             messages.error(request, e)
             print(e)
@@ -396,27 +345,19 @@ def reset_request(request):
             email = request.session['resetMail']
             password = request.POST.get('password')
             password2 = request.POST.get('password2')
-        except KeyError:
-            messages.info(request,"Session Expired, Raise new password reset request")
-            return redirect('auth')
-        except  ValueError:
-            messages.error(request,'Invalid Input')
-            return redirect('reset_request')
-        if len(password) < 6:
-            messages.error(request, "Password should be at least 6 characters")
-            return redirect('reset_request')
-        if password != password2:
-            messages.error(request, "Password mismatch")
-            return redirect('reset_request')   
-        cipher_suite = Fernet(config.ENCRYPT_KEY)
-        encrypted_text = cipher_suite.encrypt(password.encode('ascii'))
-        myPassword = base64.urlsafe_b64encode(encrypted_text).decode("ascii") 
-        nameChars = ''.join(secrets.choice(string.ascii_uppercase + string.digits)
-                        for i in range(5))
+        
+            if len(password) < 6:
+                messages.error(request, "Password should be at least 6 characters")
+                return redirect('reset_request')
+            if password != password2:
+                messages.error(request, "Password mismatch")
+                return redirect('reset_request')   
+            myPassword = passwordCipher(password)
+            nameChars = ''.join(secrets.choice(string.ascii_uppercase + string.digits)
+                            for i in range(5))
 
-        verificationToken = str(nameChars)
+            verificationToken = str(nameChars)
 
-        try:
             response = config.CLIENT.service.FnResetPassword(email, myPassword,verificationToken)
             print(response)
             if response == True:
@@ -426,6 +367,12 @@ def reset_request(request):
             else:
                 messages.error(request,"Error Try Again")
                 return redirect('reset_request')
+        except KeyError:
+            messages.info(request,"Session Expired, Raise new password reset request")
+            return redirect('auth')
+        except  ValueError:
+            messages.error(request,'Invalid Input')
+            return redirect('reset_request')
         except Exception as e:
             messages.info(request, e)
             print(e)

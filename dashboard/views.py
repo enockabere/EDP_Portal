@@ -5,119 +5,127 @@ from requests import Session
 from requests_ntlm import HttpNtlmAuth
 import json
 from django.conf import settings as config
-import datetime
+from datetime import date,datetime
 from django.contrib.sessions.models import Session
 from django.contrib import messages
 import datetime as dt
 from django.http import JsonResponse
+from django.views import View
 # Create your views here.
 
-
-def dashboard(request):
-    LeadRes = ''
-    Coordinates = ''
-    PotentialRes = ''
-    CustomerRes =''
-    try:
-        session = requests.Session()
-        session.auth = config.AUTHS
-        todays_date = datetime.datetime.now().strftime("%b. %d, %Y %A")
-        CustomerName=request.session['CustomerName']
-        CustomerNumber=request.session['CustomerNo']
-        MemberNo=request.session['MemberNo']
-        CustomerEmail=request.session['CustomerEmail']
-        stage=request.session['stage']
-
-        LeadsData = config.O_DATA.format("/LeadsList?$filter=No%20eq%20%27{CustomerNumber}%27%20and%20Email_Address%20eq%20%27{CustomerEmail}%27").format(CustomerNumber=CustomerNumber,CustomerEmail=CustomerEmail)
-        LeadsResponse = session.get(LeadsData, timeout=10).json()  
-        for lead in LeadsResponse['value']:
-            LeadRes = lead 
-            Coordinates = lead['Coordinates'] 
-        PotentialData = config.O_DATA.format("/PotentialsList?$filter=No%20eq%20%27{CustomerNumber}%27%20and%20Email_Address%20eq%20%27{CustomerEmail}%27").format(CustomerNumber=CustomerNumber,CustomerEmail=CustomerEmail)
-        PotentialResponse = session.get(PotentialData, timeout=10).json()  
-        for potential in PotentialResponse['value']:
-            PotentialRes = potential
-            Coordinates = potential['Coordinates'] 
-        CustomerData = config.O_DATA.format("/CustomersList?$filter=No%20eq%20%27{CustomerNumber}%27%20and%20Email_Address%20eq%20%27{CustomerEmail}%27").format(CustomerNumber=CustomerNumber,CustomerEmail=CustomerEmail)
-        CustomerResponse = session.get(CustomerData, timeout=10).json()  
-        for customer in CustomerResponse['value']:
-            CustomerRes = customer
-        Loans = config.O_DATA.format("/Loans?$filter=Member_Number%20eq%20%27{MemberNo}%27").format(MemberNo=MemberNo)
-        LoanResponse = session.get(Loans, timeout=10).json()
-        openDoc = []
-        ApprovedLoans = []
-        RejectedLoans = []
-        PendingLoans = []
-        for document in LoanResponse['value']:
-            if  document['Approval_Status'] == 'Open':
-                output_json = json.dumps(document)
-                openDoc.append(json.loads(output_json))
-            if  document['Approval_Status'] == 'Approved':
-                output_json = json.dumps(document)
-                ApprovedLoans.append(json.loads(output_json))
-            if  document['Approval_Status'] == 'Disapproved':
-                output_json = json.dumps(document)
-                RejectedLoans.append(json.loads(output_json))
-            if document['Approval_Status'] == "Pending Approval":
-                output_json = json.dumps(document)
-                PendingLoans.append(json.loads(output_json))
-    except KeyError as e:
-        messages.success(request, "Session Expired. Please Login")
-        print(e)
-        return redirect('auth') 
-    except requests.exceptions.RequestException as e:
-        print(e)
-        messages.info(request, e)
-        return redirect('auth')
-    openCount= len(openDoc)
-    appCount = len(ApprovedLoans)
-    rejCount = len(RejectedLoans)
-    pendCount = len(PendingLoans)
-    ctx = {"today": todays_date,"LeadRes": LeadRes, "full": CustomerName,
-            "CustomerNumber": CustomerNumber, "CustomerEmail": CustomerEmail,
-            "MemberNo": MemberNo,"stage":stage, "Coordinates":Coordinates,
-            "PotentialRes":PotentialRes, "customer":CustomerRes,"openLoans":openCount,
-            "appCount":appCount,"rejCount":rejCount,"pendCount":pendCount
-            }
-    return render(request, 'main/dashboard.html', ctx)
-
-def ApplicationDetails(request):
-    try:
-        CustomerName=request.session['CustomerName']
-        CustomerNumber=request.session['CustomerNo']
-        MemberNo=request.session['MemberNo']
-        CustomerEmail=request.session['CustomerEmail']
-        stage=request.session['stage']
-        session = requests.Session()
-        session.auth = config.AUTHS
-
-        LoanProduct = config.O_DATA.format("/LoanProducts")
-        Applicant = config.O_DATA.format("/ApplicantsList")
+class UserObjectMixin(object):
+    model =None
+    session = requests.Session()
+    session.auth = config.AUTHS
+    todays_date = dt.datetime.now().strftime("%b. %d, %Y %A")
+    def get_object(self,endpoint):
+        response = self.session.get(endpoint, timeout=10).json()
+        return response
+class Dashboard(UserObjectMixin,View):
+    def get(self,request):
         try:
-            LoanProductResponse = session.get(LoanProduct, timeout=10).json()
+            CustomerName=request.session['CustomerName']
+            CustomerNumber=request.session['CustomerNo']
+            MemberNo=request.session['MemberNo']
+            CustomerEmail=request.session['CustomerEmail']
+            stage=request.session['stage']
+            LeadRes =''
+            PotentialRes = ''
+            CustomerRes = ''
+            Coordinates = ''
+            nextDueDate = ''
+
+            LeadsData = config.O_DATA.format(f"/LeadsList?$filter=No%20eq%20%27{CustomerNumber}%27%20and%20Email_Address%20eq%20%27{CustomerEmail}%27")
+            LeadsResponse = self.get_object(LeadsData) 
+            for lead in LeadsResponse['value']:
+                LeadRes = lead 
+                Coordinates = lead['Coordinates'] 
+
+            PotentialData = config.O_DATA.format(f"/PotentialsList?$filter=No%20eq%20%27{CustomerNumber}%27%20and%20Email_Address%20eq%20%27{CustomerEmail}%27")
+            PotentialResponse = self.get_object(PotentialData) 
+            for potential in PotentialResponse['value']:
+                PotentialRes = potential
+                Coordinates = potential['Coordinates'] 
+
+            CustomerData = config.O_DATA.format(f"/CustomersList?$filter=No%20eq%20%27{CustomerNumber}%27%20and%20Email_Address%20eq%20%27{CustomerEmail}%27")
+            CustomerResponse = self.get_object(CustomerData) 
+            for customer in CustomerResponse['value']:
+                CustomerRes = customer
+
+            Loans = config.O_DATA.format(f"/Loans?$filter=Member_Number%20eq%20%27{MemberNo}%27")
+            LoanResponse = self.get_object(Loans)
+            openCount = len([x for x in LoanResponse['value'] if x['Approval_Status'] == 'Open'])
+            pendCount = len([x for x in LoanResponse['value'] if x['Approval_Status'] == 'Pending Approval'])
+            appCount = len([x for x in LoanResponse['value'] if x['Approval_Status'] == 'Approved'])
+            rejCount = len([x for x in LoanResponse['value'] if x['Approval_Status'] == 'Disapproved'])
+
+            Loans = config.O_DATA.format(f"/LoanBalances?$filter=Member_Number%20eq%20%27{MemberNo}%27")
+            myResponse = self.get_object(Loans)
+            loanBalance = 0
+            amountDue = 0
+            DaysInArrears = 0
+            today = date.today()
+            test_date_list = []
+            for balances in myResponse['value']:
+                loanBalance += int(balances['Outstanding_Balance'])
+                amountDue += int(balances['Total_Payable_Amount'])
+                DaysInArrears += int(balances['Days_in_Arrears'])
+                dates = test_date_list.append(datetime.strptime(balances['Due_Date'], '%Y-%m-%d').date())
+            res = min(test_date_list, key=lambda sub: abs(sub - today))
+        
+            nextDueDate=str(res)
+        except KeyError as e:
+            messages.success(request, "Session Expired. Please Login")
+            print(e)
+            return redirect('auth') 
+        except requests.exceptions.RequestException as e:
+            print(e)
+            messages.info(request, e)
+            return redirect('auth')
+        except ValueError:
+            pass
+
+        ctx = {"today": self.todays_date,"LeadRes": LeadRes, "full": CustomerName,
+                "CustomerNumber": CustomerNumber, "CustomerEmail": CustomerEmail,
+                "MemberNo": MemberNo,"stage":stage, "Coordinates":Coordinates,
+                "PotentialRes":PotentialRes, "customer":CustomerRes,"openLoans":openCount,
+                "appCount":appCount,"rejCount":rejCount,"pendCount":pendCount,
+                "loanBalance":loanBalance,"amountDue":amountDue,"DaysInArrears":DaysInArrears,
+                "nextDueDate":nextDueDate
+                }
+        return render(request, 'main/dashboard.html', ctx)
+
+class ApplicationDetails(UserObjectMixin,View):
+    def get(self,request):
+        try:
+            CustomerName=request.session['CustomerName']
+            CustomerNumber=request.session['CustomerNo']
+            stage=request.session['stage']
+
+            LoanProduct = config.O_DATA.format("/LoanProducts")
+            LoanProductResponse = self.get_object(LoanProduct)
             loanProducts = LoanProductResponse['value']
-            ApplicantResponse = session.get(Applicant, timeout=10).json()
-            for applicant in ApplicantResponse['value']:
-                if applicant['No'] == CustomerNumber:
-                    res = applicant
+
+            Applicant = config.O_DATA.format(f"/ApplicantsList?$filter=No%20eq%20%27{CustomerNumber}%27")
+            ApplicantResponse = self.get_object(Applicant)
+            res = [x for x in ApplicantResponse['value']]
+
             ExpenseHead = config.O_DATA.format("/SchoolExpenses")
-            ExpenseHeadResponse = session.get(ExpenseHead, timeout=10).json()
-            Expense = ExpenseHeadResponse['value']
+            ExpenseHeadResponse = self.get_object(ExpenseHead)
+            Expense = ExpenseHeadResponse['value']                
         except requests.exceptions.RequestException as e:
             print(e)
             messages.info(request, "Whoops! Something went wrong. Please Login to Continue")
             return redirect('auth')
+            
+        except KeyError:
+            messages.info(request, "Session Expired. Please Login")
+            return redirect('auth')
 
-        todays_date = dt.datetime.now().strftime("%b. %d, %Y %A")
-        
-    except KeyError:
-        messages.info(request, "Session Expired. Please Login")
-        return redirect('auth')
-
-    ctx = {"today": todays_date, "loanProducts":loanProducts,
-        "stage":stage, "data":res,"full": CustomerName,"Expense":Expense,
-            }
-    return render(request,'main/AppDetails.html',ctx)
+        ctx = {"today": self.todays_date, "loanProducts":loanProducts,
+            "stage":stage, "data":res,"full": CustomerName,"Expense":Expense,
+                }
+        return render(request,'main/AppDetails.html',ctx)
 
 
 
@@ -134,11 +142,7 @@ def FnSchoolRevenue(request):
             newStudentAdmission = float(request.POST.get('newStudentAdmission'))
             admissionFees = float(request.POST.get('admissionFees'))
             myAction = 'insert'
-        except KeyError:
-            messages.info(request, "Session Expired. Please Login")
-            return redirect('auth')
 
-        try:
             response = config.CLIENT.service.FnSchoolRevenue(
                 entryNo, applicantNo,edpClass,streams, termOneFees,termTwoFees,termThreeFees,
                 newStudentAdmission,admissionFees, myAction)
@@ -163,11 +167,7 @@ def FnSchoolExpenses(request):
             monthlyExpense = float(request.POST.get('monthlyExpense'))
             multiplierFactor = float(request.POST.get('multiplierFactor'))
             myAction = 'insert'
-        except KeyError:
-            messages.info(request, "Session Expired. Please Login")
-            return redirect('auth')
 
-        try:
             response = config.CLIENT.service.FnSchoolExpenses(
                 entryNo, applicantNo,expenseHead,monthlyExpense,multiplierFactor,myAction)
             print(response)
@@ -190,14 +190,7 @@ def FnSchoolTransportDetails(request):
             transportDescription = request.POST.get('transportDescription')
             count = int(request.POST.get('count'))
             myAction = request.POST.get('myAction')
-        except ValueError:
-            messages.info(request,"Missing Input!")
-            return redirect('ApplicationDetails')
-        except KeyError:
-            messages.info(request, "Session Expired. Please Login")
-            return redirect('auth')
 
-        try:
             response = config.CLIENT.service.FnSchoolTransportDetails(
                 entryNo, applicantNo,transportDescription,count,myAction)
             print(response)
@@ -218,14 +211,7 @@ def FnSchoolCoapplicantAssets(request):
             estimatedValue = float(request.POST.get('estimatedValue'))
             assetOwner = request.POST.get('assetOwner')
             myAction = request.POST.get('myAction')
-        except ValueError:
-            messages.info(request,"Missing Input!")
-            return redirect('ApplicationDetails')
-        except KeyError:
-            messages.info(request, "Session Expired. Please Login")
-            return redirect('auth')
 
-        try:
             response = config.CLIENT.service.FnSchoolCoapplicantAssets(
                 entryNo, applicantNo,assetName,estimatedValue,assetOwner,myAction)
             print(response)
@@ -252,15 +238,10 @@ def FnSchoolLiabilities(request):
             balanceTenures = request.POST.get('balanceTenure')
             TenureBalancePeriod = request.POST.get('TenureBalancePeriod')
             myAction = request.POST.get('myAction')
-        except ValueError:
-            messages.info(request,"Missing Input!")
-            return redirect('ApplicationDetails')
-        except KeyError:
-            messages.info(request, "Session Expired. Please Login")
-            return redirect('auth')
-        loanTenure = loanTenures + TenurePeriod
-        balanceTenure = balanceTenures + TenureBalancePeriod
-        try:
+
+            loanTenure = loanTenures + TenurePeriod
+            balanceTenure = balanceTenures + TenureBalancePeriod
+
             response = config.CLIENT.service.FnSchoolLiabilities(
                 entryNo, applicantNo,nameofborrower,bankName,loanAmount,
                 loanBalance,expectedMonthlyInstalment,loanTenure,balanceTenure,myAction)
@@ -282,14 +263,7 @@ def FnSchoolCommitments(request):
             monthlyCommitment = float(request.POST.get('monthlyCommitment'))
             annualCommitment = float(request.POST.get('annualCommitment'))
             myAction = request.POST.get('myAction')
-        except ValueError:
-            messages.info(request,"Missing Input!")
-            return redirect('ApplicationDetails')
-        except KeyError:
-            messages.info(request, "Session Expired. Please Login")
-            return redirect('auth')
 
-        try:
             response = config.CLIENT.service.FnSchoolCommitments(
                 entryNo, applicantNo,nameOfProduct,monthlyCommitment,
                 annualCommitment,myAction)
@@ -310,14 +284,7 @@ def FnSchoolSecurityProvided(request):
             typeOfSecurity = request.POST.get('typeOfSecurity')
             available = eval(request.POST.get('available'))
             myAction = request.POST.get('myAction')
-        except ValueError:
-            messages.info(request,"Missing Input!")
-            return redirect('ApplicationDetails')
-        except KeyError:
-            messages.info(request, "Session Expired. Please Login")
-            return redirect('auth')
 
-        try:
             response = config.CLIENT.service.FnSchoolSecurityProvided(
                 entryNo, applicantNo,typeOfSecurity,available,myAction)
             print(response)
@@ -339,14 +306,7 @@ def FnSchoolVehicleSecurity(request):
             yearOfManufacture = request.POST.get('yearOfManufacture')
             approximateValue = float(request.POST.get('yearOfManufacture'))
             myAction = request.POST.get('myAction')
-        except ValueError:
-            messages.info(request,"Missing Input!")
-            return redirect('ApplicationDetails')
-        except KeyError:
-            messages.info(request, "Session Expired. Please Login")
-            return redirect('auth')
 
-        try:
             response = config.CLIENT.service.FnSchoolVehicleSecurity(
                 entryNo, applicantNo,registrationNo,ownerName,yearOfManufacture,
                 approximateValue,myAction)
@@ -367,15 +327,7 @@ def FnSchoolProjectSecurityDetails(request):
             propertySecurityDetails = request.POST.get('propertySecurityDetails')
             description = request.POST.get('description')
             myAction = request.POST.get('myAction')
-        except ValueError:
-            messages.info(request,"Missing Input!")
-            return redirect('ApplicationDetails')
-        except KeyError as e:
-            print(e)
-            messages.info(request, "Session Expired. Please Login")
-            return redirect('auth')
 
-        try:
             response = config.CLIENT.service.FnSchoolProjectSecurityDetails(
                 entryNo, applicantNo,propertySecurityDetails,description,myAction)
             print(response)
@@ -425,10 +377,7 @@ def SchoolPassRate(request):
             passRate = request.POST.get('passRate')
             year = request.POST.get('year')
             myAction = 'insert'
-        except KeyError:
-            messages.info(request, "Session Expired. Please Login")
-            return redirect('auth')
-        try:
+
             response = config.CLIENT.service.FnSchoolPassRate(
                 entryNo, applicantNo,kcpeStudents,passRate, int(year), myAction)
             print(response)
@@ -452,10 +401,7 @@ def SchoolProjectDetails(request):
             estimatedCost = float(request.POST.get('estimatedCost'))
             costType = int(request.POST.get('costType'))
             myAction = 'insert'
-        except KeyError:
-            messages.info(request, "Session Expired. Please Login")
-            return redirect('login')
-        try:
+        
             response = config.CLIENT.service.FnSchoolProjectDetails(
                 entryNo, applicantNo,projectDescription,estimatedCost, costType, myAction)
             if response['return_value'] == True:

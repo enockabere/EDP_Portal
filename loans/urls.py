@@ -3,11 +3,11 @@ from django.urls import path
 from . import views
 
 urlpatterns = [
-    path('loan/calculator', views.Loan_Calculator, name="Loan_Calculator"),
+    path('loan/calculator', views.Loan_Calculator.as_view(), name="Loan_Calculator"),
 
 
-    path('loan/request', views.Loan_Request, name="loan"),
-    path('loan/detail/<str:pk>', views.LoanDetail, name='LoanDetail'),
+    path('loan/request', views.Loan_Request.as_view(), name="loan"),
+    path('loan/detail/<str:pk>', views.LoanDetail.as_view(), name='LoanDetail'),
     path('FnSchoolLoanRevenue',views.FnSchoolLoanRevenue,name='FnSchoolLoanRevenue'),
     path('FnSchoolLoanExpenses',views.FnSchoolLoanExpenses,name='FnSchoolLoanExpenses'),
     path('FnSchoolLoanEnrolment',views.FnSchoolLoanEnrolment,name='FnSchoolLoanEnrolment'),
@@ -20,8 +20,9 @@ urlpatterns = [
     path('FnCustomerSecurityProvided/<str:pk>',views.FnCustomerSecurityProvided,name='FnCustomerSecurityProvided'),
     path('FnCustomerVehicleSecurity/<str:pk>',views.FnCustomerVehicleSecurity,name='FnCustomerVehicleSecurity'),
     path('FnCustomerProjectSecurityDetails/<str:pk>',views.FnCustomerProjectSecurityDetails,name='FnCustomerProjectSecurityDetails'),
-    path('ApplyLoan',views.ApplyLoan,name='ApplyLoan'),
     path('SubBranch',views.SubBranch,name='SubBranch'),
     path('subProductCode',views.subProductCode,name='subProductCode'),
     path('FnUploadAttachedDocument',views.FnUploadAttachedDocument,name='FnUploadAttachedDocument'),
+    path('Loan/Repayment',views.loanRepayment.as_view(),name='repay'),
+    path('loanFilter',views.loanFilter.as_view(),name='loanFilter'),
 ]

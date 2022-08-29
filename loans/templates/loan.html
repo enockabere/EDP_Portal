@@ -209,7 +209,7 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <form class="myForm " action="{% url 'ApplyLoan' %}" id="LoanForm" method="post" novalidate>
+                    <form class="myForm " action="{% url 'loan' %}" id="LoanForm" method="post" novalidate>
                         {% csrf_token %}
                         <input type="hidden" name="myAction" value="insert">
                         <input type="hidden" name="loanNo" value="">
@@ -230,7 +230,7 @@
                                     required>
                             </div>
                         </div>
-                        <div class="row">
+                        <div class="row my-2">
                             <div class="col-md-4">
                                 <label class="form-label">Max. Fees Per Student <span
                                         class="text-danger">*</span></label>
@@ -238,23 +238,6 @@
                                     required>
                             </div>
                             <div class="col-md-4">
-                                <label class="form-label">EDP Branch <span class="text-danger">*</span></label>
-                                <select class="form-select" name="branchName" id="branchName">
-                                    <option value="" disabled selected>--Select--</option>
-                                    {% for branch in branch %}
-                                    <option value="{{branch.Code}}">{{branch.Name}}</option>
-                                    {% endfor %}
-                                </select>
-                            </div>
-                            <div class="col-md-4">
-                                <label class="form-label">EDP Sub Branch <span class="text-danger">*</span></label>
-                                <select class="form-select" name="subBranch">
-                                    <option class="after" value="" disabled selected>--Select--</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="row my-2">
-                            <div class="col-md-6">
                                 <label class="form-label">Loan Product <span class="text-danger">*</span></label>
                                 <select class="form-select" name="loanProduct" id="loanProduct">
                                     <option value="" disabled selected>--Select--</option>
@@ -263,7 +246,7 @@
                                     {% endfor %}
                                 </select>
                             </div>
-                            <div class="col-md-6">
+                            <div class="col-md-4">
                                 <label class="form-label">Applied Amount <span class="text-danger">*</span></label>
                                 <input type="text" class="form-control" name="appliedAmount" placeholder="000.000"
                                     required>
