@@ -8,6 +8,7 @@ from django.http import JsonResponse
 import datetime as dt
 import simplejson as jsons
 from django.views import View
+from datetime import  datetime
 
 class UserObjectMixin(object):
     model =None
@@ -44,14 +45,24 @@ class BalanceEnquiry(UserObjectMixin,View):
                 loanNo = request.POST.get('loanNo')
                 outstandingBalance =0
                 outstandingInterest = 0
+                dueDate = datetime.strptime("2000-1-1", '%Y-%m-%d').date()
+                amountPayable =0
                 try:
                     response = config.CLIENT.service.FnBalanceInquiries(
-                        loanNo, outstandingBalance,outstandingInterest)
-                    print(response)
+                        loanNo, outstandingBalance,outstandingInterest,dueDate,amountPayable)
+                    due = str(response['dueDate'])
                     if response['return_value'] == True:
                         outstanding = jsons.dumps(response['outstandingBalance'],use_decimal=True)
+                        dueDate = jsons.dumps(due,use_decimal=True)
                         interest = jsons.dumps(response['outstandingInterest'],use_decimal=True)
-                        Dict = {"return_value":response['return_value'],"outstandingBalance":outstanding,"outstandingInterest":interest}
+                        amountPayables = jsons.dumps(response['amountPayable'],use_decimal=True)
+                        Dict = {
+                                "return_value":response['return_value'],
+                                "outstandingBalance":outstanding,
+                                "outstandingInterest":interest,
+                                "dueDate":due,
+                                "amountPayable":amountPayables
+                                }
                         return JsonResponse(Dict,safe=False)
                     if response['return_value'] == False:
                         return JsonResponse("Null",safe=False)

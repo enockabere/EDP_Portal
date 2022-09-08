@@ -28,7 +28,7 @@ class Loan_Calculator(UserObjectMixin,View):
             CustomerName=request.session['CustomerName']
             stage=request.session['stage']
 
-            LoanProduct = config.O_DATA.format("/LoanProducts")
+            LoanProduct = config.O_DATA.format("/LoanProducts?$filter=Blocked%20eq%20false")
             LoanProductResponse = self.get_object(LoanProduct)
             loanProducts = LoanProductResponse['value']
 
@@ -76,7 +76,7 @@ class Loan_Request(UserObjectMixin,View):
             approvedLoans = [x for x in response['value'] if x['Approval_Status'] == 'Approved']
             rejectedLoans = [x for x in response['value'] if x['Approval_Status'] == 'Disapproved']
 
-            LoanProduct = config.O_DATA.format("/LoanProducts")
+            LoanProduct = config.O_DATA.format("/LoanProducts?$filter=Blocked%20eq%20false")
             LoanProductResponse = self.get_object(LoanProduct)
             loanProducts = LoanProductResponse['value']
                 
@@ -158,7 +158,7 @@ def SubBranch(request):
 def subProductCode(request):
     session = requests.Session()
     session.auth = config.AUTHS
-    subProduct = config.O_DATA.format("/LoanSubProducts")
+    subProduct = config.O_DATA.format("/LoanProducts?$filter=Blocked%20eq%20false")
     LoanCode = request.GET.get('LoanCode')
     try:
         Sub_res = session.get(subProduct, timeout=10).json()
@@ -177,7 +177,7 @@ class LoanDetail(UserObjectMixin,View):
             MemberNo=request.session['MemberNo']
             stage=request.session['stage']
 
-            LoanProduct = config.O_DATA.format("/LoanProducts")
+            LoanProduct = config.O_DATA.format("/LoanProducts?$filter=Blocked%20eq%20false")
             LoanProductResponse = self.get_object(LoanProduct)
             loanProducts = LoanProductResponse['value']
 
@@ -561,3 +561,45 @@ class loanFilter(UserObjectMixin,View):
             messages.info(request, "Whoops! Something went wrong. Please Login to Continue")
             return redirect('auth')
         return JsonResponse(LoanResponse)
+class  PaymentGateway(UserObjectMixin,View):
+    def get(self, request,pk):
+        try:
+            CustomerName=request.session['CustomerName']
+            MemberNo=request.session['MemberNo']
+            stage=request.session['stage']
+
+            Loans = config.O_DATA.format(f"/LoanBalances?$filter=Loan_Number%20eq%20%27{pk}%27%20and%20Member_Number%20eq%20%27{MemberNo}%27")
+            response = self.get_object(Loans)
+            for res in response['value']:
+                res = res
+        except KeyError as e:
+            messages.info(request, "Session Expired. Please Login")
+            print(e)
+            return redirect('auth')
+        except requests.exceptions.RequestException as e:
+            print(e)
+            messages.info(request, "Whoops! Something went wrong. Please Login to Continue")
+            return redirect('auth')
+
+        ctx = {"loans":res,"today": self.todays_date,"full": CustomerName,"stage":stage,}
+        return render(request,"gateway.html",ctx)
+    def post(self, request,pk):
+        try:
+            if request.method == "POST":
+                phoneNumber = request.POST.get('phoneNumber')
+                accountNo = pk
+                amount = request.POST.get('amount')
+                url = '62.12.112.26:1881/stkpush'
+                myObj = {
+                    "phoneNumber":phoneNumber,
+                    "accountNo":accountNo,
+                    "amount":amount,
+                    "description":accountNo
+                }
+                response = requests.post(url, json = myObj)
+                messages.success(request,response.text)
+        except Exception as e:
+            print(e)
+            messages.error(request,e)
+            return redirect('PaymentGateway',pk=pk)
+        return redirect('PaymentGateway',pk=pk)

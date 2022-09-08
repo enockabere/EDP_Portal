@@ -4,6 +4,7 @@
 {% block main %}
 <script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk="
     crossorigin="anonymous"></script>
+<script src="../../static/js/currency.js"></script>
 <section class="dash2">
     <div class="content-wrapper general-bg" style="padding-bottom: 22rem;">
         <div class="row" id="proBanner">
@@ -201,7 +202,7 @@
     <!--Create leave Modal -->
     <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
         aria-labelledby="staticBackdropLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-lg">
+        <div class="modal-dialog modal-dialog-scrollable modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="staticBackdropLabel">Loan Application
@@ -224,13 +225,29 @@
                                 <input type="text" class="form-control" name="noOfTeachers" placeholder="" required>
                             </div>
                             <div class="col-md-4">
+                                <label class="form-label">Applied Amount <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" name="appliedAmount" placeholder="000.000"
+                                    required>
+                            </div>
+                        </div>
+                        <div class="row my-2">
+                            <div class="col-md-12">
+                                <label class="form-label">Loan Purpose</label>
+                                <select class="form-select" name="loanPurpose">
+                                    <option value="" disabled selected>--Select--</option>
+                                    {% for res in Purpose %}
+                                    <option value="{{res.Code}}">{{res.Description}}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+                        <div class="row my-2">
+                            <div class="col-md-4">
                                 <label class="form-label">Min. Fees Per Student <span
                                         class="text-danger">*</span></label>
                                 <input type="text" class="form-control" name="minFeesPerStudent" placeholder="00000.000"
                                     required>
                             </div>
-                        </div>
-                        <div class="row my-2">
                             <div class="col-md-4">
                                 <label class="form-label">Max. Fees Per Student <span
                                         class="text-danger">*</span></label>
@@ -246,21 +263,39 @@
                                     {% endfor %}
                                 </select>
                             </div>
+                        </div>
+                        <div class="row my-2" id="step1" style="display: none">
                             <div class="col-md-4">
-                                <label class="form-label">Applied Amount <span class="text-danger">*</span></label>
-                                <input type="text" class="form-control" name="appliedAmount" placeholder="000.000"
-                                    required>
+                                <label class="form-label">Interest Calculation Method</label>
+                                <input type="text" class="form-control" id="Interest_Calculation_Method" placeholder=""
+                                    disabled>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label">Max Interest Rate </label>
+                                <input type="text" class="form-control" id="Max_Interest_Rate" placeholder="00000"
+                                    disabled>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label">Max Installments</label>
+                                <input type="text" class="form-control" id="Max_Installments" placeholder="00000"
+                                    disabled>
                             </div>
                         </div>
-                        <div class="row my-3">
-                            <div class="col-md-12">
-                                <label class="form-label">Loan Purpose</label>
-                                <select class="form-select" name="loanPurpose">
-                                    <option value="" disabled selected>--Select--</option>
-                                    {% for res in Purpose %}
-                                    <option value="{{res.Code}}">{{res.Description}}</option>
-                                    {% endfor %}
-                                </select>
+                        <div class="row my-2" id="step2" style="display: none">
+                            <div class="col-md-4">
+                                <label class="form-label">Repayment Frequency</label>
+                                <input type="text" class="form-control" id="Repayment_Frequency" placeholder=""
+                                    disabled>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label">Min. Loan Amount </label>
+                                <input type="text" class="form-control" id="Min_Loan_Amount" placeholder="00000.00"
+                                    disabled>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label">Max. Loan Amount</label>
+                                <input type="text" class="form-control" id="Max_Loan_Amount" placeholder="00000.00"
+                                    disabled>
                             </div>
                         </div>
                         <button type="submit" class="btn btn-successs w-100 my-3">Submit</button>
@@ -315,7 +350,6 @@
             e.preventDefault();
             var LoanCode = $("#loanProduct").val();
             if (LoanCode != null) {
-                $("#LoanForm select[name='subProductCode']").find('.after').nextAll().remove();
                 $.ajax({
                     type: 'get',
                     url: '{% url "subProductCode" %}',
@@ -324,31 +358,38 @@
                         LoanCode: LoanCode
                     },
                     success: function (response) {
-                        let options = '';
                         for (var i = 0; i < response.value.length; i++) {
-                            if (response.value[i]
-                                .Loan_Product_Code == LoanCode) {
-                                options += '<option value=' + response.value[i]
-                                    .Code + '>' + response.value[i].Code +
-                                    '</option>';
+                            if (response.value[i].Code == LoanCode) {
+                                $("#step1").show(1000);
+                                $("#step2").show(1300)
+                                $('#Interest_Calculation_Method').attr('placeholder',
+                                    response.value[i].Interest_Calculation_Method);
+                                $('#Max_Interest_Rate').attr('placeholder',
+                                    response.value[i].Max_Interest_Rate);
+                                $('#Max_Installments').attr('placeholder',
+                                    response.value[i].Max_Installments);
+                                $('#Repayment_Frequency').attr('placeholder',
+                                    response.value[i].Repayment_Frequency);
+                                $('#Min_Loan_Amount').attr('placeholder', currency(
+                                    response.value[i].Min_Loan_Amount, {
+                                        separator: ','
+                                    }).format());
+                                $('#Max_Loan_Amount').attr('placeholder', currency(response
+                                    .value[i]
+                                    .Max_Loan_Amount, {
+                                        separator: ','
+                                    }).format());
                             }
-
                         }
-                        $("#LoanForm select[name='subProductCode']").find('.after')
-                            .after(
-                                options);
                     },
                     error: function (response) {
                         console.log('Something went wrong');
                     }
                 });
             } else {
-                $("#LoanForm select[name='subProductCode']").find('.after').nextAll().remove();
+                console.log('Something went wrong');
             }
         });
-
-
-
     })
 </script>
 

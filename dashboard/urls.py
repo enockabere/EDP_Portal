@@ -20,6 +20,7 @@ urlpatterns = [
     path('SchoolEnrolment', views.SchoolEnrolment, name="SchoolEnrolment"),
     path('SchoolPassRate', views.SchoolPassRate, name="SchoolPassRate"),
     path('SchoolProjectDetails', views.SchoolProjectDetails, name="SchoolProjectDetails"),
+    path('manual', views.Manual.as_view(), name="Manual"),
 ]
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL,

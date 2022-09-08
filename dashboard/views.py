@@ -414,3 +414,16 @@ def SchoolProjectDetails(request):
             print(e)
             messages.info(request, e)
     return redirect('ApplicationDetails')
+
+class Manual(UserObjectMixin,View):
+    def get(self, request):
+        try:
+            CustomerName=request.session['CustomerName']
+            MemberNo=request.session['MemberNo']
+            stage=request.session['stage']
+        except KeyError as e:
+            messages.info(request, "Session Expired. Please Login")
+            print(e)
+            return redirect('auth')
+        ctx = {"today": self.todays_date,"full": CustomerName,"stage":stage,}
+        return render(request,"manual.html",ctx)

@@ -1,0 +1,16 @@
+if (response.value[i].Code == LoanCode) {
+$('#Interest_Calculation_Method').attr('placeholder',
+response.value[i].Interest_Calculation_Method);
+$('#Max_Interest_Rate').attr('placeholder',
+response.value[i].Max_Interest_Rate);
+$('#Max_Installments').attr('placeholder',
+response.value[i].Max_Installments);
+$('#Repayment_Frequency').attr('placeholder',
+response.value[i].Repayment_Frequency);
+$('#Min_Loan_Amount').attr('placeholder', currency(
+response.value[i].Min_Loan_Amount, {
+separator: ','
+}).format());
+$('#Max_Loan_Amount').attr('placeholder',
+response.value[i].Max_Loan_Amount);
+}

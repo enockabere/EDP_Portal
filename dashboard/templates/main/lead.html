@@ -49,6 +49,9 @@
                         View School Location
                         <i class="las la-arrow-right"></i>
                     </a>
+                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#loanInfo">
+                        <i class="las la-plus"></i> Add Loan Information
+                    </button>
                 </div>
             </div>
         </div>
@@ -113,6 +116,36 @@
                 </div>
             </div>
         </form>
+    </div>
+</div>
+<div class="modal fade" id="loanInfo" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+    aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="staticBackdropLabel">Loan Information</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form class="myForm" action="{% url 'FnSchoolLoanExpenses' %}" method="post" novalidate>
+                    {% csrf_token %}
+                    <input type="hidden" id="applicantNo" name="applicantNo" value="{{res.Loan_Number}}">
+                    <input type="hidden" name="entryNo" value="0">
+                    <input type="hidden" name="myAction" value="insert">
+
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="mb-2">
+                                <label class="form-label">Expected Loan Amount<span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" name="monthlyExpense" id="monthlyExpense"
+                                    placeholder="0000.000" required>
+                            </div>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-successs w-100 my-3">Submit</button>
+                </form>
+            </div>
+        </div>
     </div>
 </div>
 <script>

@@ -28,6 +28,7 @@
 </style>
 <script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk="
     crossorigin="anonymous"></script>
+<script src="../../static/js/currency.js"></script>
 <section class="dash2">
 
     <div class="content-wrapper general-bg" style="padding-bottom: 22rem;" id="results">
@@ -38,85 +39,40 @@
                 <div class="card card-body data-card">
                     <h1 class="heading display-5 pb-3">Loan Repayment</h1>
                     <div class="row">
-                        <div class="col-md-7">
-                            <form method="POST" id="LoanRepayment">
-                                {% csrf_token %}
-                                <div class="row">
-                                    <div class="col-md-12">
-                                        <div class="money-spinner mx-auto text-center" id="money-spinner"
-                                            style="display: none;">
-                                            <img src="https://upload.wikimedia.org/wikipedia/commons/b/b1/Loading_icon.gif"
-                                                alt="Loading Gif" style="height: 100px;" class="img-fluid">
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="row my-5">
-                                    <div class="col-md-12">
-                                        <label for="" class="form-label">Loan</label>
-                                        <select class="form-select" name="loanNo" id="loanNo" required>
-                                            <option value="0" disabled selected>--Select Loan--</option>
-                                            {% for res in loans %}
-                                            <option value="{{res.Loan_Number}}">{{res.Loan_Number}}</option>
-                                            {% endfor %}
-                                        </select>
-                                    </div>
-                                </div>
-                                <div class="row my-4" style="display:none" id="moneyRow">
-                                    <div class="col-md-12">
-                                        <button type="submit" class="btn btn-dark btn-block my-2"><span
-                                                id="PayMoney"></span></button>
-                                    </div>
-                                </div>
-                            </form>
-                        </div>
-                        <div class="col-md-5">
-                            <div class="row">
-                                <div class="col-md-12">
-                                    <h6 class="text-primary">
-                                        Outstanding Balance (KES)
-                                    </h6>
-                                    <h1 class="text-primary" id="proOutput" style="font-size: 2.8rem;">
-                                        0.00
-                                    </h1>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <h6 class="text-primary my-3">
-                                        Interest Accrued Buffer (KES)
-                                    </h6>
-                                    <h1 class="text-dark" id="proOutput2" style="font-size: 1rem;">
-                                        0.00
-                                    </h1>
-                                </div>
-                                <div class="col-md-6">
-                                    <h6 class="text-primary my-3">
-                                        Total Payable Amount (KES)
-                                    </h6>
-                                    <h1 class="text-dark" id="proOutput3" style="font-size: 1rem;">
-                                        0.00
-                                    </h1>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <h6 class="text-primary my-3">
-                                        Due Date
-                                    </h6>
-                                    <h1 class="text-dark" id="proOutput4" style="font-size: 1rem;">
-                                        0.00
-                                    </h1>
-                                </div>
-                                <div class="col-md-6">
-                                    <h6 class="text-primary my-3">
-                                        Days in Arrears
-                                    </h6>
-                                    <h1 class="text-dark" id="proOutput5" style="font-size: 1rem;">
-                                        0.00
-                                    </h1>
-                                </div>
-                            </div>
-
+                        <div class="col-md-12">
+                            <table id="example"
+                                class="display table table-striped table-bordered dt-responsive table-responsive-lg"
+                                style="width:100%">
+                                <thead>
+                                    <tr id="tops">
+                                        <th id="long">Loan No</th>
+                                        <th>Total Payable (KES)</th>
+                                        <th>Interest Accrued (KES)</th>
+                                        <th>Due Date</th>
+                                        <th>Day in Arrears</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for res in loans %}
+                                    <tr>
+                                        <td>{{res.Loan_Number}}</td>
+                                        <td>{{res.Total_Payable_Amount}}</td>
+                                        <td>{{res.Interest_Accrued_Buffer}}</td>
+                                        <td>{{res.Due_Date}}</td>
+                                        <td>{{res.Days_in_Arrears}}</td>
+                                        <td>
+                                            <a href="{% url 'PaymentGateway' res.Loan_Number %}"
+                                                class="btn btn-success btn-icon-text" type="button"
+                                                data-toggle="tooltip" data-placement="top" title="Continue"
+                                                style="background: #25CC88;"> Pay {{res.Total_Payable_Amount}} <i
+                                                    class="las la-angle-double-right"></i>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
                         </div>
                     </div>
                 </div>
@@ -124,59 +80,4 @@
         </div>
     </div>
 </section>
-<script>
-    $(document).ready(function () {
-        $('#loanNo').on('change', function (e) {
-            e.preventDefault();
-            $('#money-spinner').show();
-            var loanNo = $("#loanNo").val();
-            if (loanNo != null) {
-                $.ajax({
-                    type: 'get',
-                    url: '{% url "loanFilter" %}',
-                    dataType: 'json',
-                    data: {
-                        loanNo: loanNo
-                    },
-                    success: function (response) {
-                        let options = '';
-                        for (var i = 0; i < response.value.length; i++) {
-                            if (response.value[i].Loan_Number == loanNo) {
-                                var DecimalSeparator = Number("1.2").toLocaleString()
-                                    .substr(1, 1);
-                                var AmountWithCommas = response.value[i].Outstanding_Balance
-                                    .toLocaleString();
-                                var arParts = String(AmountWithCommas).split(
-                                    DecimalSeparator);
-                                var intPart = arParts[0];
-                                var decPart = (arParts.length > 1 ? arParts[1] : '');
-                                decPart = (decPart + '00').substr(0, 2);
-                                $("#proOutput").empty().append(intPart + DecimalSeparator +
-                                    decPart);
-                                $("#PayMoney").empty().append("Pay KES" + " " + intPart +
-                                    DecimalSeparator +
-                                    decPart + "/=");
-                                $("#proOutput2").empty().append(response.value[i]
-                                    .Interest_Accrued_Buffer);
-                                $("#proOutput3").empty().append(response.value[i]
-                                    .Total_Payable_Amount);
-                                $("#proOutput4").empty().append(response.value[i]
-                                    .Due_Date);
-                                $("#proOutput5").empty().append(response.value[i]
-                                    .Days_in_Arrears);
-
-                                $('#money-spinner').hide();
-                                $('#moneyRow').show(1000);
-                            }
-                        }
-
-                    },
-                    error: function (response) {
-                        console.log('Something went wrong');
-                    }
-                });
-            }
-        });
-    })
-</script>
 {% endblock %}

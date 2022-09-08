@@ -6,6 +6,8 @@
         "maxtfs",
         "mintfs",
         "mtfs",
-        "simplejson"
+        "Payables",
+        "simplejson",
+        "stkpush"
     ]
 }

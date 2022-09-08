@@ -25,4 +25,5 @@ urlpatterns = [
     path('FnUploadAttachedDocument',views.FnUploadAttachedDocument,name='FnUploadAttachedDocument'),
     path('Loan/Repayment',views.loanRepayment.as_view(),name='repay'),
     path('loanFilter',views.loanFilter.as_view(),name='loanFilter'),
+    path('Payment/Gateway/<str:pk>', views.PaymentGateway.as_view(), name='PaymentGateway'),
 ]

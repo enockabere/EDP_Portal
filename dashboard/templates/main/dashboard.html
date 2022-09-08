@@ -54,6 +54,7 @@
         transform: scale(1.01);
     }
 </style>
+<script src="../../../static/js//currency.js"></script>
 <section>
     <div class="content-wrapper" style="background-color: #ebf6f5;">
         <div class="row" id="proBanner">
@@ -257,31 +258,25 @@
 
 <script>
     $(document).ready(function () {
-        var mtfs = '{{customer.Minimum_Termly_Fee_Per_Student}}'
-        var n = mtfs.toString().split(".");
-        n[0] = n[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-        $("#mintfs").empty().append(n.join("."));
+        var mtfs = '{{customer.Minimum_Termly_Fee_Per_Student}}';
+        $("#mintfs").empty().append(currency(mtfs, {
+            separator: ','
+        }).format());
 
-        var maxtfs = '{{customer.Maximum_Termly_Fee_Per_Student}}'
-        var x = maxtfs.toString().split(".");
-        x[0] = x[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-        $("#maxtfs").empty().append(x.join("."));
+        var maxtfs = '{{customer.Maximum_Termly_Fee_Per_Student}}';
+        $("#maxtfs").empty().append(currency(maxtfs, {
+            separator: ','
+        }).format());
 
-        var DecimalSeparator = Number("1.2").toLocaleString().substr(1, 1);
-        var AmountWithCommas = '{{loanBalance}}'.toLocaleString();
-        var amountDue = '{{amountDue}}'.toLocaleString();
+        var loanBalance = '{{loanBalance}}';
+        $("#proOutput").empty().append(currency(loanBalance, {
+            separator: ','
+        }).format());
 
-        var arParts = String(AmountWithCommas).split(DecimalSeparator);
-        var intPart = arParts[0];
-        var decPart = (arParts.length > 1 ? arParts[1] : '');
-        decPart = (decPart + '00').substr(0, 2);
-        $("#proOutput").empty().append("KES" + " " + intPart + DecimalSeparator + decPart + "/=");
-
-        var arParts1 = String(amountDue).split(DecimalSeparator);
-        var intPart1 = arParts1[0];
-        var decPart1 = (arParts1.length > 1 ? arParts1[1] : '');
-        decPart1 = (decPart1 + '00').substr(0, 2);
-        $("#proOutput1").empty().append("KES" + " " + intPart1 + DecimalSeparator + decPart1 + "/=");
+        var amountDue = '{{amountDue}}';
+        $("#proOutput1").empty().append(currency(amountDue, {
+            separator: ','
+        }).format());
     })
 </script>
 

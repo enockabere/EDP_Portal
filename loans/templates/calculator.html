@@ -12,12 +12,11 @@
     }
 
     .file-man-box {
-        padding: 20px;
+        padding: 10px;
         border: 1px solid #e3eaef;
         border-radius: 5px;
         position: relative;
         margin-bottom: 20px;
-        display: none;
     }
 
     .file-man-box .file-close {
@@ -78,6 +77,9 @@
         font-size: 14px;
     }
 
+    #proReport {
+        display: none;
+    }
 
 
     .display-5 {
@@ -97,6 +99,7 @@
 </style>
 <script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk="
     crossorigin="anonymous"></script>
+<script src="../../static/js/currency.js"></script>
 <section class="dash2">
 
     <div class="content-wrapper general-bg" style="padding-bottom: 22rem;" id="results">
@@ -107,7 +110,7 @@
                 <div class="card card-body data-card">
                     <h1 class="heading display-5 pb-3">Loan Calculator</h1>
                     <div class="row">
-                        <div class="col-md-9">
+                        <div class="col-md-8">
                             <form method="POST" id="Loan_Calculator">
                                 {% csrf_token %}
                                 <div class="row my-2">
@@ -137,41 +140,82 @@
                                             name="requestedAmount" placeholder="Loan Amount" />
                                     </div>
                                 </div>
+
                                 <div class="row my-2">
                                     <div class="col-md-6">
                                         <label class=" form-label">Disbursement Date<span
                                                 class="text-danger">*</span></label>
-                                        <input type="date" class="form-control" name="disbursementDate"
+                                        <input type="date" class="form-control" name="disbursementDate" min=""
                                             id="disbursementDate" required>
                                     </div>
                                     <div class="col-md-6">
                                         <label class="form-label">Repayment Start Date<span
                                                 class="text-danger">*</span></label>
                                         <input type="date" class="form-control" name="repaymentStartDate"
-                                            id="repaymentStartDate" required>
+                                            id="repaymentStartDate" min="" required>
                                     </div>
                                 </div>
-                                <div class="row my-2">
+                                <div class="row my-4">
                                     <div class="col-md-12">
-                                        <input type="submit" class="btn btn-dark btn-block my-2" />
+                                        <input type="submit" class="btn btn-dark btn-block mt-4" />
                                     </div>
                                 </div>
                             </form>
                         </div>
-                        <div class="col-md-3">
-                            <h6 class="text-primary">
-                                Monthly Repayment (KES)
-                            </h6>
-                            <h1 class="text-primary" id="proOutput" style="font-size: 2.8rem;">
-                                0.00
-                            </h1>
+                        <div class="col-md-4">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <h6 class="text-dark">
+                                        Monthly Repayment (KES)
+                                    </h6>
+                                    <h1 class="text-primary" id="proOutput" style="font-size: 1.2rem;">
+                                        0.00
+                                    </h1>
+                                </div>
+                            </div>
+                            <div class="row my-2">
+                                <div class="col-md-6">
+                                    <h6 class="text-dark">
+                                        Max Interest Rate
+                                    </h6>
+                                    <h1 class="text-primary" id="Max_Interest_Rate" style="font-size: 1rem;">
+                                        0
+                                    </h1>
+                                </div>
+                                <div class="col-md-6">
+                                    <h6 class="text-dark">
+                                        Max Installments
+                                    </h6>
+                                    <h1 class="text-primary" id="Max_Installments" style="font-size: 1rem;">
+                                        0
+                                    </h1>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <h6 class="text-dark">
+                                        Min. Loan Amount
+                                    </h6>
+                                    <h1 class="text-primary" id="Min_Loan_Amount" style="font-size: .9rem;">
+                                        0.00
+                                    </h1>
+                                </div>
+                                <div class="col-md-6">
+                                    <h6 class="text-dark">
+                                        Max. Loan Amount
+                                    </h6>
+                                    <h1 class="text-primary" id="Max_Loan_Amount" style="font-size: .9rem;">
+                                        0.00
+                                    </h1>
+                                </div>
+                            </div>
                             <div class="money-spinner" id="money-spinner" style="display: none;">
                                 <img src="https://upload.wikimedia.org/wikipedia/commons/b/b1/Loading_icon.gif"
                                     alt="Loading Gif" style="height: 100px;" class="img-fluid">
                             </div>
-                            <div class="row">
+                            <div class="row" id="proReport">
                                 <div class="col-md-12">
-                                    <h6 class="text-primary my-3">
+                                    <h6 class="text-dark my-3">
                                         Calculator Schedule Report
                                     </h6>
                                     <div class="file-man-box" id="fileMan">
@@ -200,6 +244,45 @@
     </div>
 </section>
 <script>
+    $(document).ready(function () {
+        $('#loanType').on('change', function (e) {
+            e.preventDefault();
+            var LoanCode = $("#loanType").val();
+            if (LoanCode != null) {
+                $.ajax({
+                    type: 'get',
+                    url: '{% url "subProductCode" %}',
+                    dataType: 'json',
+                    data: {
+                        LoanCode: LoanCode
+                    },
+                    success: function (response) {
+                        for (var i = 0; i < response.value.length; i++) {
+                            if (response.value[i].Code == LoanCode) {
+                                $("#Max_Interest_Rate").empty().append(response.value[i]
+                                    .Max_Interest_Rate);
+                                $("#Max_Installments").empty().append(response.value[i]
+                                    .Max_Installments);
+                                $("#Min_Loan_Amount").empty().append(currency(response
+                                    .value[i].Min_Loan_Amount, {
+                                        separator: ','
+                                    }).format());
+                                $("#Max_Loan_Amount").empty().append(currency(response
+                                    .value[i].Max_Loan_Amount, {
+                                        separator: ','
+                                    }).format());
+                            }
+                        }
+                    },
+                    error: function (response) {
+                        console.log('Something went wrong');
+                    }
+                });
+            } else {
+                console.log('Something went wrong');
+            }
+        });
+    })
     $(document).on('submit', '#Loan_Calculator', function (e) {
         e.preventDefault();
         $('#money-spinner').show();
@@ -220,20 +303,24 @@
                 $("#requestedAmount").val("")
                 $("#disbursementDate").val("")
                 $("#repaymentStartDate").val("")
-                var DecimalSeparator = Number("1.2").toLocaleString().substr(1, 1);
-                var AmountWithCommas = response.toLocaleString();
-                var arParts = String(AmountWithCommas).split(DecimalSeparator);
-                var intPart = arParts[0];
-                var decPart = (arParts.length > 1 ? arParts[1] : '');
-                decPart = (decPart + '00').substr(0, 2);
-                $("#proOutput").empty().append(intPart + DecimalSeparator + decPart);
+                $("#proOutput").empty().append(currency(response, {
+                    separator: ','
+                }).format());
                 $('#money-spinner').hide();
-                $("#fileMan").show(500);
+                $("#proReport").show(500);
             }
         })
 
     });
+
     $(document).ready(function () {
+        var utc = new Date().toJSON().slice(0, 10).replace(/-/g, '-');
+        var x = document.getElementById("disbursementDate").min = utc;
+        var text = document.getElementById("disbursementDate").getAttribute("min");
+
+        var xy = document.getElementById("repaymentStartDate").min = utc;
+        var texts = document.getElementById("repaymentStartDate").getAttribute("min");
+
         $('#file-close').click(function () {
             $("#fileMan").toggle(500);
         })

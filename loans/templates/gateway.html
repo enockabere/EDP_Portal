@@ -1,0 +1,239 @@
+{% extends 'offcanvas.html' %}
+{% load bootstrap5 %}
+{% load static %}
+{% block main %}
+<style>
+    .contt {
+        display: block;
+        justify-content: center;
+        align-items: center;
+        overflow: hidden;
+        background: whitesmoke;
+    }
+
+    .display-5 {
+        color: #627084;
+        text-transform: uppercase;
+        font-size: 1.125em;
+        font-weight: 700;
+        line-height: 1;
+        letter-spacing: 0.1em;
+        margin: 0 0 1.777777778em;
+        transition: color 0.45s ease;
+    }
+
+    .data-card:hover h1 {
+        color: #008080;
+    }
+
+    @import url('https://fonts.googleapis.com/css2?family=Poppins&display=swap');
+
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: 'Poppins', sans-serif
+    }
+
+    p {
+        margin: 0
+    }
+
+    .box-right {
+        padding: 30px 25px;
+        background-color: white;
+        border-radius: 15px
+    }
+
+    .box-left {
+        padding: 20px 20px;
+        background-color: white;
+        border-radius: 15px
+    }
+
+    .textmuted {
+        color: #7a7a7a
+    }
+
+    .bg-green {
+        background-color: #d4f8f2;
+        color: #06e67a;
+        padding: 3px 0;
+        display: inline;
+        border-radius: 25px;
+        font-size: 11px
+    }
+
+    .p-blue {
+        font-size: 14px;
+        color: #1976d2
+    }
+
+    .fas.fa-circle {
+        font-size: 12px
+    }
+
+    .p-org {
+        font-size: 14px;
+        color: red;
+    }
+
+    .h7 {
+        font-size: 15px
+    }
+
+    .h8 {
+        font-size: 12px
+    }
+
+    .h9 {
+        font-size: 10px
+    }
+
+    .bg-blue {
+        background-color: #dfe9fc9c;
+        border-radius: 5px
+    }
+
+    .form-control {
+        box-shadow: none !important
+    }
+
+    .card input::placeholder {
+        font-size: 14px
+    }
+
+    ::placeholder {
+        font-size: 14px
+    }
+
+    input.card {
+        position: relative
+    }
+
+    .far.fa-credit-card {
+        position: absolute;
+        top: 10px;
+        padding: 0 15px
+    }
+
+    .fas,
+    .far {
+        cursor: pointer
+    }
+
+    .cursor {
+        cursor: pointer
+    }
+
+    .btn.btn-primary {
+        box-shadow: none;
+        height: 40px;
+        padding: 11px
+    }
+
+    .bg.btn.btn-primary {
+        background-color: transparent;
+        border: none;
+        color: #1976d2
+    }
+
+    .bg.btn.btn-primary:hover {
+        color: #539ee9
+    }
+
+    @media(max-width:320px) {
+        .h8 {
+            font-size: 11px
+        }
+
+        .h7 {
+            font-size: 13px
+        }
+
+        ::placeholder {
+            font-size: 10px
+        }
+    }
+</style>
+<script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk="
+    crossorigin="anonymous"></script>
+<script src="../../static/js/currency.js"></script>
+
+<script>
+    $(document).ready(function () {
+        var totalPayable = '{{loans.Total_Payable_Amount}}';
+        $("#totalPayable").empty().append(currency(totalPayable, {
+            separator: ','
+        }).format());
+        var Outstanding_Balance = '{{loans.Outstanding_Balance}}';
+        $("#Outstanding_Balance").empty().append(currency(Outstanding_Balance, {
+            separator: ','
+        }).format());
+    })
+</script>
+<section class="dash2">
+
+    <div class="content-wrapper general-bg" style="padding-bottom: 22rem;" id="results">
+        <!--alert -->
+        {% include 'alerts.html' %}
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card card-body data-card">
+                    <h1 class="heading display-5 pb-3">Payment For Loan No. <span
+                            class="text-success">{{loans.Loan_Number}}</span></h1>
+                    <div class="row">
+                        <div class="col-md-7">
+                            <div class="row">
+                                <div class="col-12 mb-4">
+                                    <div class="row box-right mx-2">
+                                        <div class="col-md-7">
+                                            <p class="ps-3 text-dark fw-bold h6 mb-0">TOTAL PAYABLE</p>
+                                            <p class="h2 fw-bold d-flex text-primary my-2" id="totalPayable"></p>
+                                        </div>
+                                        <div class="col-md-5">
+                                            <p class="p-blue"> <span class="fas fa-circle pe-2"></span>Outstanding
+                                                Balance </p>
+                                            <p class="fw-bold mb-3" id="Outstanding_Balance"></p>
+
+                                            <p class="p-org"><span class="fas fa-circle pe-2"></span>Days in Arrears</p>
+                                            <p class="fw-bold" id="Days_in_Arrears">{{loans.Days_in_Arrears}} Days</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-5 col-12 ps-md-5 p-0 ">
+                            <div class="box-left">
+                                <div class="">
+                                    <p class="h7 fw-bold mb-1">Make Payment</p>
+                                    <p class="textmuted h8 mb-2">Make payment for by writing your number.
+                                    </p>
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <form action="{% url 'PaymentGateway' loans.Loan_Number %}" method="POST">
+                                                {% csrf_token %}
+                                                <input type="hidden" name="amount"
+                                                    value="{{loans.Total_Payable_Amount}}">
+                                                <div class="row">
+                                                    <div class="col-md-12">
+                                                        <label class=" form-label">Phone Number</label>
+                                                        <input type="text" class="form-control" name="phoneNumber"
+                                                            required>
+                                                    </div>
+                                                </div>
+                                                <button type="submit" class="btn btn-primary my-3 w-100">KES
+                                                    {{loans.Total_Payable_Amount}}</button>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

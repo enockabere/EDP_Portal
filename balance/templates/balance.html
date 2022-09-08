@@ -28,8 +28,8 @@
 </style>
 <script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk="
     crossorigin="anonymous"></script>
+<script src="../../static/js/currency.js"></script>
 <section class="dash2">
-
     <div class="content-wrapper general-bg" style="padding-bottom: 22rem;" id="results">
         <!--alert -->
         {% include 'alerts.html' %}
@@ -38,7 +38,7 @@
                 <div class="card card-body data-card">
                     <h1 class="heading display-5 pb-3">Balance Enquiry</h1>
                     <div class="row">
-                        <div class="col-md-8">
+                        <div class="col-md-6">
                             <form method="POST" id="BalanceEnquiry">
                                 {% csrf_token %}
                                 <div class="row my-2">
@@ -59,19 +59,45 @@
                                 </div>
                             </form>
                         </div>
-                        <div class="col-md-4">
-                            <h6 class="text-primary">
-                                Outstanding Balance (KES)
-                            </h6>
-                            <h1 class="text-primary" id="proOutput" style="font-size: 2.8rem;">
-                                0.00
-                            </h1>
-                            <h6 class="text-primary my-3">
-                                Outstanding Interest (KES)
-                            </h6>
-                            <h1 class="text-primary" id="proOutput2" style="font-size: 2.8rem;">
-                                0.00
-                            </h1>
+                        <div class="col-md-6">
+
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <h6 class="text-dark">
+                                        Outstanding Balance (KES)
+                                    </h6>
+                                    <h1 class="text-primary" id="proOutput" style="font-size: 1.7rem;">
+                                        0.00
+                                    </h1>
+                                </div>
+                                <div class="col-md-6">
+                                    <h6 class="text-dark">
+                                        Outstanding Interest (KES)
+                                    </h6>
+
+                                    <h1 class="text-primary" id="proOutput2" style="font-size: 1.7rem;">
+                                        0.00
+                                    </h1>
+                                </div>
+                            </div>
+                            <div class="row my-3">
+                                <div class="col-md-6">
+                                    <h6 class="text-dark">
+                                        Next Due Date
+                                    </h6>
+                                    <h1 class="text-primary" id="proOutput3" style="font-size: 1.7rem;">
+                                        0.00
+                                    </h1>
+                                </div>
+                                <div class="col-md-6">
+                                    <h6 class="text-dark">
+                                        Amount Payable (KES)
+                                    </h6>
+                                    <h1 class="text-primary" id="proOutput4" style="font-size: 1.7rem;">
+                                        0.00
+                                    </h1>
+                                </div>
+                            </div>
                             <div class="money-spinner" id="money-spinner" style="display: none;">
                                 <img src="https://upload.wikimedia.org/wikipedia/commons/b/b1/Loading_icon.gif"
                                     alt="Loading Gif" style="height: 100px;" class="img-fluid">
@@ -96,19 +122,16 @@
             },
             success: function (response) {
                 $("#loanNo").val("");
-                var DecimalSeparator = Number("1.2").toLocaleString().substr(1, 1);
-                var AmountWithCommas = response['outstandingBalance'].toLocaleString();
-                var arParts = String(AmountWithCommas).split(DecimalSeparator);
-                var intPart = arParts[0];
-                var decPart = (arParts.length > 1 ? arParts[1] : '');
-                decPart = (decPart + '00').substr(0, 2);
-                $("#proOutput").empty().append(intPart + DecimalSeparator + decPart);
-                var Amount = response['outstandingInterest'].toLocaleString();
-                var Parts = String(Amount).split(DecimalSeparator);
-                var intParts = Parts[0];
-                var dec = (Parts.length > 1 ? Parts[1] : '');
-                dec = (dec + '00').substr(0, 2);
-                $("#proOutput2").empty().append(intParts + DecimalSeparator + dec);
+                $("#proOutput").empty().append(currency(response['outstandingBalance'], {
+                    separator: ','
+                }).format());
+                $("#proOutput2").empty().append(currency(response['outstandingInterest'], {
+                    separator: ','
+                }).format());
+                $("#proOutput3").empty().append(response['dueDate']);
+                $("#proOutput4").empty().append(currency(response['amountPayable'], {
+                    separator: ','
+                }).format());
                 $('#money-spinner').hide();
             }
         })
