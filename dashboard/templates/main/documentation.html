@@ -6,8 +6,7 @@
         height: 100% !important;
         padding-top: 56.25%;
     }
-</style>
-<style>
+
     .responsive-iframe {
         position: absolute;
         top: 0;
@@ -26,6 +25,29 @@
         -ms-box-shadow: 0px 0px 10px 0px rgba(82, 63, 105, 0.1);
         background-clip: border-box;
         border-radius: 8px;
+    }
+
+    .contt {
+        display: block;
+        justify-content: center;
+        align-items: center;
+        overflow: hidden;
+        background: whitesmoke;
+    }
+
+    .display-5 {
+        color: #627084;
+        text-transform: uppercase;
+        font-size: 1.125em;
+        font-weight: 700;
+        line-height: 1;
+        letter-spacing: 0.1em;
+        margin: 0 0 1.777777778em;
+        transition: color 0.45s ease;
+    }
+
+    .data-card:hover h1 {
+        color: #008080;
     }
 </style>
 <div class="row">
@@ -98,50 +120,6 @@
 
                 </form>
             </div>
-            <div class="accordion" id="accordionExample">
-                <div class="accordion-item">
-                    <h2 class="accordion-header" id="headingOne">
-                        <button class="accordion-button text-info" type="button" data-bs-toggle="collapse"
-                            data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-                            My Attachments
-                        </button>
-                    </h2>
-                    <div id="collapseOne" class="accordion-collapse collapse" aria-labelledby="headingOne"
-                        data-bs-parent="#accordionExample">
-                        <div class="accordion-body">
-                            <ul class="inbox-wid list-unstyled">
-                                {% for response in file %}
-                                <form action="" method="post">
-                                    {% csrf_token %}
-                                    <input type="hidden" name="attachmentID" value="{{response.AuxiliaryIndex2}}">
-                                    <input type="hidden" name="File_Name" value="{{response.File_Name}}">
-                                    <input type="hidden" name="File_Extension" value="{{response.File_Extension}}">
-                                    <li class="inbox-list-item">
-                                        <button type="submit" data-toggle="tooltip" data-placement="top"
-                                            title="Click to Download">
-                                            <div class="media" style="display: flex;">
-                                                <div class="media-body">
-                                                    <h5 class="font-size-16 mb-1">
-                                                        <i class="fas fa-download me-2 text-success"></i>
-                                                        {{response.File_Name}}.{{response.File_Extension}}
-                                                    </h5>
-                                                </div>
-                                            </div>
-                                        </button>
-                                    </li>
-                                    <hr style="margin-top:-.5rem">
-                                </form>
-                                {% empty %}
-                                <p class="text-danger">
-                                    You have not attached any document<i class="las la-file-download"></i>
-                                </p>
-                                {% endfor %}
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-
-            </div>
         </div>
     </div>
     <div class="col-md-6">
@@ -153,47 +131,93 @@
             </div>
         </div>
     </div>
-    <!-- Modal -->
-    <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
-        aria-labelledby="staticBackdropLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="staticBackdropLabel">Relationship Manager Details</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <div class="mx-auto text-center">
-                        <img src="../../../static/img/logo/pp.png" class="img-fluid" alt="" srcset=""
-                            style="height: 100px; width:100px;border-radius:50%">
-                    </div>
-                    <form>
-                        <div class="row">
-                            <div class="col-md-6">
-                                <label class="form-label">RM Name</label>
-                                <input type="text" class="form-control" placeholder="{{PotentialRes.RM_Name}}" readonly>
-                            </div>
-                            <div class="col-md-6">
-                                <label class="form-label">RM Code</label>
-                                <input type="text" class="form-control" placeholder="{{PotentialRes.RM_Code}}" readonly>
-                            </div>
-                            <a href="" type="button" class="btn btn-success w-100 my-3"><i class="las la-plus"></i>
-                                Create
-                                Appointment
-                            </a>
+</div>
+<div class="row my-2">
+    <div class="col-md-12">
+        <div class="card card-body data-card">
+            <h1 class="heading display-5 pb-3">Attached Documents</h1>
+            <div class="row">
+                {% for data in file %}
+                <div class="col-md-2">
+                    <div class="file-man-box">
+                        <form action="{% url 'DeleteAttachment' %}" method="POST">
+                            {% csrf_token %}
+                            <input type="hidden" name="docID" value="{{data.No}}">
+                            <input type="hidden" name="attachmentID" value="{{data.ID}}">
+                            <input type="hidden" name="tableID" value="{{data.Table_ID}}">
+                            <button class="file-close" id="file-close"><i class="fa fa-times-circle"></i></button>
+                        </form>
+                        <div class="file-img-box"><img src="../../../static/img/logo/f1.png" alt="icon">
                         </div>
-                    </form>
+                        <form action="{% url 'viewDocs' %}" method="POST">
+                            {% csrf_token %}
+                            <input type="hidden" name="docID" value="{{data.No}}">
+                            <input type="hidden" name="attachmentID" value="{{data.ID}}">
+                            <input type="hidden" name="File_Name" value="{{data.File_Name}}">
+                            <input type="hidden" name="tableID" value="{{data.Table_ID}}">
+                            <input type="hidden" name="File_Extension" value="{{data.File_Extension}}">
+                            <button class="file-download mx-1"><i class="fa fa-download text-success"></i></button>
+                        </form>
+                        <div class="file-man-title">
+                            <h5 class="mb-0 text-overflow">
+                                {{data.File_Name}}.{{data.File_Extension}}</h5>
+                        </div>
+                    </div>
                 </div>
+                {% empty %}
+                <p class="text-danger">
+                    You have not uploaded any attachments <i class="las la-file-download"></i>
+                </p>
+                {% endfor %}
             </div>
         </div>
     </div>
-    <script>
-        $(document).ready(function () {
-            var Coordinates = '{{Coordinates}}'
-            console.log(Coordinates)
-            detailUrl = 'https://maps.google.com/maps?q=' + Coordinates +
-                '&t=&z=13&ie=UTF8&iwloc=&output=embed';
-            $("#gmap_canvas").attr('src', detailUrl);
+</div>
+<!-- Modal -->
+<div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+    aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="staticBackdropLabel">Relationship Manager Details</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="mx-auto text-center">
+                    <img src="../../../static/img/logo/pp.png" class="img-fluid" alt="" srcset=""
+                        style="height: 100px; width:100px;border-radius:50%">
+                </div>
+                <form>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label class="form-label">RM Name</label>
+                            <input type="text" class="form-control" placeholder="{{PotentialRes.RM_Name}}" readonly>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">RM Code</label>
+                            <input type="text" class="form-control" placeholder="{{PotentialRes.RM_Code}}" readonly>
+                        </div>
+                        <a href="" type="button" class="btn btn-success w-100 my-3"><i class="las la-plus"></i>
+                            Create
+                            Appointment
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    $(document).ready(function () {
+        var Coordinates = '{{Coordinates}}'
+        console.log(Coordinates)
+        detailUrl = 'https://maps.google.com/maps?q=' + Coordinates +
+            '&t=&z=13&ie=UTF8&iwloc=&output=embed';
+        $("#gmap_canvas").attr('src', detailUrl);
 
-        });
-    </script>
+        $('#collapseBtn').click(function () {
+            $('#collapseOne').toggle(500);
+        })
+
+    });
+</script>

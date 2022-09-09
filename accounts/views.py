@@ -67,36 +67,36 @@ def login_request(request):
             password = request.POST.get('password')
         
             print(email,password)
-            Customer = config.O_DATA.format(f"/CustomersList?$filter=Email_Address%20eq%20%27{email}%27")
-            CustomerResponse = get_object(Customer)
-            for applicant in CustomerResponse['value']:
-                if applicant['Verified']==True:
-                    decoded_text = passwordCipher(applicant['Password'])
-                    if decoded_text == password:
-                        request.session['CustomerName'] = applicant['Full_Name']
-                        request.session['CustomerNo'] = applicant['No']
-                        request.session['MemberNo'] = applicant['Member_Number']
-                        request.session['CustomerEmail'] = applicant['Email_Address']
-                        request.session['KRA_Pin'] = applicant['KRA_Pin']
-                        request.session['Branch_Code'] = applicant['Branch_Code']
-                        request.session['Membership_Status'] = applicant['Membership_Status']
-                        request.session['MOEST_Registration_No'] = applicant['MOEST_Registration_No']
-                        request.session['Mobile_Number'] = applicant['Mobile_Number']
-                        request.session['stage'] = 'Customer'
-                        return redirect('dashboard')
+            # Customer = config.O_DATA.format(f"/CustomersList?$filter=Email_Address%20eq%20%27{email}%27")
+            # CustomerResponse = get_object(Customer)
+            # for applicant in CustomerResponse['value']:
+            #     if applicant['Verified']==True:
+            #         decoded_text = passwordCipher(applicant['Password'])
+            #         if decoded_text == password:
+            #             request.session['CustomerName'] = applicant['Full_Name']
+            #             request.session['CustomerNo'] = applicant['No']
+            #             request.session['MemberNo'] = applicant['Member_Number']
+            #             request.session['CustomerEmail'] = applicant['Email_Address']
+            #             request.session['KRA_Pin'] = applicant['KRA_Pin']
+            #             request.session['Branch_Code'] = applicant['Branch_Code']
+            #             request.session['Membership_Status'] = applicant['Membership_Status']
+            #             request.session['MOEST_Registration_No'] = applicant['MOEST_Registration_No']
+            #             request.session['Mobile_Number'] = applicant['Mobile_Number']
+            #             request.session['stage'] = 'Customer'
+            #             return redirect('dashboard')
 
-            Applicant = config.O_DATA.format(f"/ApplicantsList?$filter=Email_Address%20eq%20%27{email}%27")
-            ApplicantResponse = get_object(Applicant)
-            for applicant in ApplicantResponse['value']:
-                if applicant['Verified']==True:
-                    decoded_text = passwordCipher(applicant['Password'])
-                    if decoded_text == password:
-                        request.session['CustomerName'] = applicant['Full_Name']
-                        request.session['CustomerNo'] = applicant['No']
-                        request.session['MemberNo'] = applicant['Business_Company_Reg_No']
-                        request.session['CustomerEmail'] = applicant['Email_Address']
-                        request.session['stage'] = 'Applicant'
-                        return redirect('ApplicationDetails')
+            # Applicant = config.O_DATA.format(f"/ApplicantsList?$filter=Email_Address%20eq%20%27{email}%27")
+            # ApplicantResponse = get_object(Applicant)
+            # for applicant in ApplicantResponse['value']:
+            #     if applicant['Verified']==True:
+            #         decoded_text = passwordCipher(applicant['Password'])
+            #         if decoded_text == password:
+            #             request.session['CustomerName'] = applicant['Full_Name']
+            #             request.session['CustomerNo'] = applicant['No']
+            #             request.session['MemberNo'] = applicant['Business_Company_Reg_No']
+            #             request.session['CustomerEmail'] = applicant['Email_Address']
+            #             request.session['stage'] = 'Applicant'
+            #             return redirect('ApplicationDetails')
 
 
             Potential = config.O_DATA.format(f"/PotentialsList?$filter=Email_Address%20eq%20%27{email}%27")

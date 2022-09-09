@@ -532,3 +532,65 @@ label {
     transition: transform 0.45s ease, background 0.45s ease;
     border: none;
 }
+.file-man-box {
+    padding: 5px;
+    border: 1px solid #e3eaef;
+    border-radius: 5px;
+    position: relative;
+    margin-bottom: 10px;
+}
+.btn-down i{
+    font-size: .5rem !important;
+    color: #fff;
+}
+.file-man-box .file-close {
+    color: #f1556c;
+    border: none;
+    outline: none;
+    position: absolute;
+    line-height: 10px;
+    font-size: 20px;
+    right: 2px;
+    top: 2px;
+    background: none;
+    visibility: hidden
+}
+
+.file-man-box .file-img-box {
+    line-height: 100px;
+    text-align: center
+}
+
+.file-man-box .file-img-box img {
+    height: 54px
+}
+
+.file-man-box .file-download {
+    font-size: 25px;
+    color: #98a6ad;
+    position: absolute;
+    bottom: 5px;
+    right: 1px;
+    background: none;
+    border: none;
+}
+
+.file-man-box .file-download:hover {
+    color: #313a46
+}
+
+.file-man-box .file-man-title {
+    padding-right: 10px
+}
+.file-man-title h5{
+    font-size: 10px !important;
+}
+
+.file-man-box:hover {
+    -webkit-box-shadow: 0 0 24px 0 rgba(0, 0, 0, .06), 0 1px 0 0 rgba(0, 0, 0, .02);
+    box-shadow: 0 0 24px 0 rgba(0, 0, 0, .06), 0 1px 0 0 rgba(0, 0, 0, .02)
+}
+
+.file-man-box:hover .file-close {
+    visibility: visible
+}

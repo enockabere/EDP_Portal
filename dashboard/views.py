@@ -12,6 +12,8 @@ import datetime as dt
 from django.http import JsonResponse
 from django.views import View
 import base64
+from django.http import HttpResponse
+import io as BytesIO
 # Create your views here.
 
 class UserObjectMixin(object):
@@ -47,6 +49,9 @@ class Dashboard(UserObjectMixin,View):
             for potential in PotentialResponse['value']:
                 PotentialRes = potential
                 Coordinates = potential['Coordinates'] 
+                Access_File = config.O_DATA.format(f"/AttachedDocuments?$filter=No%20eq%20%27{potential['No']}%27")
+                res_file = self.get_object(Access_File)
+                allFiles = [x for x in res_file['value']]
 
             CustomerData = config.O_DATA.format(f"/CustomersList?$filter=No%20eq%20%27{CustomerNumber}%27%20and%20Email_Address%20eq%20%27{CustomerEmail}%27")
             CustomerResponse = self.get_object(CustomerData) 
@@ -92,7 +97,7 @@ class Dashboard(UserObjectMixin,View):
                 "PotentialRes":PotentialRes, "customer":CustomerRes,"openLoans":openCount,
                 "appCount":appCount,"rejCount":rejCount,"pendCount":pendCount,
                 "loanBalance":loanBalance,"amountDue":amountDue,"DaysInArrears":DaysInArrears,
-                "nextDueDate":nextDueDate
+                "nextDueDate":nextDueDate,"file":allFiles
                 }
         return render(request, 'main/dashboard.html', ctx)
 
@@ -122,6 +127,52 @@ def UploadPotentialAttachment(request):
                 return redirect('dashboard')
         except Exception as e:
             print(e)        
+    return redirect('dashboard')
+
+
+def DeleteAttachment(request,pk):
+    if request.method == "POST":
+
+        attachmentID = int(request.POST.get('attachmentID'))
+        tableID= int(request.POST.get('tableID'))
+        docID = request.POST.get('docID')
+        try:
+            response = config.CLIENT.service.FnDeleteDocumentAttachment(
+                attachmentID,docID,tableID)
+            print(response)
+            if response == True:
+                messages.success(request, "Deleted Successfully ")
+                return redirect('dashboard')
+        except Exception as e:
+            messages.error(request, e)
+            print(e)
+    return redirect('dashboard')
+
+def viewDocs(request):
+    if request.method == 'POST':
+        docNo = request.POST.get('docNo')
+        attachmentID = int(request.POST.get('attachmentID'))
+        File_Name = request.POST.get('File_Name')
+        File_Extension = request.POST.get('File_Extension')
+        tableID = int(request.POST.get('tableID'))
+
+        try:
+            response = config.CLIENT.service.FnGetDocumentAttachment(
+                docNo, attachmentID, tableID)
+            
+            filenameFromApp = File_Name + "." + File_Extension
+            buffer = BytesIO.BytesIO()
+            content = base64.b64decode(response)
+            buffer.write(content)
+            responses = HttpResponse(
+                buffer.getvalue(),
+                content_type="application/ms-excel",
+            )
+            responses['Content-Disposition'] = f'inline;filename={filenameFromApp}'
+            return responses
+        except Exception as e:
+            messages.info(request, e)
+            return redirect('dashboard')
     return redirect('dashboard')
 
 class ApplicationDetails(UserObjectMixin,View):
