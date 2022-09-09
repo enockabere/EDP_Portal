@@ -21,6 +21,7 @@ urlpatterns = [
     path('SchoolPassRate', views.SchoolPassRate, name="SchoolPassRate"),
     path('SchoolProjectDetails', views.SchoolProjectDetails, name="SchoolProjectDetails"),
     path('manual', views.Manual.as_view(), name="Manual"),
+    path('UploadPotentialAttachment', views.UploadPotentialAttachment, name="UploadPotentialAttachment"),
 ]
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL,

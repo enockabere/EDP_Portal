@@ -29,6 +29,11 @@
     }
 </style>
 <div class="row">
+    <div class="col-md-12">
+        {% include 'alerts.html' %}
+    </div>
+</div>
+<div class="row">
     <div class="col-md-12 container">
         <div class="alert bg-success mb-3 py-3" role="alert">
             <div class="d-flex">
@@ -60,19 +65,33 @@
             <h4 class="alert-heading text-white">Make Document Attachment</h4>
             <hr>
             <div class="card p-3 my-3 data-card">
-                <form>
+                <form action="{% url 'UploadPotentialAttachment' %}" method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <input type="hidden" name="docNo" value="{{PotentialRes.No}}">
                     <div class="row">
                         <div class="col-md-12">
                             <label class="form-label">Attachment <span class="text-danger">*</span></label>
-                            <select class="form-select" name="">
-                                <option class="after" value="" disabled selected>--Select--</option>
+                            <select class="form-select" name="documentType">
+                                <option value="0" disabled selected>--Select--</option>
+                                <option value="1">Statement</option>
+                                <!-- <option value="2">School Photo</option> -->
+                                <option value="3">KYC Documents</option>
+                                <option value="4">CRB Reports</option>
+                                <option value="5">Valuation Report</option>
+                                <option value="6">MOEST Certificate</option>
+                                <option value="7">Registration of Business</option>
+                                <option value="8">Lease Agreement</option>
+                                <option value="9">Business Permit</option>
+                                <option value="10">Collateral</option>
+                                <option value="11">Others</option>
+                                <option value="12">School Photo</option>
                             </select>
                         </div>
                     </div>
                     <div class="row my-2">
                         <div class="col-md-12">
                             <label class="form-label">File <span class="text-danger">*</span></label>
-                            <input type="file" class="form-control">
+                            <input type="file" class="form-control" name="attachment">
                         </div>
                     </div>
                     <button type="submit" class="btn btn-primary w-100">Submit</button>
@@ -148,25 +167,22 @@
                         <img src="../../../static/img/logo/pp.png" class="img-fluid" alt="" srcset=""
                             style="height: 100px; width:100px;border-radius:50%">
                     </div>
-                    <form class="row">
-                        <div class="col-md-6">
-                            <label class="form-label">RM Name</label>
-                            <input type="text" class="form-control" placeholder="John Doe" readonly>
-                        </div>
-                        <div class="col-md-6">
-                            <label class="form-label">RM Contact No </label>
-                            <input type="text" class="form-control" placeholder="+254700000000" readonly>
-                        </div>
-                        <div class="col-md-12">
-                            <label class="form-label">RM Email</label>
-                            <input type="text" class="form-control" placeholder="johndoe@gmail.com" readonly>
+                    <form>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <label class="form-label">RM Name</label>
+                                <input type="text" class="form-control" placeholder="{{PotentialRes.RM_Name}}" readonly>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">RM Code</label>
+                                <input type="text" class="form-control" placeholder="{{PotentialRes.RM_Code}}" readonly>
+                            </div>
+                            <a href="" type="button" class="btn btn-success w-100 my-3"><i class="las la-plus"></i>
+                                Create
+                                Appointment
+                            </a>
                         </div>
                     </form>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary"><i class="las la-plus"></i> Create Appointment
-                        <i class="las la-calendar-plus"></i></button>
                 </div>
             </div>
         </div>

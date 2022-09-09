@@ -11,6 +11,7 @@ from django.contrib import messages
 import datetime as dt
 from django.http import JsonResponse
 from django.views import View
+import base64
 # Create your views here.
 
 class UserObjectMixin(object):
@@ -94,6 +95,34 @@ class Dashboard(UserObjectMixin,View):
                 "nextDueDate":nextDueDate
                 }
         return render(request, 'main/dashboard.html', ctx)
+
+def UploadPotentialAttachment(request):
+    if request.method == "POST":
+        try:
+            docNo = request.POST.get('docNo')
+            attach = request.FILES.get('attachment')
+            filename = request.FILES['attachment'].name
+            documentType = int(request.POST.get('documentType'))
+            tableID = 50401
+            attachment = base64.b64encode(attach.read())
+
+            try:
+                response = config.CLIENT.service.FnUploadAttachedDocument(
+                    docNo, filename,attachment,documentType, tableID)
+                print(response)
+                if response == True:
+                    messages.success(request, "Upload Successful")
+                    return redirect('dashboard')
+                else:
+                    messages.error(request, "Failed, Try Again")
+                    return redirect('dashboard')
+            except Exception as e:
+                messages.error(request, e)
+                print(e)
+                return redirect('dashboard')
+        except Exception as e:
+            print(e)        
+    return redirect('dashboard')
 
 class ApplicationDetails(UserObjectMixin,View):
     def get(self,request):
