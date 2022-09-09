@@ -26,6 +26,7 @@ class UserObjectMixin(object):
         return response
 class Dashboard(UserObjectMixin,View):
     def get(self,request):
+        allFiles = []
         try:
             CustomerName=request.session['CustomerName']
             CustomerNumber=request.session['CustomerNo']
@@ -100,6 +101,23 @@ class Dashboard(UserObjectMixin,View):
                 "nextDueDate":nextDueDate,"file":allFiles
                 }
         return render(request, 'main/dashboard.html', ctx)
+
+def FnPotentialLoanAmount(request):
+    if request.method == "POST":
+        docNo = request.POST.get('docNo')
+        loanAmount= float(request.POST.get('loanAmount'))
+        try:
+            response = config.CLIENT.service.FnPotentialLoanAmount(
+                docNo,loanAmount)
+            print(response)
+            return redirect('dashboard')
+            if response == True:
+                messages.success(request, "Sent Successfully ")
+                return redirect('dashboard')
+        except Exception as e:
+            messages.error(request, e)
+            print(e)
+    return redirect('dashboard')
 
 def UploadPotentialAttachment(request):
     if request.method == "POST":

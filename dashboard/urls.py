@@ -24,6 +24,7 @@ urlpatterns = [
     path('UploadPotentialAttachment', views.UploadPotentialAttachment, name="UploadPotentialAttachment"),
     path('DeleteAttachment', views.DeleteAttachment, name="DeleteAttachment"),
     path('viewDocs', views.viewDocs, name="viewDocs"),
+    path('FnPotentialLoanAmount', views.FnPotentialLoanAmount, name="FnPotentialLoanAmount"),
 ]
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL,
