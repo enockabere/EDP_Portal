@@ -126,7 +126,7 @@ class Loan_Request(UserObjectMixin,View):
                     maxFeesPerStudent, loanProduct,subProductCode,
                     loanPurpose,appliedAmount,myAction)
                 print(response)
-                if response['return_value'] == True:
+                if response['return_value'] != False:
                     messages.success(request, "Request Successful")
                     return redirect('LoanDetail', pk=response['loanNo'])
             except ValueError as e:
