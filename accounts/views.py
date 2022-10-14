@@ -29,7 +29,6 @@ def passwordCipher(password):
 
 
 class EmailThread(threading.Thread):
-
     def __init__(self, email):
         self.email = email
         threading.Thread.__init__(self)
@@ -186,15 +185,12 @@ def RegisterLead(request):
             nameChars = ''.join(secrets.choice(string.ascii_uppercase + string.digits)
                         for i in range(5))
             verificationToken = str(nameChars)
-
-            print("Token:",verificationToken)
             
             cipher_suite = Fernet(config.ENCRYPT_KEY)
             
             encrypted_text = cipher_suite.encrypt(password.encode('ascii'))
             myPassword = base64.urlsafe_b64encode(encrypted_text).decode("ascii")
 
-            print("Password:", myPassword)
 
             if not coord:
                 coordinates = 'None'
