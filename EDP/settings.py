@@ -39,25 +39,14 @@ MODE = config("MODE", default="dev")
 SECRET_KEY = config('SECRET_KEY')
 DEBUG = config('DEBUG', default=False, cast=bool)
 # development
-if config('MODE') == "dev":
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.postgresql_psycopg2',
-            'NAME': config('DB_NAME'),
-            'USER': config('DB_USER'),
-            'PASSWORD': config('DB_PASSWORD'),
-            'HOST': config('DB_HOST'),
-            'PORT': '',
-        }
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': 'edpartners',
+    }
+}
 
-    }
-# production
-else:
-    DATABASES = {
-        'default': dj_database_url.config(
-            default=config('DATABASE_URL')
-        )
-    }
+
 
 db_from_env = dj_database_url.config(conn_max_age=500)
 DATABASES['default'].update(db_from_env)
@@ -193,14 +182,14 @@ ENCRYPT_KEY = b'bzKNyzSwwsN0pwQKglGqPnMKPS6WTPElkRPoCOTYN0I='
 
 AUTHS = Session()
 
-WEB_SERVICE_PWD = 'Admin@123'
+WEB_SERVICE_PWD = "I'mAdm1n"
 
-O_DATA = "http://demo.nav.kobby.co.ke:1348/BC130/ODataV4/Company('Ed%20Partners%20Africa%20Limited'){}"
-BASE_URL = 'http://demo.nav.kobby.co.ke:1347/BC130/WS/Ed%20Partners%20Africa%20Limited/Codeunit/Integrations'
-AUTHS.auth = HTTPBasicAuth('KTL-ADMIN', WEB_SERVICE_PWD)
+O_DATA = "http://102.37.140.58:1448/EPA/OData/Company(%27EPA%20TEST%27){}"
+BASE_URL = 'http://102.37.140.58:1447/EPA/WS/EPA%20TEST/Codeunit/Integrations'
+AUTHS.auth = HTTPBasicAuth('EPA-ADMIN', WEB_SERVICE_PWD)
 
 CLIENT = Client(BASE_URL, transport=Transport(session=AUTHS))
-AUTHS = HTTPBasicAuth('KTL-ADMIN', WEB_SERVICE_PWD)
+AUTHS = HTTPBasicAuth('EPA-ADMIN', WEB_SERVICE_PWD)
 django_heroku.settings(locals())
 
 # live Company Name = KMPDC LIVE
