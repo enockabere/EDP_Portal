@@ -83,6 +83,10 @@ def login_request(request):
                         request.session['Mobile_Number'] = applicant['Mobile_Number']
                         request.session['stage'] = 'Customer'
                         return redirect('dashboard')
+                    messages.error(request,"Incorrect Password/Username")
+                    return redirect('auth')
+                messages.error(request,"User not verified.")
+                return redirect('auth')
 
             Applicant = config.O_DATA.format(f"/ApplicantsList?$filter=Email_Address%20eq%20%27{email}%27")
             ApplicantResponse = get_object(Applicant)
@@ -96,7 +100,10 @@ def login_request(request):
                         request.session['CustomerEmail'] = applicant['Email_Address']
                         request.session['stage'] = 'Applicant'
                         return redirect('ApplicationDetails')
-
+                    messages.error(request,"Incorrect Password/Username")
+                    return redirect('auth')
+                messages.error(request,"User not verified")
+                return redirect('auth')
 
             Potential = config.O_DATA.format(f"/PotentialsList?$filter=Email_Address%20eq%20%27{email}%27")
             PotentialResponse = get_object(Potential)
@@ -110,6 +117,10 @@ def login_request(request):
                         request.session['CustomerEmail'] = applicant['Email_Address']
                         request.session['stage'] = 'Potential'
                         return redirect('dashboard')
+                    messages.error(request,"Incorrect Password/Username")
+                    return redirect('auth')
+                messages.error(request,"User not verified.")
+                return redirect('auth')
                     
             Leads = config.O_DATA.format(f"/LeadsList?$filter=Email_Address%20eq%20%27{email}%27")
             LeadResponse = get_object(Leads)
@@ -123,12 +134,15 @@ def login_request(request):
                         request.session['CustomerEmail'] = lead['Email_Address']
                         request.session['stage'] = 'Lead'
                         return redirect('dashboard')
+                    messages.error(request,"Incorrect Password/Username")
+                    return redirect('auth')
+                messages.error(request,"User not verified.")
+                return redirect('auth')
             
-            messages.error(
-                request, "Invalid Credentials. Please reset your password else create a new account")
+            messages.error(request, "User not registered")
             return redirect('auth') 
-        except ValueError:
-            messages.error(request,"Missing Input!")
+        except ValueError as e:
+            messages.error(request,e)
             print("Missing Input!")
             return redirect('auth')
         except requests.exceptions.ConnectionError as e:

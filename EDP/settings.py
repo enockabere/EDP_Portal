@@ -155,10 +155,11 @@ USE_TZ = True
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_HOST_USER ='hypertextassassin3@gmail.com'
-EMAIL_HOST_PASSWORD='qnybgnibxjsumyvn'
+EMAIL_HOST_USER ='maebaenock95@gmail.com'
+EMAIL_HOST_PASSWORD='nfxcoydzskzzfvis'
 EMAIL_USE_TLS = True
 EMAIL_PORT = 587
+
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
@@ -184,7 +185,7 @@ AUTHS = Session()
 
 WEB_SERVICE_PWD = "I'mAdm1n"
 
-O_DATA = "http://102.37.140.58:1448/EPA/OData/Company(%27EPA%20TEST%27){}"
+O_DATA = "http://102.37.140.58:1448/EPA/ODataV4/Company(%27EPA%20TEST%27){}"
 BASE_URL = 'http://102.37.140.58:1447/EPA/WS/EPA%20TEST/Codeunit/Integrations'
 AUTHS.auth = HTTPBasicAuth('EPA-ADMIN', WEB_SERVICE_PWD)
 
