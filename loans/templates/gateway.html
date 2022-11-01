@@ -160,18 +160,7 @@
     crossorigin="anonymous"></script>
 <script src="../../static/js/currency.js"></script>
 
-<script>
-    $(document).ready(function () {
-        var totalPayable = '{{loans.Total_Payable_Amount}}';
-        $("#totalPayable").empty().append(currency(totalPayable, {
-            separator: ','
-        }).format());
-        var Outstanding_Balance = '{{loans.Outstanding_Balance}}';
-        $("#Outstanding_Balance").empty().append(currency(Outstanding_Balance, {
-            separator: ','
-        }).format());
-    })
-</script>
+
 <section class="dash2">
 
     <div class="content-wrapper general-bg" style="padding-bottom: 22rem;" id="results">
@@ -236,4 +225,16 @@
         </div>
     </div>
 </section>
+<script>
+    $(document).ready(function () {
+        var totalPayable = '{{loans.Total_Payable_Amount}}';
+        $("#totalPayable").empty().append(currency(totalPayable, {
+            separator: ','
+        }).format());
+        var Outstanding_Balance = '{{loans.Outstanding_Balance}}';
+        $("#Outstanding_Balance").empty().append(currency(Outstanding_Balance, {
+            separator: ','
+        }).format());
+    })
+</script>
 {% endblock %}
